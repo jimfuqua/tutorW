@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)http://tavmjong.free.fr/SVG/BUTTON_TEST/button_test.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta charset="UTF-8">
+    <meta name="author" content="Tavmjong Bah">
+    <meta name="date" content="2011-02-25">
+    <meta name="copyright" content="Copyright 2011">
+    <meta name="keywords" content="SVG, HTML, HTML5, XHTML, CSS">
+    <meta name="description" content="An SVG Button Test Page">
+
+    <title>An SVG Button Test Page</title>
+
+    <style type="text/css">
+      svg.Orange {
+        color: orange;
+      }
+      svg.Purple {
+        color: purple;
+      }
+      g:hover {
+        cursor: pointer;
+      }
+      g:hover rect[id="ButtonGlow"] {
+        opacity: 0;
+      }
+
+      object {
+        color: green;
+      }
+      img {
+        color: blue;
+      }
+    </style>
+
+    <script type="text/ecmascript">
+
+      function status(text, frameId) {
+        document.getElementById("status_" + frameId).innerHTML = text;
+      }
+
+    </script>
+
+    <script type="text/ecmascript">
+
+      function buttonEvent(event) {
+          if ((event.type == "click" &amp;&amp; event.button == 0) ||
+              (event.type == "keydown" &amp;&amp;
+	      (event.keyCode == 32 || event.keyCode ==13))) {
+
+          /* Messy, can't we do better? */
+          /* SVGGElement -> SVGSVGElement -> SVGUseElement -> SVGSVGElement */
+	  var SVGRoot     = event.currentTarget.parentNode.parentNode.parentNode;
+          var SVGRootId   = SVGRoot.id;
+
+          /* We could do a loop to search for the tspan objects... */
+          /*     but this is quick and dirty. */
+          var Text        = event.currentTarget.childNodes[5].firstChild.firstChild;
+	  var TextShadow  = event.currentTarget.childNodes[7].firstChild.firstChild;
+
+          var pressed = false;
+	  var text = "OFF";
+
+          if ("false" == SVGRoot.getAttribute("aria-pressed")) {
+           pressed = true;
+	   text = "ON";
+          }
+
+          SVGRoot.setAttribute("aria-pressed", pressed);
+	  Text.nodeValue = text;
+	  TextShadow.nodeValue = text;
+
+	  top.status(text, SVGRootId);
+
+        }
+      }
+  </script>
+
+  </head>
+  <body>
+ 
+    <h1>An SVG Button Test Page</h1>
+    <h2><i>Or SVG Integration in HTML</i></h2>
+      <p>
+        This page is an investigation into how to use simple SVG
+        graphics in HTML. It ignores scaling issues, which are
+        <a href="http://tavmjong.free.fr/SVG/VIEWPORT/viewport.xhtml">tested elsewhere</a>. The
+        plan is to start off with a very simple button and then to add
+        functionality to the button a step at a time. The goal is to
+        keep things as simple as possible (avoiding JavaScript where
+        possible).
+      </p>
+      <p>
+	Topics on this page were discussed at the
+	<a href="http://www.w3.org/2011/02/09-svg-minutes.html" target="_blank">Feb. 9th, 2011</a> and
+	<a href="http://www.w3.org/2011/02/16-svg-minutes.html" target="_blank">Feb. 16th, 2011</a>
+	SVG Working Group Teleconferences. The page has been updated
+	as a result of feedback from the group.
+      </p>
+
+    <h1>An SVG button used via &lt;img&gt;</h1>
+
+      <p>
+         The simplest thing to do is to use &lt;img&gt;
+	 to replace a PNG by an SVG.
+      </p>
+      <pre>	&lt;a href="http://www.w3.org/Graphics/SVG/"&gt;
+	  &lt;img src="buttonA.png" alt="A sample PNG button."/&gt;
+	&lt;/a&gt;
+	&lt;a href="http://www.w3.org/Graphics/SVG/"&gt;
+	  &lt;img src="buttonA.svg" alt="A sample SVG button."/&gt;
+	&lt;/a&gt;
+      </pre>
+
+      <a href="http://www.w3.org/Graphics/SVG/" target="_blank">
+	<img src="./An SVG Button Test Page2_files/buttonA.png" alt="A sample PNG button.">
+      </a>
+      <a href="http://www.w3.org/Graphics/SVG/" target="_blank">
+	<img src="./An SVG Button Test Page2_files/buttonA.svg" alt="A sample SVG button.">
+      </a>
+
+      <ul>
+	<li>Works in:
+	  Chrome 9beta,
+	  Firefox 4beta,
+	  Opera 11.
+	</li>
+	<li>
+	  Unknown:
+	  IE9.
+	</li>
+      </ul>
+	
+      <p>
+	Notes:
+      </p>
+      <ul>
+	<li>
+	  The region that is active for the mouse is larger than the button image.
+	</li>
+	<li>
+	  Declarative animation but not JavaScript animation works inside the &lt;img&gt; tag.
+	</li>
+      </ul>
+
+      <ul>
+	<li>Works in:
+	  Chrome 9beta,
+	  Firefox 4beta (color animation does not work),
+	  Opera 11.
+	</li>
+	<li>
+	  Unknown:
+	  IE9.
+	</li>
+      </ul>
+	
+      <p>
+	Cameron suggests either catching the error:
+      </p>
+
+      <pre>        &lt;a href="http://www.w3.org/Graphics/SVG/" target="_blank"&gt;
+	  &lt;img src="buttonA.svg" alt="A sample SVG button."
+	       onerror="this.removeAttribute('onerror');
+			this.src='buttonA.png'"/&gt;
+	&lt;/a&gt;
+      </pre>
+
+      <a href="http://www.w3.org/Graphics/SVG/" target="_blank">
+	<img src="./An SVG Button Test Page2_files/buttonA.svg" alt="A sample SVG button." onerror="this.removeAttribute(&#39;onerror&#39;);
+		      this.src=&#39;buttonA.png&#39;">
+      </a>
+
+      <p>
+	this works in IE8!
+      </p>
+      <p>
+	Cameron also suggested using a JavaScript library like Modernizr.
+	I have not tested this.
+      </p>
+
+      <pre>  &lt;script src="modernizr.js"&gt;&lt;/script&gt;
+  &lt;style&gt;
+    html.svg .png-fallback { display: none }
+    html.no-svg .svg-image { display: none }
+  &lt;/style&gt;
+  &lt;a href="http://www.w3.org/Graphics/SVG/"&gt;
+    &lt;img class="svg-image" src="buttonA.svg"&gt;
+    &lt;img class="png-fallback" src="buttonA.png"&gt;
+  &lt;/a&gt;
+      </pre>
+
+    <h1>An SVG button used via &lt;object&gt;</h1>
+
+      <p>
+	The next step is to try to use the SVG button via the
+	&lt;object&gt; tag. This is in order that a PNG can be used as
+	a fallback (for browsers that don't support SVG). The SVG
+	serves only as a better (scalable) graphic than a PNG.  The
+	action (linking to a web page) is left to the HTML. Notice how
+	this works when using the &lt;object&gt; tag with a PNG but
+	not an SVG.
+      </p>
+
+      <pre>	&lt;a href="http://www.w3.org/Graphics/SVG/"&gt;
+	  &lt;object type="image/png" data="buttonA.png"&gt;
+	     Your browser does not support PNG! Impossible!
+	  &lt;/object&gt;
+	&lt;/a&gt;
+	&lt;a href="http://www.w3.org/Graphics/SVG/"&gt;
+	  &lt;object type="image/svg+xml" data="buttonA.svg"&gt;
+	    &lt;img src="buttonA.png" alt="A sample button."/&gt;
+	  &lt;/object&gt;
+	&lt;/a&gt;
+      </pre>
+
+      <a href="http://www.w3.org/Graphics/SVG/" target="_blank">
+	<object type="image/png" data="./An SVG Button Test Page2_files/buttonA.png">
+	   Your browser does not support PNG! Impossible!
+	</object>
+      </a>
+      <a href="http://www.w3.org/Graphics/SVG/" target="_blank">
+	<object type="image/svg+xml" data="./An SVG Button Test Page2_files/buttonA.svg">
+	  <img src="./An SVG Button Test Page2_files/buttonA.png" alt="A sample button.">
+	</object>
+      </a>
+
+      <ul>
+	<li>
+	  SVG Works:
+	  IE9.
+	</li>
+	<li>
+	  SVG Fails:
+	  Chrome 9beta,
+	  Firefox 4beta,
+	  Opera 11.IE9.
+	</li>
+      </ul>
+	
+      <p>
+	This does not work in most browsers as SVG does not pass the
+	mouse event to the HTML file, even if
+	<i>pointer-events="none"</i> is set in the SVG root
+	element. Firefox (4beta) will actually show the
+	<i>href</i> value in the HTML address bar but doesn't respond
+	to mouse clicks. It appears that an SVG referenced via
+	&lt;object&gt; creates a <i>nested browsing context</i> as SVG
+	is an XML format while a PNG does not according to the
+	<a href="http://www.whatwg.org/specs/web-apps/current-work/#the-object-element">WhatWG
+	  HTML spec</a>.
+	Ironically, the link works in IE8 since the PNG fallback is shown.
+      </p>
+
+      <p>
+	One can try to use a
+	<a href="http://www.whatwg.org/specs/web-apps/current-work/#attr-hyperlink-usemap"><i>usemap</i></a>
+	but it still doesn't work with SVG (it does with a PNG, note
+	how the map restricts the input to the left half of the PNG
+	button). It seems that SVG despite the mime
+	type <i>image/svg+xml</i> isn't interpreted as an image and
+	thus the map is ignored.
+      </p>
+ 
+      <pre>        &lt;object type="image/png" data="buttonA.png" usemap="#ButtonMap"&gt;
+        &lt;/object&gt;
+        &lt;object type="image/svg+xml" data="buttonA.svg" usemap="#ButtonMap"&gt;
+	  &lt;img src="buttonA.png" alt="A sample button."/&gt;
+        &lt;/object&gt;
+        &lt;map name="ButtonMap"&gt;
+	  &lt;area shape="rect" coords="0,0,120,100" href="http://www.w3.org/Graphics/SVG/" alt="Button"/&gt;
+        &lt;/map&gt;
+      </pre>
+
+      <object type="image/png" data="./An SVG Button Test Page2_files/buttonA.png" usemap="#ButtonMap">
+      </object>
+      <object type="image/svg+xml" data="./An SVG Button Test Page2_files/buttonA.svg" usemap="#ButtonMap">
+	<img src="./An SVG Button Test Page2_files/buttonA.png" alt="A sample button.">
+      </object>
+      <map name="ButtonMap">
+	<area shape="rect" coords="0,0,120,100" href="http://www.w3.org/Graphics/SVG/" alt="Button">
+      </map>
+
+      <ul>
+	<li>
+	  SVG Fails:
+	  Chrome 9beta (PNG fails too),
+	  Firefox 4beta,
+	  Opera 11.
+	</li>
+	<li>
+	  SVG Unknown:
+	  IE9.
+	</li>
+	<li>
+	  PNG: IE8 doesn't support maps.
+	</li>
+      </ul>
+
+      <p>
+	It was suggested at the SVG WG meeting that one could use an
+	event handler directly on the object. This works for PNGs but
+	not for SVGs in most browsers.
+      </p>
+
+      <pre>	&lt;object type="image/png" data="buttonA.png"
+		onclick="alert('PNG Button Pressed')"
+		onmouseover="this.style.cursor='crosshair'"&gt;
+	  Your browser does not support PNG! Impossible!
+	&lt;/object&gt;
+	&lt;object type="image/svg+xml" data="buttonA.svg"
+		onclick="alert('SVG Button Pressed')"
+		onmouseover="this.style.cursor='crosshair'"&gt;
+	  &lt;img src="buttonA.png" alt="A sample button."/&gt;
+	&lt;/object&gt;
+      </pre>
+
+      <object type="image/png" data="./An SVG Button Test Page2_files/buttonA.png" onclick="alert(&#39;PNG Button Pressed&#39;)" onmouseover="this.style.cursor=&#39;crosshair&#39;">
+	Your browser does not support PNG! Impossible!
+      </object>
+      <object type="image/svg+xml" data="./An SVG Button Test Page2_files/buttonA.svg" onclick="alert(&#39;SVG Button Pressed&#39;)" onmouseover="this.style.cursor=&#39;crosshair&#39;" style="cursor: crosshair;">
+	<img src="./An SVG Button Test Page2_files/buttonA.png" alt="A sample button.">
+      </object>
+
+      <ul>
+	<li>
+	  SVG Link Fails:
+	  Chrome 9beta (also doesn't change cursor on mouse over),
+	  Firefox 4beta,
+	  Opera 11.
+	</li>
+	<li>
+	  SVG Link Unknown:
+	  IE9.
+	</li>
+	<li>
+	  PNG: IE8 shows crosshair on second PNG (fallback) but not on first.
+	</li>
+      </ul>
+
+    <h1>An HTML file referenced via &lt;object&gt; or &lt;iframe&gt;</h1>
+
+      <p>
+	At the SVG WG meeting, it was asked how are HTML pages handled
+	when included via &lt;object&gt; or &lt;iframe&gt;.
+      </p>
+
+      <pre>	&lt;a href="http://www.w3.org/Graphics/SVG/" target="_blank"&gt;
+          &lt;object type="text/html" data="dummy.html" style="color: green"&gt;
+	    Your browser does not support HTML. C'est dommage.
+	  &lt;/object&gt;
+	&lt;/a&gt;
+	&lt;a href="http://www.w3.org/Graphics/SVG/" target="_blank"&gt;
+	  &lt;iframe src="dummy.html" style="color: purple" seamless="seamless"/&gt;
+	&lt;/a&gt;
+      </pre>
+
+      <a href="http://www.w3.org/Graphics/SVG/" target="_blank">
+        <object type="text/html" data="./An SVG Button Test Page2_files/dummy.html" style="color: green">
+	  Your browser does not support HTML. C'est dommage.
+	</object>
+      </a>
+      <a href="http://www.w3.org/Graphics/SVG/" target="_blank">
+	<iframe src="./An SVG Button Test Page2_files/dummy.html" style="color: purple" seamless="seamless"></iframe>
+      </a>
+
+      <ul>
+	<li>
+	  &lt;a&gt; link fails:
+	  Chrome 9beta (PNG fails too),
+	  Firefox 4beta,
+	  Opera 11.
+	</li>
+	<li>
+	  &lt;a&gt; link works:
+	  IE9 (?).
+	</li>
+	<li>
+          &lt;a&gt; link works on second iframe in IE8.
+	  Both IE8 and Firefox 4beta show www.w3.org address at bottom
+	  of browser window, even when you cannot follow link.
+        </li>
+	<li>
+	  Note: the W3C validator indicates that an &lt;iframe&gt; can
+	  not be a descendent of the &lt;a&gt; element.
+        </li>
+      </ul>
+
+    <h1>An SVG button with CSS styling</h1>
+
+      <p>
+     	The next step would be to style the color of the button via
+      	CSS from HTML. SVG has the property <i>color</i> which seems
+      	to allow this but I can't find an example. One could then
+      	change the color via a script in the HTML or style multiple
+      	buttons differently. Setting fill="currentColor" does work
+      	with internal style sheets. You can also have the HTML and SVG
+      	refer to the same external style sheet... but this still
+      	doesn't help in referencing the same SVG file
+	multiple times but applying different styles.
+      </p>
+      <p>
+	From SVG 1.1F2, section 11.2:
+
+	"currentColor: Indicates that painting is done using the
+        current animated value of the color specified by the ‘color’
+        property. This mechanism is provided to facilitate sharing of
+        color attributes between parent grammars such as other
+        (non-SVG) XML. This mechanism allows you to define a style in
+        your HTML which sets the ‘color’ property and then pass that
+        style to the SVG user agent so that your SVG text will draw in
+        the same color."
+      </p>
+      <p>
+	As clarified at the Feb. 9th, 2010 SVG WG meeting, styling
+	does not work across document boundaries.  This is the
+	expected behavior. The &lt;iframe&gt; tag has an
+	attribute <i>@seemless</i> that allows styling to work across
+	boundaries, see:
+	<a href="http://www.w3.org/TR/html5/the-iframe-element.html#the-iframe-element">HTML WG document</a>.
+	This does not appear to work either.
+      </p>
+
+      <pre>	&lt;a href="http://www.w3.org/Graphics/SVG/"&gt;
+	  &lt;img src="buttonB.svg" alt="A sample SVG button." style="color: orange"/&gt;
+	&lt;/a&gt;
+	&lt;a href="http://www.w3.org/Graphics/SVG/"&gt;
+	  &lt;object type="image/svg+xml" data="buttonB.svg" style="color: green"&gt;
+	    Your browser does not support SVG. C'est dommage.
+	  &lt;/object&gt;
+	&lt;/a&gt;
+        &lt;iframe src="buttonB.svg" style="color: purple" width="240" height="100" seamless="seamless"/&gt;
+      </pre>
+      <pre>	Inside SVG:
+	&lt;rect
+	   width="220"
+	   height="80"
+	   ry="40"
+	   x="10"
+	   y="10"
+	   style="fill:currentColor;stroke:none" /&gt;
+      </pre>
+
+      <a href="http://www.w3.org/Graphics/SVG/" target="_blank">
+	<img src="./An SVG Button Test Page2_files/buttonB.svg" alt="A sample SVG button." style="color: orange">
+      </a>
+      <object type="image/svg+xml" data="./An SVG Button Test Page2_files/buttonB.svg" style="color: green">
+	Your browser does not support SVG. C'est dommage.
+      </object>
+      <iframe src="./An SVG Button Test Page2_files/buttonB.svg" style="color: purple" width="240" height="100" seamless="seamless"></iframe>
+
+      <ul>
+	<li>
+	  Styling Fails
+	  Chrome 9beta,
+	  Firefox 4beta,
+	  Opera 11.
+	</li>
+	<li>
+	  Styling Unknown:
+	  IE9.
+	</li>
+      </ul>
+
+      <p>
+	Styling via currentColor does works with inlined SVG.
+      </p>
+
+      <pre>        svg.Orange {
+          color: orange;
+        }
+        svg.Purple {
+          color: purple;
+        }
+        ...
+	&lt;a href="http://www.w3.org/Graphics/SVG/"&gt;
+          &lt;svg class="Orange" ... &gt;
+ 	    &lt;use xlink:href="buttonB.svg#Root"/&gt;
+	  &lt;/svg&gt;
+	&lt;/a&gt;
+	&lt;a href="http://www.w3.org/Graphics/SVG/"&gt;
+          &lt;svg class="Purple" ... &gt;
+	  &lt;defs&gt;
+	    &lt;text id="TheColor"&gt;Purple&lt;/text&gt;
+	  &lt;/defs&gt;
+	  &lt;use xlink:href="buttonBtext.svg#Root"/&gt;
+        &lt;/svg&gt;
+      </pre>
+
+      <a href="http://www.w3.org/Graphics/SVG/">
+      <svg class="Orange" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="240" height="100">
+	<use xlink:href="buttonB.svg#Root"></use>
+      </svg>
+      </a>
+      <a href="http://www.w3.org/Graphics/SVG/">
+      <svg class="Purple" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="240" height="100">
+	<defs>
+	  <text id="TheColor">Purple</text>
+	</defs>
+	<use xlink:href="buttonBtext.svg#Root"></use>
+      </svg>
+      </a>
+
+      <ul>
+	<li>
+	  Styling Works:
+	  Firefox 4beta,
+	  Opera 11 (text underlined).
+	</li>
+	<li>
+	  Styling Fails:
+	  Chrome 9 beta (inline SVG works but referencing external SVG doesn't).
+	</li>
+	<li>
+	  Styling Unknown:
+	  IE9.
+	</li>
+      </ul>
+      <ul>
+	<li>
+	  tref Works:
+	  Opera 11.
+	</li>
+	<li>
+	  tref Fails:
+	  Chrome 9 beta,
+	  Firefox 4beta.
+	</li>
+	<li>
+	  tref Unknown:
+	  IE9.
+	</li>
+      </ul>
+
+      <p>
+	See below for a way to style external SVG from HTML (using
+	simple JavaScript).
+      </p>
+
+    <h1>An SVG button with internal events</h1>
+
+      <p>
+	Clicking on the SVG button generates an alert. This step
+	gives up on having a PNG fallback as the SVG handles mouse
+	events internally, something a PNG can't do. We also
+	cannot use &lt;img&gt; as it cannot handle mouse events.
+      </p>
+
+      <pre>        &lt;object type="image/svg+xml" data="buttonC.svg"&gt;
+	  Your browser does not support SVG. C'est dommage.
+	&lt;/object&gt;
+      </pre>
+      <pre>	Inside SVG:
+	cursor="pointer"
+	onclick="alert('SVG Button Pressed')"
+      </pre>
+
+      <object type="image/svg+xml" data="http://tavmjong.free.fr/SVG/BUTTON_TEST/buttonC.svg">
+	Your browser does not support SVG. C'est dommage.
+      </object>
+
+      <ul>
+	<li>
+	  Works:
+	  Chrome 9 beta,
+	  Firefox 4beta,
+	  Opera 11.
+	</li>
+	<li>
+	  Unknown:
+	  IE9.
+	</li>
+      </ul>
+
+    <h1>An SVG button with two states and with <a href="http://www.w3.org/TR/wai-aria/">ARIA</a></h1>
+
+      <p>
+	Now we are forced to use JavaScript to keep track of the two
+	states. The current state is kept in the value
+	<i>aria-pressed</i>.  One should note that using
+	<i>aria-pressed</i> results in a non-valid SVG file
+	according to the W3C validator.
+      </p>
+
+      <object type="image/svg+xml" data="http://tavmjong.free.fr/SVG/BUTTON_TEST/buttonE.svg">
+        Your browser does not support SVG. C'est dommage.
+      </object>
+
+      <ul>
+	<li>
+	  Works:
+	  Chrome 9 beta,
+	  Firefox 4beta,
+	  Opera 11.
+	</li>
+	<li>
+	  Unknown:
+	  IE9.
+	</li>
+      </ul>
+
+    <h1>Reusing external SVG buttons</h1>
+
+      <p>
+	At first it appeared to be quite a pain to use the same SVG
+	button multiple times on a web page as it appeared that the
+	JavaScript needed to be in the HTML. This is a demo of my
+	original method using JavaScript in the HTML. It uses inline
+	SVG referencing SVG fragments from an external file.
+      </p>
+
+    <p>Click on buttons to change state.</p>
+
+    <svg class="Purple" id="purple" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="240" height="100" role="button" aria-pressed="false">
+      <use xlink:href="buttonF.svg#Button"></use>
+    </svg>
+
+    <p>The button is <b id="status_purple">OFF</b>.</p>
+
+    <svg class="Orange" id="orange" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="240" height="100" role="button" aria-pressed="false">
+      <use xlink:href="buttonF.svg#Button"></use>
+    </svg>
+
+    <p>The button is <b id="status_orange">OFF</b>.</p>
+
+    <p>Referencing external SVG fails in Chrome 11, works in Opera 11
+      and Firefox 4beta.</p>
+
+    <p>
+      A suggestion by Erik at the Feb 16th SVG WG meeting gave me the
+      key ingredient that allows the JavaScript to be kept in the
+      external SVG (and also to style the SVG from the HTML). The key
+      is to use <i>window.frameElement.id</i> to grab the id of the
+      object that is referencing the SVG file. The <i>color</i> from
+      the objects style attribute can be grabbed via
+      <i>window.frameElement.style.color</i>, and then JavaScript can
+      be used to set the button's color in an init() function. And
+      while we are at it, custom text can be grabbed from &lt;param&gt;s
+      inside the &lt;object&gt;.
+    </p>
+
+    <p>Style from &lt;object&gt;:</p>
+    <object type="image/svg+xml" data="http://tavmjong.free.fr/SVG/BUTTON_TEST/buttonG.svg" id="lightblue" style="color: lightblue">
+    </object>
+
+    <p>The button is <b id="status_lightblue">Off</b>.</p>
+
+    <p>Style from &lt;object&gt; and custom text from &lt;param&gt;s:</p>
+    <object type="image/svg+xml" data="http://tavmjong.free.fr/SVG/BUTTON_TEST/buttonG.svg" id="pink" style="color: pink">
+	<param id="TextOn" name="TextOn" value="I am on">
+	<param id="TextOff" name="TextOff" value="I am off">
+    </object>
+
+    <p>The button is text <b id="status_pink">Off</b>.</p>
+
+    <p>Style from CSS (in SVG file):</p>
+    <object type="image/svg+xml" data="http://tavmjong.free.fr/SVG/BUTTON_TEST/buttonG.svg" id="default">
+    </object>
+
+    <p>The button is <b id="status_default">Off</b>.</p>
+
+    <p>Styling from CSS works in Chrome 11, Opera 11
+      and Firefox 4beta.</p>
+
+    <h1>Further issues to investigate</h1>
+
+    <ol>
+      <li>
+	How to give SVG buttons different text from HTML.  At the SVG
+	WG meeting, Chris suggested &lt;tref&gt; could work here.  But
+	this doesn't actually work when an SVG is reused since there
+	is no way to change what the &lt;tref&gt;'s HREF (without
+	using JavaScript). Doug's Parameters will take care of this
+	in the future. SOLVED, see above.
+      </li>
+      <li>
+	Using inlined SVG it is possible to reference external
+	SVG and style the external SVG from the HTML. However,
+	it means that the JavaScript that controls the state
+	of a button cannot be kept in the external file.
+	SOLVED, see above.
+      </li>
+      <li>
+	How to use &lt;use&gt; with button scripts. (Firefox, Opera,
+	Chrome return different values for <i>event.target</i> when
+	a butten is cloned using &lt;use&gt;, <i>SVGUseElement</i>
+	vs. <i>SVGElementInstance</i>.)
+      </li>
+    </ol>
+
+  
+
+</body></html>

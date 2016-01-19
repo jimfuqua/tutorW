@@ -1,0 +1,82 @@
+html {
+   overflow: hidden;
+}
+
+body {
+background:#5F9EA0;  /*CadetBlue*/
+color:black;
+font-family:Verdana, "Myriad Web", Syntax, sans-serif;
+font-size: 1em;
+margin: 0;
+padding: 0;
+height:99%;
+}
+
+h1{
+text-align: center;
+font-size:1.5em;
+}
+
+#answer_block{
+    text-align: center;
+    height:90%;
+}
+
+#student_identifier_div{
+font-size:1.2em;
+text-align: center;
+}
+
+.answer_buttons{
+height:100%;
+width:40%;
+background-color:lightblue;
+border:outset 6px black;
+}
+
+.answer_buttons:hover{
+height:100%;
+width:40%;
+background-color:lightblue;
+border:inset 6px yellow;
+}
+
+#left{
+color:red;
+margin-right:5%;
+}
+
+#right{
+margin-left:5%;
+}
+
+#answer_block{
+position:absolute;
+left:10%;
+width:80%;
+height:60%;
+/*border: solid thin red;*/
+}
+
+#instruction_div{
+margin-top:3em;
+border: solid thin red;
+width: 46em;
+margin-left:auto;
+margin-right:auto;
+background-color:lightblue;
+}
+
+#instructions{
+border: solid thin red;
+position:absolute;
+width: 50%;
+margin-left: 25%;
+top: 40%;
+text-align: center;
+font-family:Verdana, "Myriad Web", Syntax, sans-serif;
+font-size: 1.5em;
+font-weight: bold;
+padding: 1em;
+background-color:lightblue;
+}

@@ -1,0 +1,23 @@
+HOW TO CHECK A LESSON
+
+1.  Eliminate all php errors.
+2.  Eliminate all js errors.
+
+3.  Check data in tCompleted.
+        Was tC_Question_and_Response responsive?
+            It does not need a "Response" if there are only two options.
+            because tC_Correct discloses the response.
+            On math problems should have both.
+        tC_CompletedTimestamp have data?
+        tC_ServerTimeStarted have data?
+        tC_ClientTimeStarted have data?
+        tC_Time_client_processed_answer have data?
+        Have you checked all paths through lesson?
+
+4.  Check data in tAssignments.
+        Was tA_RepsTowardM incremented?
+        tA_ErrorsMade correct on correct?
+        tA_ErrorsMade correct on error with tA_RepsTowardM set to zero 0?
+        tA_LocalDateTime
+        tA_Post_date
+        Have you checked all paths through lesson?

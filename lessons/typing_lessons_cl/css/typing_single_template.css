@@ -1,0 +1,189 @@
+* {padding:0; margin:0;}
+
+body {
+    background: #119999;
+    color: black;
+    /*
+        font-family:	Georgia, Minion Web, Palatino, Book Antiqua, Utopia, Times New Roman, serif;
+        font-family:	Myriad Web, Arial, Helvetica, sans-serif;.*/
+    font-family:	Verdana, "Myriad Web", Syntax, sans-serif;
+    /*font-size:	1em;
+    font-weight:	normal;
+    word-spacing:	normal;
+    letter-spacing:	normal;
+    text-transform:	none;
+    /*  font-size-adjust: .58;  */
+    }
+
+    div#center_div{
+    /*text-align:center;*/
+    margin-left:auto;
+    margin-right:auto;
+    /*border:solid thin yellow;*/
+    }
+
+div#div_first_line{
+    position:relative;
+    margin-top:3%;
+    /*border:solid thin green;*/
+    }
+
+
+    span#span_first_line{
+    margin-left:auto;
+    margin-right:auto;
+    /*border:solid thin blue;*/
+    }
+
+
+    div#Title1 {
+    font-size:x-large;
+    text-align:center;
+    border: none;
+    background:inherit;
+    width: 20em;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:1em;
+    /*border:solid thin red;*/
+    }
+
+
+    div#student_identifier {
+    font-size:x-large;
+    text-align:center;
+    border: none;
+    background:inherit;
+    width: 20em;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:.7em;
+    /*border:solid thin red;*/
+    }
+
+    #typing_lesson_display{
+    border: .2em ridge;
+    cursor:cursor: not-allowed;
+    border-color: #ffff99;
+    margin-top:2em;
+    padding-top:2em;
+    padding-right:1.5em;
+    padding-bottom:2em;
+    padding-left:1.5em;
+    width: 80%;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:4%;
+    margin-bottom:2em;
+    }
+
+    .line_display{
+    position:relative;
+    padding:.1em;
+    width:80%;
+    margin:.03em 1em .1em 0em;
+    border:solid thin red;
+    font-size:1.3em;
+    /*background-color:yellow;*/
+    }
+
+    input#displayLine1{
+    background:#F9F9B7;
+    cursor:url(no.gif),no-drop;
+    }
+
+    input.displayLine2{
+      width:20em;
+      margin-left:.2em;
+    }
+
+    .InputLines{
+    min-width: 23em;
+    margin:.1em 0em .1em .2em;
+    font-size:1.3em;
+    cursor:url(no.gif),no-drop;
+    }
+
+    div#BottomData{
+    width:80%;
+    margin-left:auto;
+    margin-right:auto;
+    }
+
+    div#bottom_buttons{
+    width:80%;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+    }
+
+    .WPM{
+    width:3em;
+    height:1.7em;
+    background:#F9F9B7;
+    border:solid thin red;
+    margin-left:0em;
+    cursor:url(no.gif),no-drop;
+    font-size:1em;
+    text-align:center;
+    }
+
+    .Errors_made{
+    width:3em;
+    height:1.7em;
+    background:#F9F9B7;
+    border:solid thin red;
+    margin-left:0em;
+    cursor:url(no.gif),no-drop;
+    font-size:.9em;
+    text-align:center;
+    padding:.1em;
+    }
+
+    .Labels{
+    background: #009999;
+    border:none;
+    width:3em;
+    font-size:.9em;
+    cursor:url(no.gif),no-drop;
+    }
+
+    #CorrectKeyStrokes{
+    width:3em;}
+
+
+    .data{
+    background:#85B2A7;
+    border:none;
+    width:3em;
+    font-size:.9em;
+    margin-right:2em;
+    cursor:url(no.gif),no-drop;
+    padding-left:.3em;
+   }
+
+    #Date_Display{
+    background: #85B2A7;
+    border:none;
+    width:12em;
+    font-size:.9em;
+    margin-right:2em;
+    cursor:url(no.gif),no-drop;}
+
+    #Date_DisplayLabel{margin-left:10em;}
+
+    #bottom_line_1{
+    text-align:center;
+    margin-bottom:1em;
+    }
+    #bottom_line_2{
+    text-align:center;
+    margin-top:1em;
+    margin-bottom:1em;
+    }
+    #t_err{margin-right:0em;}
+
+    #park{
+    border:none;
+    background: #009999;
+    }

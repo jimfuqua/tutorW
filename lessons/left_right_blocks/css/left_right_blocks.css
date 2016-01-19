@@ -1,0 +1,116 @@
+html {
+   overflow: hidden;
+}
+
+body {
+background:#5F9EA0;  /*CadetBlue*/
+color:black;
+font-family:Verdana, "Myriad Web", Syntax, sans-serif;
+font-size: 1em;
+margin: 0;
+padding: 0;
+height:99%;
+}
+
+#div_quit_valid{
+ text-align: center;
+}
+
+h1{
+text-align: center;
+font-size:1.5em;
+}
+
+div#CenterDiv{
+    position:relative;
+    top:3em;
+    width: 80%;
+    height: 13em;
+    border:0;
+    margin-top: 3em;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #5F9EA0;  /*CadetBlue*/
+    border:double thin yellow;
+}
+
+div#outer_error_notice_div{
+    border:double thick red;
+    position: absolute;
+    top: 19%;
+    height: 30%;
+    width: 50%;
+    left: 25%;
+    display:none;
+}
+
+div#error_notice_div{
+    position: absolute;
+    top: 0%;
+    height: 70%;
+    width: 98.8%;
+    left: 0%;
+    background-color: white;
+    display:none;
+    text-align: center;
+    font-size:1.2em;
+    padding-top: 2em;
+    border:double thick yellow;
+}
+
+#answer_block{
+    text-align: center;
+    height:90%;
+}
+
+#student_identifier_div{
+font-size:1.2em;
+text-align: center;
+}
+
+.answer_buttons{
+height:90%;
+width:40%;
+background-color:lightblue;
+color: lightblue;
+border:outset 6px black;
+}
+
+.answer_buttons:hover{
+height:90%;
+width:40%;
+background-color:lightblue;
+color: lightblue;
+border:inset 6px yellow;
+}
+
+#left{
+margin-right:5%;
+}
+
+#right{
+margin-left:5%;
+}
+
+#answer_block{
+position:absolute;
+left:10%;
+width:80%;
+height:60%;
+/*border: solid thin red;*/
+}
+
+#instruction_div{
+margin-top:3em;
+border: solid thin red;
+width: 46em;
+margin-left:auto;
+margin-right:auto;
+background-color:lightblue;
+}
+
+#instruction_h1{
+/*border: solid thin red;*/
+}

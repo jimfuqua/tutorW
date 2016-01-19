@@ -1,0 +1,18 @@
+a#quit_button_top_left{
+    position:fixed;
+    top:.5em;
+    left:.5em;
+    z-index:99;
+    text-align:center;
+}
+
+input#image-exit        {position:fixed;top:.5em;left:.5em;border:none;z-index:99;}
+a#help_button         {position:fixed;top:.5em;left: 96%;border:none;z-index:99;}
+img#image-help        {position:fixed;top:.5em;left: 96%;border:none;z-index:99;}
+a#clue_button         {position:fixed;top:10em;left: 93%;border:none;z-index:99;}
+img#clue              {position:fixed;top:96%;left: 95%;border:none;z-index:99;}
+
+#div_quit_valid{
+ text-align: center;
+ border:none;
+}

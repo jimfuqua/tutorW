@@ -1,0 +1,95 @@
+/* Style_800.css */
+/* Type Selectors */
+ body {
+ 	  background: white; 
+	  color: black; 
+	  font-family:  "new century schoolbook",  serif ; 
+	  font-size: 13pt;
+          width: auto;
+	  border: 0;
+	  margin-left:5%;
+	  padding: 0;
+	  float: none;
+	  }
+          
+#center_div{
+position:absolute;
+top:8em;
+border:solid thin red;
+}
+
+#Title1{
+position:absolute;
+top:0em;
+left:auto;
+right:auto;
+border:solid thin blue;
+}
+
+#student_identifier{
+position:absolute;
+top:6em;
+left:auto;
+right:auto;
+height:auto;
+border:solid thin red;
+}
+
+#input_line_stack{
+position:absolute;
+top:1em;
+left:1%;
+width:15em;
+padding:0;
+border:solid thin yellow;
+}
+#data_stack{
+position:absolute;
+top:10em;
+left:60%;
+border:solid thin maroon;
+}
+
+#WPM_stack{
+border:solid thin fuchsia;
+position:absolute;
+top:2em;
+left:22em;
+}
+
+#Errors_stack{border:solid thin teal;
+position:absolute;
+top:2em;
+left:25em;}
+
+#typing_lesson_display{
+position:absolute;
+top:2em;
+left:0;
+width:37em;
+border:solid thin black;
+}
+
+#BottomData{
+position:absolute;
+top: 6em;
+border:solid thin gray;
+display:none;
+}
+
+#lesson_menu_button {display:none;}
+#next_lesson_button {display:none;}
+#repeat_lesson_button {display:none;}
+#print_button {display:none;}
+#quit_button_top_left {display:none;}
+#help_button{display:none;}
+#displayLine1{width:auto;}
+
+input.InputLines{
+width:14em;
+padding:0;
+margin:0;
+border:solid thin black;
+}
+
+/* END css */	   

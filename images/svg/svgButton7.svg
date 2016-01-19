@@ -1,0 +1,33 @@
+< !-- This shows a push button. -- > 
+	< g transform="translate(0,0)" 
+		onmousedown="MBHMIProtocol.WriteToggleImmediate('PB2', 'PL2');" > 
+
+		< !-- The following filter is used to add a drop shadown. -- > 
+		< filter id="PB2dropshadow" > 
+			< feGaussianBlur stdDeviation="2" > 
+			< /feGaussianBlur > 
+		< /filter > 
+							
+		< !-- This applies a linear colour gradient across the button. -- > 
+		< linearGradient id="PB2Gradient" x1="0" y1="1" x2="0" y2="0" > 
+			< stop offset="50%" stop-color="red" / > 
+			< stop offset="100%" stop-color="white" / > 
+		< /linearGradient > 
+
+		< !-- This rectangle is used for the drop shadown and needs to match 
+			the size used for the button. -- > 
+		< rect x="7" y="7" width="75" height="75" rx="15"
+			fill="grey" stroke="none" stroke-width="0px" 
+			filter="url(#PB2dropshadow)"/ > 
+
+		< !-- This is the actual button. The button "class" connects it with the
+			css style which animates it. -- > 
+		< g class="svgbuttondef" > 
+			< rect x="0" y="0" width="75" height="75" rx="15"
+				fill="url(#PB2Gradient)" stroke-width="5px"/ > 
+
+	 		< !-- This is the text label. -- > 
+			< text x="15" y="45" font-size="24" > PB2< /text >  
+		< /g > 
+	< /g > 
+

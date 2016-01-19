@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="100%" height="100%" viewBox="0 0 480 360"
+  xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <defs>
+    <linearGradient id="button_surface" gradientUnits="objectBoundingBox"
+      x1="1" x2="1" y1="0" y2="1">
+      <stop stop-color="#434343" offset="0"/>
+      <stop stop-color="#000000" offset="0.67"/>
+    </linearGradient>
+
+    <linearGradient id="virtual_light" gradientUnits="objectBoundingBox"
+      x1="0" x2="0" y1="0" y2="1">
+      <stop stop-color="#EEEEEE" offset="0" stop-opacity="1"/>
+      <stop stop-color="#EEEEEE" offset="0.4" stop-opacity="0"/>
+    </linearGradient>
+
+    <linearGradient id="reflection_fill" gardientUnits="objectBoundingBox"
+      x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#FFFFFF" offset="0" stop-opacity="1"/>
+      <stop stop-color="#FFFFFF" offset="0.2" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- object to mask the reflection -->
+    <rect id="reflection_mask" x="0" y="0" width="220" height="100"
+      fill="url(#reflection_fill)"/>
+
+    <!-- reflection to match virtual lighting effect -->
+    <filter id="reflection" filterUnits="objectBoundingBox"
+      x="-0.1" y="-0.1" width="1.2" height="1.2">
+
+      <!-- flip the original object -->
+      <feTransform in="SourceGraphic" transform="matrix(1,0,0,-1,0,182)"
+        result="reflected_graphic"/>
+
+      <!-- specify the mask and translate it -->
+      <feImage xlink:href="#reflection_mask" result="filter_mask"/>
+      <feTransform in="filter_mask" transform="translate(0 182)"
+        result="filter_mask"/>
+
+      <!-- combine the mask and the flipped object -->
+      <feComposite in="reflected_graphic" in2="filter_mask" operator="in"/>
+    </filter>
+  </defs>
+
+  <!-- button content -->
+  <g filter="url(#reflected_graphic)">
+    <rect x="10" y="10" rx="15" ry="15" width="150" height="80"
+        fill="url(#button_surface)" stroke="#363636"/>
+
+    <text x="30" y="55" fill="white"
+      font-family="Tahoma" font-size="20" font-weight="500">
+      SVG Button
+    </text>
+
+    <rect x="12" y="12" rx="15" ry="15" width="146" height="76"
+      fill="url(#virtual_light)" stroke="#FFFFFF" stroke-opacity="0.4"/>
+  </g>
+</svg>

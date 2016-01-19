@@ -1,0 +1,22 @@
+body{
+    background: cadetblue;
+}
+
+h1{
+    text-align:center;
+}
+
+#outer-login{
+border: double 3px red;
+    width: 52%;
+    margin-top: 8%;
+    margin-left: 25%;
+}
+
+#login{
+    font-size: 1.3em;
+    background: #79c3c4;
+    border: double thin yellow;
+    padding: 2em;
+
+}

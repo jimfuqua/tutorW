@@ -1,0 +1,6 @@
+// Check a php file for errors
+php -l file_name;  // that is an ell not a one.
+
+//
+
+

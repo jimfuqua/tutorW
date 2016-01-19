@@ -1,0 +1,18 @@
+{
+  "env": {
+    //enable browser environment
+    "browser": 1
+  },
+    "ecmaFeatures": {
+        "blockBindings": true,
+        "arrowFunctions": true,
+        "jsx": true
+    },
+    "rules": {
+        "semi": 2
+    },
+    "globals": {
+      $: true,
+      Dialog: true
+  }
+}

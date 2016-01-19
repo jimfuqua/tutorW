@@ -1,0 +1,212 @@
+/*<?php
+header('Content-type: text/javascript');
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+$_SESSION['tC_ClientTimeStarted'] = time()+0;
+$_SESSION["tC_ServerTimeStarted"] = time()+0;
+$logFile = fopen("/var/www/jimfuqua/tutor/logs/horizontal_vertical_diagnonal_js", "w");
+// This data is erroneous on first lesson after login.
+$v = var_export($_SESSION, true);
+    fwrite($logFile, "\n" .  __LINE__ . ' horizontal_vertical_diagnonal_js $_SESSION =:' .  $v . " \n");
+?>*/
+var CorrectAnswer,
+    AnswerCorrect,
+    errors_made = 0,
+    tC_ClientTimeStarted = new Date().getTime(),
+    serverTimeStarted = '<?php echo $_SESSION["tC_ServerTimeStarted"] ?>',
+    lesson_id = '<?php echo $_SESSION["lesson_id"] ?>',
+    today = new Date(),
+    tA_S_ID = 'qqq4q3q',
+    tC_Question_and_Response,
+    tC_Time_client_processed_answer = today.getTime(),
+    lessons = [],
+    questions = [],
+    tC_More_data_about_response = "",
+    AnswerEntered;
+
+$('#quit_button_top_left').click(function () {
+    'use strict';
+    alert('Press Alt-F4 to close any window. ');
+});
+
+function exit_from_lesson() {
+    'use strict';
+    //var post_to = "/tutor/scripts/cAssignment_get_next_lesson.php",
+    //    data = {'tA_S_ID': tA_S_ID};
+    // THIS IS THE EXIT FROM THIS LESSON
+    /** Could not get the next four lines to go to the next lesson.
+        I wanted to do so because it could carry tA_S_ID to cAssignment
+        thus avoiding session variables.  Needs more work because it should work
+        when coupled with window.location and data returned.
+    **/
+    //$.post("/tutor/scripts/cAssignment_get_next_lesson.php", {'tA_S_ID': tA_S_ID});
+    //$.post(post_to, {'tA_S_ID': tA_S_ID}).done(function( data ) {
+    //    alert( "Data Loaded: " + data );
+    //});
+    // Either of the following lines work.  Which is best?
+    //document.location.href = "/tutor/scripts/cAssignment_get_next_lesson.php";
+    window.location.href = "/jimfuqua/tutor/src/scripts/cAssignment_get_next_lesson.php";
+}
+
+function update_tCompleted() {
+    'use strict';
+    var question_and_response,
+        post_string,
+        post_to;
+    question_and_response = $("#instruction_h1").text();
+    post_string = {
+        "tC_Correct" : AnswerCorrect,
+        "tC_ClientTimeStarted": tC_ClientTimeStarted,
+        "tC_Time_client_processed_answer" : (new Date()).getTime(),
+        "tC_Question_and_Response" : question_and_response,
+        "tC_More_data_about_response" : "none",
+        "tA_ErrorsMade" : errors_made
+    };
+    post_to = "http://localhost/jimfuqua/tutor/scripts/update_tCompleted.php";
+    // this creates a new entry in tCompleted.
+    $.post(post_to, post_string);
+}
+
+function adjust_tARepsTowardM(new_value) {
+    'use strict';
+    var post_to = "http://localhost/jimfuqua/tutor/src/scripts/update_tAssignments.php",
+        post_string = {
+            "tA_RepsTowardM" : new_value,
+            "lesson_id" : lesson_id,
+            "sender" : "horizontal_vertical_diagonal"
+        };
+    $.post(post_to, post_string);
+}
+
+function registerCorrectAnswer() {
+    'use strict';
+    if (errors_made === 0) {
+        adjust_tARepsTowardM("Plus1");
+    } else {
+        adjust_tARepsTowardM("0");
+    }
+    update_tCompleted();
+    exit_from_lesson();
+}
+
+function registerWrongAnswer() {
+    'use strict';
+    var msg;
+    errors_made = errors_made + 1;
+    adjust_tARepsTowardM("0");
+    tC_Question_and_Response = "CorrectAnswer = " + CorrectAnswer
+        + ", AnswerEntered = " + AnswerEntered;
+    update_tCompleted();
+    msg = "<p>The line is " + CorrectAnswer;
+    msg = msg + ". <br /><br /> Please press the " + CorrectAnswer + " button.</p>";
+    $("#error_message").append(msg);
+    $("#error_message").show();
+    $.post("http://localhost/jimfuqua/tutor/src/scripts/increment_tA_ErrorsMade.php");
+    return false;
+}
+
+function shuffleButtons() {
+    'use strict';
+    var randomNumber = Math.floor((Math.random() * 4) + 1);
+    console.log("randomNumber = " + randomNumber);
+    if (randomNumber === 1) { // vertical first
+        $("#horizontal_button").insertAfter("#vertical_button"); // V,H,D
+        $("#diagonal_button").insertAfter("#horizontal_button");
+    }
+    if (randomNumber === 2) { //
+        $("#horizontal_button").insertAfter("#diagonal_button"); // V,D,H
+        $("#diagonal_button").insertAfter("#vertical_button");
+    }
+    //                                                   Default is H,V,D
+    if (randomNumber === 4) { //
+        $("#horizontal_button").insertAfter("#diagonal_button"); // D,H,V
+        $("#vertical_button").insertAfter("#vertical_horizontal");
+    }
+}
+
+function onClick(event) {
+    'use strict';
+    var buttonClicked = event.target.id;
+    console.log("buttonClicked = " + buttonClicked);
+    AnswerCorrect = (buttonClicked === CorrectAnswer);
+    if (AnswerCorrect === true) {
+        registerCorrectAnswer(CorrectAnswer, event.target.id); // ? event.data.CorrectAnswer
+    } else {
+        registerWrongAnswer(CorrectAnswer, event.target.id);
+    }
+    return false;
+}
+
+function drawVericalLine() {
+// Draw a vertical line.
+        ctx.beginPath();
+        ctx.moveTo(130,0);
+        ctx.lineTo(130,260);
+        ctx.strokeStyle="#FF0000";
+        ctx.lineWidth=5;
+        ctx.stroke();
+        CorrectAnswer = 'vertical';
+}
+
+function drawHorizontalLine() {
+// Draw a horizontal line.
+        ctx.beginPath();
+        ctx.moveTo(0,130);
+        ctx.lineTo(260,130);
+        ctx.strokeStyle="#FF0000";
+        ctx.lineWidth=5;
+        ctx.stroke();
+        CorrectAnswer = 'horizontal';
+}
+
+function displayLesson() {
+    'use strict';
+    var randomNumber = Math.floor((Math.random() * 6) + 1);
+    // Math.floor rounds down to the nearest integer. The +1 insures not 0.
+    // Math.random() * 6 can generate a fraction approaching 6 but not 6.
+    console.log("146 randomNumber = " + randomNumber);
+    var c=document.getElementById("myCanvas");
+    var ctx=c.getContext("2d");
+    ctx.fillStyle="#5F9EA0"; /*CadetBlue*/
+    ctx.fillStyle = "#9ea7b8";
+
+    if (randomNumber        === 1) {  // vertical is the correct answer.
+        drawVericalLine();
+    } else if (randomNumber === 2) { // vertical is the correct answer.
+        drawVericalLine();
+    } else if (randomNumber === 3) { // horizontal is the correct answer.
+        drawHorizontalLine()
+    } else if (randomNumber === 4) { // horizontal is the correct answer.
+        drawHorizontalLine()
+    } else if (randomNumber === 5) { // diagonal is the correct answer.
+        // Draw a diagonal backslash line.
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.lineTo(260,260);
+        ctx.strokeStyle="#FF0000";
+        ctx.lineWidth=5;
+        ctx.stroke();
+        CorrectAnswer = 'diagonal';
+    } else if (randomNumber === 6) { // diagonal is the correct answer.
+        // Draw a diagonal front slash line.
+        ctx.beginPath();
+        ctx.moveTo(260,0);
+        ctx.lineTo(0,260);
+        ctx.strokeStyle="#FF0000";
+        ctx.lineWidth=5;
+        ctx.stroke();
+        CorrectAnswer = 'diagonal';
+    }
+
+}
+
+$(document).ready(function () {
+    'use strict';
+    displayLesson();
+    $("#audio1").attr("src", "./sounds/is_the_line_horizontal_vertical_or_diagonal.ogg");
+    $("#audio1").attr("autoplay", "true");
+    $("#answer_buttons").click(this, onClick);
+    shuffleButtons();
+});
+

@@ -1,0 +1,42 @@
+
+$(document).ready(function() {
+	
+src_w = "age_w.ogg";
+$('#audio1').attr("src", src_w);
+src_s = "age_s.ogg";
+$('#audio2').attr("src", src_s);
+//$('#audio1').attr("autoplay", true);
+
+
+
+$('#spelling_word_input').val('');
+$('#spelling_word_input').focus();
+$("#spelling_word_input").keyup(function(event){
+  if(event.keyCode == 13){
+    alert('19');
+  }
+});
+
+//$('#spelling_word_input').bind('click', register_answer())
+
+document.getElementById('audio1').addEventListener('ended', function(){
+	this.currentTime = 0;
+	this.pause();
+	document.getElementById('audio2').play();
+}, false);
+
+document.getElementById('audio2').addEventListener('ended', function(){
+	this.currentTime = 0;
+	this.pause();
+	//document.getElementById('audio1').play();
+}, false);
+
+
+});  // document.ready
+
+/*
+Must deliver parameter range of words to this lesson
+Must tell student spelling on error.
+
+
+*/

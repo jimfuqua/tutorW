@@ -1,0 +1,11 @@
+function exit_from_lesson() {
+    "use strict";
+    // THIS IS THE EXIT FROM THIS LESSON
+    $.post(
+    "http://localhost/jimfuqua/tutor/src/scripts/cAssignment_get_next_lesson.php",
+       data_out
+     ).done(function( returned_data ) {
+         //alert( "returned_data Loaded: " + returned_data );
+         document.location.href = returned_data;
+     });
+}

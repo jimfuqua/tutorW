@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<!-- saved from url=(0105)http://geargenerator.com/#200,200,100,8,1,0,5624.39999999998,2,1,8,2,4,27,-90,0,0,16,4,4,27,-60,0,0,2,327 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<meta name="description" content="Involute spur gear generator and simulator">
+		<meta name="keywords" content="Gear generator, simulator, geargenerator, html, css, javascript, svg, download, free">
+		<meta name="author" content="Abel Vincze, Iparigrafika Ltd.">
+		<meta property="og:url" content="http://geargenerator.com/">
+		<meta property="og:title" content="Involute spur gear generator and simulator">
+		<meta property="og:description" content="Gear Generator is a tool for creating involute spur gears and download them in SVG format. In addition it let you compose full gear layouts with connetcted gears to design multiple gears system with control of the input/output ratio and rotation speed. Gears can be animated with various speed to demonstrate working mechanism">
+		<meta property="og:image" content="http://geargenerator.com/shareimage.jpg">
+		<link rel="canonical" href="http://geargenerator.com/">
+		<title>Gear Generator</title>
+		<script async="" src="./Gear Generator_files/analytics.js"></script><script src="./Gear Generator_files/jquery-1.11.1.min.js"></script>
+		<script type="text/javascript" src="./Gear Generator_files/jquery.cookie.js"></script>
+		<script>
+			/*
+			todo:
+			
+			* remove any gear
+			- remove any single gear
+			* change parent gear
+			* Diametral Pitch change recursive
+			- Drag'n'drop move
+			* add/remove gears
+			* update scale for all gears
+			* gear level RPM setting...
+			
+			* URL hash-ben mentes...
+			
+			- hide controls
+			
+			- show hide setting categories
+			* share buttons
+			* download buttons
+			* about text
+			
+			* update gear text!!! (with ratio and RPM)
+			
+			
+			*/
+			var shift,
+				guides = true,
+				geartext = true,
+				grid = true,
+				AM = 180/Math.PI,
+				font = ["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-/=*;:,.<>", "0204284442324335464738181215080307480525452224683316263634174130100106373120004014232713", "4ABCDE/BD 4AFGDHIJKLM/NH/OL 4GFMPQLKJ 4AFGJKO/LM 4EAOR/ST 4AOR/ST 4HUEMPQLR 4ER/US/OA 2VA/ML/CO 4RGFMP 4ENR/AO/NS 4EAO 4ERWOA 4REOA 4UGFMPQLKJU 4SHIJKOA 4DVMPQLKJD 4ENHIJKOA/NS 4JKLQGFMP 4RO/CV 4RGFMPO 6XFO 6XEHVO 4RA/EO 4RTO/TV 4EARO 4YVMPSZaHYE 4OBabUGFVBA 4EMPSZI 4EDVMPSZaDR 4FMPSZbUcB 4MdCKJ/HS 4EMPSZbUefgh 4BabUE/AO 0Ai/QO 3Kj/bklgh 4EWI/AO/WB 1MPO 4Ai/SZTbUE/WT 4Ai/BabUE 4GFMPSZbUG 4mi/SZbUGFA 4nI/EMPSZbU 4Ai/BabU 4IZSocGFA 4GFpC/Ii 4IE/DVMPi 4IVi 4IFaMi 4IA/Ei 4Igm/Vi 4EAIi 3YVMPQLCjY 2QLM/VA 4EABNHIJKLQ 4QLKJIHDGFMP/TH 4DBKF 4ROibUGFMP 4SHDGFMPiCK 4ORV 4NBPMFGDHNiQLKJIH 4UNiQLKJDVM 4pq/US 4US 4RA 4Ii/DB 4US/pq/JP/GQ 1ZN/oMh 1ZN/or 1rMh 0PA 3KSF 3OHA"],
+				baserot = 0,
+				rot = baserot,				// global base rotation
+				RPM = 0,
+				realRPM = 0,
+				rota = 0,
+				animation = false,
+				loop = false,
+				gears = [],
+				selectedgear = -1,
+				defaultgear = {	ID: -1,	N: 9, D: 1.5, P: 6, PA: 20, rot: rot, gearangle: 0, jointangle: -60	},
+				has3d,
+				theme = 1;
+
+			function fixInput( v, setFN, def, min, max ) {
+				if( isNaN( v ) ) v = def;
+				if( min != undefined && v<min ) v=min;
+				else if( max != undefined && v>max ) v=max;
+				setFN( v );
+				return v;
+			}
+			function getNfix() { return fixInput( Number( $("#N").val() ), setN, gears[selectedgear].N, 4, 200 ); }			
+			function getN() { return Number( $("#N").val() ); }			
+			function setN( v ) { $("#N").val( v ); }			
+			function getDfix() { return fixInput( Number( $("#D").val() ), setD, gears[selectedgear].D, 0.1 ); }			
+			function getD() { return Number( $("#D").val() ); }			
+			function setD( v ) { $("#D").val( v ); }			
+			function getPfix() { return fixInput( Number( $("#P").val() ), setP, gears[selectedgear].P, 1, 200 ); }
+			function getP() { return Number( $("#P").val() ); }
+			function setP( v ) { $("#P").val( v ); }			
+			function getPAfix() { return fixInput( Number( $("#PA").val() ), setPA, gears[selectedgear].PA, 12, 35 ); }			
+			function getPA() { return Number( $("#PA").val() ); }			
+			function setPA( v ) { $("#PA").val( v ); }			
+			function getRPMfix() { return fixInput( Number( $("#RPM").val() ), setRPM, RPM, -360, 360 ); }			
+			function getRPM() { return Number( $("#RPM").val() ); }			
+			function setRPM( v ) { $("#RPM").val( v ); }			
+			function getscalefix() { return fixInput( Number( $("#scale").val() ), setscale, 100, 25, 400 ); }			
+			function getscale() { return Number( $("#scale").val() ); }			
+			function setscale( v ) { $("#scale").val( v ); }			
+			function getPGfix() { return fixInput( Number( $("#PG").val() ), setPG, gears[selectedgear].parentID, -1 ); }			
+			function getPG() { return Number( $("#PG").val() ); }			
+			function setPG( v ) { $("#PG").val( v ); }			
+			function getCAXLE() { return !!$("#CAXLE:checked").val(); }			
+			function setCAXLE( v ) { $("#CAXLE").prop("checked", v==true ); }			
+			function getgrid() { return !!$("#grid:checked").val(); }			
+			function setgrid( v ) { $("#grid").prop("checked", v==true ); }			
+			function getguides() { return !!$("#guides:checked").val(); }			
+			function setguides( v ) { $("#guides").prop("checked", v==true ); }			
+			function getlabels() { return !!$("#labels:checked").val(); }			
+			function setlabels( v ) { $("#labels").prop("checked", v==true ); }			
+			function getCAfix() { return fixInput( Number( $("#CA").val() ), setCA, gears[selectedgear].jointangle ); }			
+			function getCA() { return Number( $("#CA").val() ); }			
+			function setCA( v ) { $("#CA").val( v ); }			
+			
+			// --------------------------------------------------------------------------------------------------
+			
+			function Nadd( a ) {
+				setN( getN()+a );
+				Nchange();
+			}
+			function PAadd( a ) {
+				setPA( getPA()+a );
+				PAchange();
+			}
+			function Aadd( a ) {
+				setCA( getCA()+a );
+				CAchange();
+			}
+			function scalem( m ) {
+				setscale( getscale()*m );
+				scaleChange();
+			}
+			
+			function Nchange() {
+				if( shift ) {
+					setP( getNfix()/getD() );
+					updatePitches();
+				} else {
+					setD( getNfix()/getP() );
+					updateGears();
+				}
+			}
+			function Dchange() {
+				if( shift ) {
+					setP( getN()/getDfix() );
+					updatePitches();
+				} else {
+					setN( Math.floor( getDfix()*getP() ) );
+					Nchange();
+				}
+			}
+			function Pchange() {
+				setD( getN()/getPfix() );
+				updatePitches();
+			}
+			function PAchange() {
+				getPAfix();
+				updatePitches();
+			}
+				function calcP() {
+					setP( getN()/getD() );
+				}
+				
+			function RPMchange() {
+				RPM = getRPMfix();
+				if( shift ) RPM = RPM/gears[selectedgear].totalratio;
+				updateListItemText( 0 );
+				updateHash();
+			}
+			function scaleChange() {
+				getscalefix();
+				renderAllGears();
+				updateHash();
+			}
+			function CAchange() {
+				gears[selectedgear].jointangle = getCAfix();
+				positionGears( selectedgear );
+				rotateGears( selectedgear );
+				updateHash();
+				maxSize();
+			}
+			function PGchange() {
+				var ID = selectedgear,
+					gear = gears[ID]
+					pID = gear.parentID,
+					PG = getPGfix();
+				if( PG>=0 && !isChildOf( PG, ID ) && PG != pID && PG<gears.length) {
+					var parentChilds = gears[pID].childIDs;
+					parentChilds.splice( parentChilds.lastIndexOf( ID ), 1);
+					gear.parentID = PG;
+					gears[gear.parentID].childIDs.push( ID );
+					updateJoint();
+				} else setPG( pID );
+			}
+
+			function CAXLEchange() {
+				var ID = selectedgear,
+					gear = gears[ID];
+				
+				if( gear.parentID<0 ) {
+					setCAXLE( true );
+					return;
+				}
+				updateJoint();
+			}
+			function updateJoint() {
+				var ID = selectedgear,
+					gear = gears[ID],
+					pP = gears[gear.parentID].P,
+					pPA = gears[gear.parentID].PA;
+				if( !(gear.axlejoint = getCAXLE()) && ( pP != getP() || pPA != getPA() ) ) {
+					setD(getN()/pP);
+					setP(pP);
+					setPA(pPA);
+					updatePitches();
+				} else {
+					positionGears( ID );
+					rotateGears( ID );
+					updateListItemText( ID );
+					updateHash();
+				}
+			}
+			
+			function displaychange() {
+				if( grid != (grid = getgrid()) ) makeGrid();
+				guides = getguides();
+				setGuidesClass();
+				geartext = getlabels();
+				setLabelsClass()
+
+				writeCookies();
+			}
+			function setGuidesClass() {
+				if( getguides() ) $("#screen").removeClass("noguides");
+				else $("#screen").addClass("noguides");
+			}
+			function setLabelsClass() {
+				if( getlabels() ) $("#screen").removeClass("nolabels");
+				else $("#screen").addClass("nolabels");
+			}
+			// --------------------------------------------------------------------------------------------------
+
+			function createGear( N, D, P, PA, ID ) {
+				var sc = getscale(),
+					A = 1/P,
+					B = 1.157/P,
+					OD = (N + 2)/P,
+					RD = (N - 2.3)/P,
+					BC = D*Math.cos(PA*(Math.PI/180)),
+					CP = Math.PI/P,
+					rmin = RD/2,
+					rmax = OD/2,
+					rbase = BC/2,
+					pts = [],
+					ac = 0,
+					aca = 0,
+					w = Math.ceil( OD/2*sc )*2,
+					h = w,
+					
+					addpts = function( p ) { pts.push( p );	},
+					pt = function( r, a ) { return { r: r, a: a }; },
+			
+					out = '<?xml version="1.0" encoding="utf-8"?><!-- Generator: Iparigrafika Gear Generator by Abel Vincze http://geargenerator.com/ --><svg version="1.2" class="svggear" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="'+w+'px" height="'+h+'px" viewBox="'+(-w/2)+' '+(-h/2)+' '+w+' '+h+'" overflow="scroll" xml:space="preserve">';
+				
+				// calc
+				addpts( pt( rmin, 0 ) );			//first point
+				
+				for( var i=1, pn=0, step=1, first = true; i<100; i+=step ) {
+					// get a point...
+					var bpl = polarToLinear( pt( rbase, -i ) ),			//base point linear
+						len = ((rbase*Math.PI*2)/360)*i,				//length
+						opl = polarToLinear( pt( len, -i+90 ) ),		//add line
+						np = linearToPolar( { x: bpl.x+opl.x, y: bpl.y+opl.y } );
+						
+					if( np.r>= rmin ) {
+						//console.log( np.a );
+						if( first ) {
+							first = false;
+							step=(2/N)*10;
+							//console.log("first point at "+i );
+						}
+						if( np.r<D/2 ) {
+							ac = np.a;
+							aca = i;
+						}
+						pn++;
+						if( np.r> rmax ) {
+							np.r = rmax;
+							addpts( np );
+							break;	
+						}
+						addpts( np );
+					}
+				} 
+				// tukrozes
+				var fa = 360/N,						// final a
+					ma = fa/2 + 2*ac,				// mirror a
+					fpa = (fa-ma)>0?0:-(fa-ma)/2,	// first point a
+					m=pts.length;
+				pts[0] = pt( rmin, fpa );			// fix first point a
+				while( pts[m-1].a>ma/2 ) {
+					pts.splice(m-1,1);
+					m--;
+					pn--;	
+				}
+
+				for( var i=pn; i>=0; i-- ) {
+					var bp = pts[i],
+						na = ma-bp.a;					
+					addpts( pt( bp.r, na ) );
+				}
+				// repeat
+				for( var i=1,m=pts.length; i<N; i++ ) {
+					for( var p=0; p<m; p++ ) {
+						var bp = pts[p],
+							na = bp.a+fa*i;
+						addpts( pt( bp.r, na ) );
+					}
+				}
+				// print points
+				out += '<polygon id="gearpoly'+ID+'" data-id="'+ID+'" class="gear" fill="#ddd" stroke="#444" stroke-width="1" stroke-miterlimit="10" points="';
+				for( var i=0; i<pts.length; i++ ) {
+					var point = polarToLinear( pts[i] );
+					out += fix6(point.x*sc)+','+fix6(point.y*sc)+' ';
+				}
+				out += '"/>';
+				
+				// center cross
+				out += '<g class="guides"><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-miterlimit="10" points="';
+				out += '10,0 -10,0"/>';
+				out += '<polyline fill="none" stroke="#444" stroke-width="0.5" stroke-miterlimit="10" points="';
+				out += '0,10 0,-10"/></g>';
+				// first tooth marker
+				var zpr = 1.57/P*sc/4;
+					zp = polarToLinear( pt( D/2, ma/2 ) );
+				out += '<circle fill="#c00" class="firstmarker" stroke="none" stroke-miterlimit="10" cx="'+fix6(zp.x*sc)+'" cy="'+fix6(zp.y*sc)+'" r="'+fix6(zpr)+'"/>';
+				
+				// text on wheel
+				var tdata = makeText("*"+ID+" N="+N+" Pitch D="+fix2(D)+" P="+fix2(P)+" PA="+fix2(PA), 2),
+					textH = (RD/2)/7/6,	// betu magassaga (/6 a pixelmagassag miatt)
+					textH = textH>0.03?0.03:textH,
+					textB = (RD/2)-textH*10,	// alapvonal 75%-nal
+					plotAngle = 180/((textB*Math.PI)/textH);
+					
+					
+				out += '<g class="geartext">'+renderSVGPrecisionPolarText( tdata, textB, textH, plotAngle, sc )+'</g>';
+				// guides
+				out += '<g class="guides gearguides" opacity="0.2">';	
+				out += '<circle class="pitch" fill="none" stroke="#f00" stroke-miterlimit="10" cx="0" cy="0" r="'+fix2((D/2)*sc)+'"/>'; // pitch circle
+				//out += '<circle class="root" fill="none" stroke="#ccc" stroke-miterlimit="10" cx="0" cy="0" r="'+fix2((RD/2)*sc)+'"/>'; // Root circle
+				out += '<circle class="outer" fill="none" stroke="#ccc" stroke-miterlimit="10" stroke-dasharray="2,2" cx="0" cy="0" r="'+fix2((OD/2)*sc)+'"/>'; // Outer circle
+				out += '<circle class="base" fill="none" stroke="#00f" stroke-miterlimit="10" stroke-dasharray="2,2" cx="0" cy="0" r="'+fix2((BC/2)*sc)+'"/>'; // Base circle
+				out += '</g>';
+
+				out += '</svg>';
+				
+				
+				return { svg: out, gearangle: fa, baseangle: ac, Rsc: D*sc/2, w: w, h: h };
+			}
+			function linearToPolar( c ) {
+				var x = c.x, y = c.y, r, a;
+				//var AM = 180/Math.PI;
+				r = Math.sqrt( x*x + y*y );
+				a = Math.asin( y/r )*AM;
+				if( x<0 ) a = 180-a;
+				a = (a+360)%360;
+				return { r: r, a: a }
+			}
+			function polarToLinear( p ) {
+				var r = p.r, a = p.a, x, y;
+				//var AM = 180/Math.PI;
+				a = ((a+360)%360)/AM;
+				
+				x = Math.cos( a )*r;
+				y = -Math.sin( a )*r;
+				
+				return { x: x, y: y }
+			}
+
+			function fix2( v ) {
+				return Math.round( 100*v )/100;
+			}
+			function fix6( v ) {
+				return Math.round( 10000*v )/10000;
+			}
+
+			function createSVGgrid( sc ) {
+				/*var cl = $("body").attr("class"),
+					col;
+				
+				if(cl=="col0") col = "#888";
+				if(cl=="col1") col = "#fff";
+				if(cl=="col2") col = "#888";*/
+			
+			
+				var col = ["#888","#fff","#888"][theme],
+					subd = 10,
+					weight = 1,
+					scdot = sc+0.5;
+					out = '<svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="'+sc+'px" height="'+sc+'px" viewBox="0 0 '+sc+' '+sc+'" xml:space="preserve">';	//+out+'</svg>';
+				
+				out += '<g class="grid" stroke="'+col+'" opacity="0.2">'
+				out += '<polyline fill="none" stroke-width="'+weight+'" stroke-linecap="square" stroke-miterlimit="2"  points="';
+				out += '0.5 '+scdot+' 0.5 0.5 '+scdot+' 0.5"></polyline>';
+				
+				for( var i=1; i<10; i++ ) {
+					var pos = (sc/10)*i+0.5;
+					out += '<polyline fill="none" stroke-width="'+(weight/2)+'" stroke-linecap="square" stroke-miterlimit="2"  points="0.5 '+pos+' '+scdot+' '+pos+'"></polyline>';
+					out += '<polyline fill="none" stroke-width="'+(weight/2)+'" stroke-linecap="square" stroke-miterlimit="2"  points="'+pos+' 0.5 '+pos+' '+scdot+'"></polyline>';
+					
+				}
+				
+				out += '</g></svg>';
+				return out;
+			}
+			function makeGrid() {
+				if( grid ) {
+					var svg = createSVGgrid( getscale() ),
+						b64 = 'data:image/svg+xml;base64,' + window.btoa(svg),
+						url = 'url("' + b64 + '")';				
+				} else {
+					var url = "none";
+				}
+				$('#screen').css('backgroundImage', url);
+
+			}
+			// -------------- FONT
+			function getchardata( chr ) {
+				var i=font[0].lastIndexOf( chr ),
+					data=[];
+				if( i>-1 ) {
+					var chdata = font[2].split(" ")[i],
+						l = 0;
+					data[0] = Number(chdata.substr(0,1));
+					for( var p=0,pi; p<chdata.length; p++ ) {
+						pi = getindex( chdata.charCodeAt(p) );
+						if( pi<0 ) data[++l] = [];
+						else data[l].push( font[1].substr( pi ,2 ) );
+					}
+				} else data[0]=chr==" "?3:-1;
+				return data;
+			}
+			function getindex( code ) {
+				code-=65;
+				code>25&&(code-=6);
+				return code*2;
+			}
+			
+			function makeText( txt, chs ) {
+				var width,
+					pos = 0,
+					data = [0];
+				chs = chs==undefined?1: chs;
+				for( var i=0, cdata; i<txt.length; i++ ) {
+					cdata = getchardata( txt.substr( i, 1 ) );
+					if( cdata[0]>=0 ) {
+						for(var l=1; l<cdata.length; l++ ) {
+							for( var p=0, pt, line=[]; p<cdata[l].length; p++ ) {
+								pt = cdata[l][p].split("");
+								line.push( { x: Number(pt[0])+pos, y: Number(pt[1]) } );
+							}
+							data.push( line );
+						}
+						pos += chs+cdata[0];						
+					}
+				}
+				if( pos>0 ) data[0] = pos-1;
+				return data;
+			}
+			function renderSVGLinearText( tdata, textB, pixH, weight ) {
+				var out = '<g class="text">',
+					add = weight/2;
+				if( add<0.5 ) add = 0.5;
+					
+				for( var i=1; i<tdata.length; i++ ) {				
+					out += '<polyline fill="none" stroke="#444" stroke-width="'+weight+'" stroke-linecap="square" stroke-miterlimit="2"  points="';
+					for( var p=0; p<tdata[i].length; p++ ) {
+						out += (tdata[i][p].x*pixH+add) + " " + (textB-tdata[i][p].y*pixH+add) + " ";
+					}
+					out += '"/>';
+				}				
+				out += "</g>";
+				return out;
+			}
+			function renderSVGPolarText( tdata, textB, pixH, plotAngle, sc ) {
+				
+				var angularLength = tdata[0]*plotAngle,		// angular length of the text
+					ba = angularLength/2,					// base angle
+					out = '<g class="text">';
+					
+				for( var i=1; i<tdata.length; i++ ) {				
+					out += '<polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1"  points="';
+					for( var p=0, a, r, dot; p<tdata[i].length; p++ ) {
+						a = -tdata[i][p].x * plotAngle + ba;											
+						r = (tdata[i][p].y-5) * pixH + textB;
+						dot = polarToLinear( { r: r, a: a } );						
+						out += dot.x*sc + " " + dot.y*sc + " ";
+					}
+					out += '"/>';
+				}				
+				out += "</g>";
+				return out;
+			}
+			function renderSVGPrecisionPolarText( tdata, textB, pixH, plotAngle, sc ) {
+				
+				var angularLength = tdata[0]*plotAngle,		// angular length of the text
+					ba = angularLength/2,					// base angle
+					out = '<g class="text">';
+					
+				for( var i=1; i<tdata.length; i++ ) {				
+					out += '<polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1"  points="';
+					for( var p=0, a, r, dot, dx, inc, lx, ly, x, y, mp=tdata[i].length; p<mp; p++ ) {
+					
+						x = tdata[i][p].x;
+						y = tdata[i][p].y;
+						if( p==0 ) { 
+							lx = x;
+							ly = y
+							a = -lx * plotAngle + ba;											
+							r = (ly-5) * pixH + textB;
+							dot = polarToLinear( { r: r, a: a } );						
+							out += fix2(dot.x*sc) + " " +fix2(dot.y*sc) + " ";
+						} else {
+							dx = Math.abs( x-lx );
+							if( dx==0 ) {
+								dx=1;
+							}
+							ix = ( x-lx )/dx;
+							iy = ( y-ly )/dx;
+							for( var s=1, X, Y; s<=dx; s++ ) {
+								Y = ly + iy*s;
+								X = lx + ix*s;
+								a = -X * plotAngle + ba;											
+								r = (Y-5) * pixH + textB;
+								dot = polarToLinear( { r: r, a: a } );						
+								out += fix2(dot.x*sc) + " " + fix2(dot.y*sc) + " ";
+							}
+							lx = x;
+							ly = y;
+						}
+					}
+					out += '"/>';
+				}				
+				out += "</g>";
+				return out;
+			}
+			
+			function replaceWithSVGText( selection, upperCase, pixH, weight, chs  ) {
+				pixH = pixH || 1;
+				chs = chs==undefined? 2: chs;
+				weight = weight || 1;
+				
+				var txt = selection.html();
+				
+				if( upperCase ) txt = txt.toUpperCase();
+					
+				var tdata = makeText( txt, chs ),
+					w = tdata[0]*pixH+weight,
+					h = pixH*8+weight,
+					out = renderSVGLinearText( tdata, pixH*8, pixH, weight );
+				
+				out = '<svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="'+w+'px" height="'+h+'px" viewBox="0 0 '+w+' '+h+'" xml:space="preserve">'+out+'</svg>';
+				
+				selection.html( out );
+			}
+			// --------------------------------------------------------------------------------------------------
+
+			function addNewGear() {
+				if( selectedgear<0 ) return;
+				var gear = gears[selectedgear],
+					P = gear.P,
+					N = 13,
+					D = N/P,
+					PA = gear.PA;
+					
+				addGear( gear, false, N, D, P, PA );
+			}
+			function addGear( parentgear, axlejoint, N, D, P, PA, A ) {
+				parentgear = parentgear || defaultgear;
+				axlejoint = axlejoint || false;
+				N = N || parentgear.N;
+				D = D || parentgear.D;
+				P = P || parentgear.P;
+				PA = PA || parentgear.PA;
+				A = A==undefined? parentgear.jointangle: A;
+				
+				var ID = addGearData( parentgear.ID, axlejoint, N, D, P, PA, A ).ID;
+				addGearDataProcess( ID );
+				updateGearDOM( ID );
+				positionGears( ID );
+				rotateGears( ID );
+				selectGear( ID );
+				updateHash();
+				setListItemText( ID );
+				maxSize();
+				return gears[ID];
+			}
+			function addGearData( parentgearID, axlejoint, N, D, P, PA, A ) {
+				var ID = gears.length,
+					thegear = createGear( N, D, P, PA, ID ),
+					newgear = {
+						ID:			ID,
+						parentID:	parentgearID,
+						axlejoint:	axlejoint,
+	
+						N:			N,
+						D:			D,
+						P: 			P,
+						PA:			PA,
+						// ez az uj fogaskerekbol adodik
+						rot:		0,		// ezt nem igy persze
+						gearangle:	thegear.gearangle,				
+						
+						ratio:		1,
+						totalratio: 1,
+						
+						jointangle:	A,			// default, hogy alatta...
+						baseangle:	thegear.baseangle,
+					//	geardata:	createGear( N,D,P ),
+					
+						Rsc:		thegear.Rsc,
+						
+						svg:		thegear.svg,
+						svgwidth:	thegear.w,		// fogaskerek svg merete.
+						svgheight:	thegear.h,
+						svgoffsetx:	-thegear.w/2,		// svg offset a kozeppont pozicionalasahoz
+						svgoffsety:	-thegear.h/2,
+						offsetx:	0,
+						offsety:	0,
+						x:			0,			// aktualis pozicio, ezt ki kell szamolni a csatlakozas szogebol, tavolsagabol.
+						y:			0,
+						
+						childIDs:	[]
+					};
+				gears[ID] = newgear;
+				return gears[ID];
+			}
+			function addGearDataProcess( ID ) {
+				var newgear = gears[ID],
+					parentID = newgear.parentID,
+					parentgear = (newgear.parentID<0)? defaultgear: gears[newgear.parentID];
+							
+				if( parentgear.ID >= 0 ) {
+					gears[parentgear.ID].childIDs.push( ID );
+				}
+
+				// add gear to DOM
+				$("#screen").append( '<div id="gearcontainer'+ID+'" class="svg">'+newgear.svg+'</div>' );
+				$("#gearselector").append( '<li id="gearlistitem'+ID+'" data-id="'+ID+'" class="listitem"></li>' );
+				$("#gearlistitem"+ID).bind( "click", selectionClick );
+				setGearEvents( ID );
+				setListItemText( ID );
+				return gears[ID];
+				
+			}
+			function selectionClick() {
+				var ID = Number($(this).attr("data-id"));
+				if( ID == undefined ) return false;
+				selectGear( ID );
+				updateHash();
+			}
+
+			function removeGear() {
+
+				//console.log(" childs: "+getTotalChildNumber( ID ));
+				
+				var ID = selectedgear,
+					newgears = [],
+					oldIDs = [],
+					chg = getTotalChildNumber( ID );
+					
+				if( chg>0 ) {
+				    if (!confirm("This gear have "+chg+" child gear"+(chg>1?"s":"")+".\nChild gears will be also removed!")) return;
+				}
+				
+				selectedgear = removeAllGears( ID );
+				if( selectedgear<0 ) selectedgear = 0;
+				
+				//console.log( gears );
+				
+				// delete gear
+				for( var i=0, newID=0; i<gears.length; i++ ) {
+					if( gears[i] ) {
+						
+						newgears[newID] = gears[i];
+						oldIDs[newID++] = i;
+						
+						
+					}
+				}
+				
+				gears = newgears;
+				for( var i=0; i<gears.length; i++ ) {
+					changeID( oldIDs[i], i );
+					$("#gearlistitem"+oldIDs[i]).attr("id","gearlistitem"+i).attr("data-id", i );
+					$("#gearcontainer"+oldIDs[i]).attr("id","gearcontainer"+i);
+					$("#gearpoly"+oldIDs[i]).attr("id","gearpoly"+i).attr("data-id", i );
+					if( selectedgear == oldIDs[i] ) selectedgear = i;
+				}
+				
+				selectGear( selectedgear );
+				renderAllGears();
+				updateHash();
+				updateListItemText(0);
+				maxSize();
+			}
+			function removeAllGears( ID ) {
+
+				var	gear = gears[ID],
+					pi = gear.parentID,
+					chs = gear.childIDs.slice();
+				
+				for( var i=0; i<chs.length; i++ ) {
+					removeAllGears( chs[i] );
+				}
+				// remove this ID from parent's child
+				if( pi>=0 ) {
+					var parentChilds = gears[pi].childIDs;
+					parentChilds.splice( parentChilds.lastIndexOf( ID ), 1);
+				}
+				// delete gear
+				if( ID>0 ) {
+					gears[ID] = null;	//.splice( ID, 1 );
+					$("#gearlistitem"+ID).remove();
+					$("#gearcontainer"+ID).remove();
+				}
+				return pi;
+			}
+				function getTotalChildNumber( ID ) {
+					var childs = 0,
+						gear = gears[ID];
+					
+					for( var i=0; i<gear.childIDs.length; i++ ) {
+						childs += 1+getTotalChildNumber( gear.childIDs[i] );
+					}
+					return childs;
+				}
+				function isChildOf( chID, ID ) {
+					var isChild = false,
+						checkChilds = function( ID ) {
+							var gear = gears[ID];
+							if( gear.ID==chID ) isChild=true;
+							for( var i=0; i<gear.childIDs.length; i++ ) {
+								//if( gear.childIDs[i]==chID ) isChild=true;
+								checkChilds( gear.childIDs[i] );
+							}
+							
+						};
+					checkChilds( ID );
+					return isChild;
+				}
+				function changeID( oldID, newID ) {
+					
+					for( var i=0; i<gears.length; i++ ) {
+						if( gears[i].parentID==oldID ) gears[i].parentID = newID;
+						if( gears[i].ID==oldID ) gears[i].ID = newID;
+						for( var c=0; c<gears[i].childIDs.length; c++ ) {
+							if( gears[i].childIDs[c]==oldID ) {
+								gears[i].childIDs[c] = newID;
+							}
+						}
+					}
+					
+				}
+			
+			function rotateGears( ID ) {
+				//console.log("rotate gears "+ID);
+				// rotate childs (recursive)
+				ID = ID || 0;
+				var gear = gears[ID];
+				if( ID == 0 ) { gears[ID].rot = rot-gears[ID].jointangle; }
+				else {
+					var parentgear = gears[ gear.parentID ],
+						newrot;
+					
+					if( gear.axlejoint ) {
+						gears[ID].rot = parentgear.rot-gears[ID].jointangle;	// + gear.jointangle
+						
+					} else {
+						gears[ID].rot= 180-((parentgear.rot+gear.jointangle)*gear.ratio)-gear.jointangle;//-((gear.jointangle*2)*gear.ratio);
+						
+					}
+					//console.log("rotation "+gears[ID].rot);
+				}
+				setGearDOMRotation( ID );
+				
+				for( var i=0; i<gear.childIDs.length; i++ ) {
+					rotateGears( gear.childIDs[i] );
+				}
+				
+			}
+			function selectParent() {
+				var ID = gears[selectedgear].parentID;
+				if( ID>=0 ) selectGear( ID );
+			}
+			function selectGear( ID ) {
+				selectedgear = ID;	// select this geat + set Selection!!!
+				selectListItem( ID );
+				setEditorValues( ID );
+				
+				var gear = gears[ID];
+				$("#svgdata").val( gear.svg );
+				$("#svgfilename").val( "gg_gear N"+gear.N+" D"+fix2(gear.D)+" P"+fix2(gear.P)+" PA"+fix2(gear.PA)+" @"+fix2(getscale())+".svg" );
+
+				$(".svg").removeClass("selected");
+				$("#gearcontainer"+ID).addClass("selected");
+
+			}
+			function setEditorValues( ID ) {
+				var data = gears[ID];
+				
+				setN( data.N );
+				setD( data.D );
+				setP( data.P );
+				setPA( data.PA );
+				setPG( data.parentID );
+				setCA( data.jointangle );
+				setCAXLE( data.axlejoint );
+				
+				$("#out").html( '<?xml version="1.0" encoding="utf-8"?><!-- Generator: Iparigrafika SpurGearAnalyzator v2 by Abel Vincze http://iparigrafika.hu/gear -->'+data.svg );
+			}
+			function positionGears( ID ) {
+				//console.log("rotate gears");
+				// rotate childs (recursive)
+				ID = ID || 0;
+				var gear = gears[ID],
+					parentID = gear.parentID,
+					parentgear;
+				
+				//console.log( parentID );
+				
+				if( parentID>=0 ) {
+					parentgear = gears[ parentID ];
+				
+					gear.ratio = parentgear.N/gears[ID].N;
+					
+					// pozicio megadasa a parent alapjan
+					if( gear.axlejoint ) {
+						gear.offsetx = 0;
+						gear.offsety = 0;
+						
+						gear.totalratio = parentgear.totalratio;
+					} else {
+						var dist = parentgear.Rsc+gear.Rsc;
+						
+						gear.offsetx = Math.cos( gear.jointangle/AM )*dist;
+						gear.offsety = -Math.sin( gear.jointangle/AM )*dist;
+						
+						gear.totalratio = parentgear.totalratio*gear.ratio;
+					}
+					gear.x = parentgear.x + gear.offsetx;
+					gear.y = parentgear.y + gear.offsety;
+					
+					//console.log( gears[ID].x );
+			
+				} else {
+					var temp = gear.svgwidth/2,
+						sc = getscale(),
+						m = Math.ceil( (temp+(sc/5))/sc );
+					gear.x = m*sc;
+					gear.y = m*sc;
+
+				}
+				//setListItemText( ID );
+				updateGearDOM( ID );
+
+				for( var i=0; i<gear.childIDs.length; i++ ) {
+					positionGears( gear.childIDs[i] );
+				}
+				
+			}
+			function renderAllGears() {
+				renderGear(0);
+				positionGears(0);
+				rotateGears(0);
+				makeGrid();
+				maxSize();
+			}
+			function renderGear( ID ) {
+				var gear = gears[ID];
+				//console.log( "gear"+ID+" CA: "+gear.jointangle );
+				updateGear( ID, gear.N, gear.D, gear.P, gear.PA, gear.jointangle );
+				
+				for( var i=0; i<gear.childIDs.length; i++ ) {
+					renderGear( gear.childIDs[i] );
+				}
+			}
+			function updatePitches() {
+				var ID = selectedgear,
+					P = getP(),
+					PA = getPA(),
+					N = getN();
+				
+				if( gears[ID].P != P || gears[ID].PA != PA ) {
+					updatePitch( N, P, PA, ID );
+					if( !gears[ID].axlejoint ) {
+						updateParentPitch( P, PA, ID );
+					}
+					
+					positionGears( 0 );
+					rotateGears( 0 );
+					updateHash();
+					maxSize();
+					//updateListItemText( ID );
+				}
+			}
+			function updatePitch( N, P, PA, ID, excludedChild ) {
+				excludedChild = excludedChild || -1;
+				
+				var gear = gears[ID],
+					D = N/P;
+			
+				updateGear( ID, N, D, P, PA, gear.jointangle );
+				
+				for( var i=0; i<gear.childIDs.length; i++ ) {
+					var chID = gear.childIDs[i];
+					if( chID != excludedChild && !gears[chID].axlejoint ) {
+						updatePitch( gears[chID].N, P, PA, chID );
+					}
+				}
+					
+			}
+			function updateParentPitch( P, PA, ID ) {
+				if( gears[ID].axlejoint ) return;
+				var parentID = gears[ID].parentID;
+				if( parentID>=0 ) {
+					updatePitch( gears[parentID].N, P, PA, parentID, ID );	
+					updateParentPitch( P, PA, parentID );
+				}
+
+			}
+			function updateGears() {
+				var ID = selectedgear;
+				updateGear( ID );
+				positionGears( ID );
+				rotateGears( ID );
+				updateListItemText( ID );
+				updateHash();
+				maxSize();
+			}
+			function updateGear( ID, N, D, P, PA, CA ) {
+				N = N || getN();
+				D = D || getD();
+				P = P || getP();
+				PA = PA || getPA();
+				CA = CA==undefined? getCA(): CA;
+				var thegear = createGear( N, D, P, PA, ID );
+					
+				gears[ID].N = N;
+				gears[ID].D = D;
+				gears[ID].P = P;
+				gears[ID].PA = PA;
+				gears[ID].jointangle = CA;
+				gears[ID].gearangle = thegear.gearangle;
+				gears[ID].baseangle = thegear.baseangle;
+
+				gears[ID].svg = thegear.svg;
+				gears[ID].svgwidth = thegear.w;		// fogaskerek svg merete.
+				gears[ID].svgheight = thegear.h;
+				gears[ID].svgoffsetx = -thegear.w/2;		// svg offset a kozeppont pozicionalasahoz
+				gears[ID].svgoffsety = -thegear.h/2;
+				gears[ID].Rsc = thegear.Rsc;
+			
+				$("#gearcontainer"+ID).html( thegear.svg );
+				setGearEvents( ID );
+			}
+			function setGearEvents( ID ) {
+				$("#gearpoly"+ID).bind( "click", selectionClick );
+			}
+			function updateGearDOM( ID ) {
+				var gearc = $("#gearcontainer"+ID),
+					data = gears[ ID ];
+				
+				gearc.css( { width:			data.svgwidth,
+							height:			data.svgheight } );
+				setGearDOMRotation( ID );
+			}
+			function setGearDOMRotation( ID ) {
+				var	gear = $("#gearcontainer"+ID),
+					data = gears[ ID ];
+				gear.css( { "transform": 	"translate3d("+fix2(data.x+data.svgoffsetx)+"px,"+fix2(data.y+data.svgoffsety)+"px,0) rotate("+fix6(data.rot+data.baseangle)+"deg)"  } );
+				//console.log( (data.x+data.svgoffsetx)+"+"+(data.y+data.svgoffsety) )
+			}
+			function selectListItem( ID ) {
+				$(".listitem").removeClass("selected");
+				$("#gearlistitem"+ID).addClass("selected");
+			}
+			function setListItemText( ID ) {
+				$("#gearlistitem"+ID).html( '#'+(ID)+' - ratio: '+getRatio( 1/gears[ID].totalratio )+' - RPM: '+fix2(gears[ID].totalratio*RPM) );
+				
+			}
+			function updateListItemText( ID ) {
+				var gear = gears[ID];
+				
+				setListItemText( ID );
+				//updateGearsDOM( ID );
+
+				for( var i=0; i<gear.childIDs.length; i++ ) {
+					updateListItemText( gear.childIDs[i] );
+				}
+				
+			}
+				function getRatio( r ) {
+					var out;
+					r = Number(r);
+					if( r<1 ) {
+						out = "1:"+fix2(1/r);
+					} else {
+						out = fix2(r)+":1";
+					}
+					return out;
+				}
+	
+			//var maxw = 0, maxh = 0;
+			function maxSize() {
+				var mx = 0, my = 0;
+				
+				for( var i=0, gear, gmx, gmy, add; i<gears.length; i++ ) {
+					gear = gears[i];
+					add = (gear.svgwidth/2)*1.5;
+					gmx = gear.x+add;
+					gmy = gear.y+add;
+					if( gmx>mx ) mx = gmx;
+					if( gmy>my ) my = gmy;
+				}
+				
+				$("#screen").css( { width: mx, height: my } );
+				
+			}
+	
+			// --------------------------------------------------------------------------------------------------
+
+			function reset() {
+				$("#N").bind("enterKey",Nchange);
+				$("#D").bind("enterKey",Dchange);
+				$("#P").bind("enterKey",Pchange);
+				$("#PA").bind("enterKey",PAchange);
+				$("#scale").bind("enterKey",scaleChange);
+				$("#RPM").bind("enterKey",RPMchange);
+				$("#CA").bind("enterKey",CAchange);
+				$("#PG").bind("enterKey",PGchange);
+				$("#CAXLE").bind("change",CAXLEchange);
+				$(".display").bind("change",displaychange);
+
+				$("input").keyup(onKeyup).blur(onBlur);
+				has3d = "WebKitCSSMatrix" in window || "MozPerspective" in document.body.style;
+				/*@cc_on if (/^10/.test(@_jscript_version)) has3d = TRUE; @*/	//IE10 have 3d support
+
+				resetOEF();
+				
+				if( !parseHash() ) addGear( undefined, true, 18, 3, 6, 20 );	// default gear;
+				updateHash();
+				readCookies();
+				RPMchange();	// get initial value from input box
+				maxSize();
+			}
+			function parseHash() {
+				var h = location.hash;
+				if( !h ) h="#200,200,100,6,1,0,0,4,1,8,2,4,27,-90,0,0,16,4,4,27,-60,1,1,12,1,12,20,-60,2,0,60,5,12,20,0,0,0,2,-563";
+				if( h ) {
+					var t = h.substr( 1 ),
+						CRC=0,
+						CRC2=0;
+						
+					if( t=="clear" ) return false;
+						
+					t = t.split(",");
+					
+					for( var i=0; i<t.length-1; i++ ) {
+						CRC += Number(t[i]);
+						CRC2 = Math.sin( Number(t[i]) )*100-CRC2;
+					}
+					if( t[i]!=Math.ceil(CRC%800+CRC2*2) ) return false;	// Wrong CRC
+
+					var i=0, 
+						gs,
+						g = function() {
+							return Number(t[i++]);
+						}
+						basex = g(),
+						basey = g();
+						
+					setscale( g() );
+					setRPM( g() );
+					loop = animation = g()==1;
+					var sg = g();
+					rot = g();
+					gs = g();
+					
+					for( var j=0; j<gs; j++ ) { addGearData( j==0?-1:g(), g()==1, g(), g(), g(), g(), g()); }
+					for( var j=0; j<gs; j++ ) { addGearDataProcess( j ) };
+					//for( var j=0; j<gs; j++ ) { updateGearDOM( j ) };
+					positionGears( 0 );
+					rotateGears( 0 );
+					selectGear( sg );
+					if( animation ) OEF();
+					return true;
+				}
+				return false;
+			}
+			function updateHash() {
+				var h  = "",
+					S=",",
+					CRC=0,
+					CRC2=0,
+					a=animation?1:0,
+					g = function( n ) {
+						h += n+S;
+						CRC += Number(n);
+						CRC2 = Math.sin( Number(n) )*100-CRC2;
+					};
+				g(gears[0].x);
+				g(gears[0].x);
+				g(getscale());
+				g(getRPM());
+				g(a);
+				g(selectedgear);
+				g(rot);
+				g(gears.length);
+				
+				for( var i=0, gear; i<gears.length; i++ ) {
+					gear = gears[i];
+					if( i>0 ) { g(gear.parentID); }
+					g(gear.axlejoint?1:0);
+					g(gear.N);
+					g(gear.D);
+					g(gear.P);
+					g(gear.PA);
+					g(gear.jointangle);
+				}
+				g(0);	// for future use
+				g(0);
+				g(2);	// version
+				h+=Math.ceil(CRC%800+CRC2*2);
+				location.hash = "#"+h;
+			}
+			function onKeyup( e ) {
+					//console.log("key: "+e.keyCode+" shift: "+e.shiftKey );
+					shift = e.shiftKey;
+					if(e.keyCode == 13) {
+						$(this).trigger("enterKey");
+					}
+				
+			}
+			function onBlur( e ) {
+				$(this).trigger("enterKey");
+			}
+			function resetOEF() {
+				window.raf = (function(){
+					return 	window.requestAnimationFrame       ||
+							window.webkitRequestAnimationFrame ||
+							window.mozRequestAnimationFrame    ||
+							function( callback ) {
+								window.setTimeout( callback, 100/6 );
+							};
+				})();
+			}
+			function OEF() {
+				if( animation ) {
+					if( realRPM<RPM ) { realRPM += 1 }
+					else if( realRPM>RPM ) { realRPM -= 1 };
+					if( Math.abs(realRPM-RPM)<1 ) realRPM=RPM;
+				} else {
+					realRPM -= 1;
+					if( realRPM<0 ) { 
+						realRPM=0;
+						loop = false;
+					}
+				}
+				if( loop ) raf( OEF );
+				
+				//console.log( RPM );
+				
+				rota = (realRPM/3600)*360;
+				rot += rota;
+
+ 				rotateGears();
+				if( loop==false ) { updateHash(); }
+			}
+			function anim( mode ) {
+				switch( mode ) {
+					
+					case 0:
+						animation = !animation
+						if( animation ) {
+							updateHash();
+							if( !loop ) {
+								loop = true;
+								OEF();
+							}
+						}
+						break;
+					case 1:
+						loop = false;
+						animation = false;
+						updateHash();
+						break;
+					case 2:
+						loop = false;
+						animation = false,
+						realRPM = 0;
+						rot = baserot;
+						rotateGears();
+						//OEF();
+						updateHash();
+						break;
+					
+				}
+				
+			}
+			function setTheme( th ) {
+				theme = th;
+				$("body").attr("class", "col"+th );
+				makeGrid();
+				writeCookies();
+			}
+			function writeCookies() {
+				$.cookie("theme", theme );
+				$.cookie("guides", guides );
+				$.cookie("geartext", geartext );
+				$.cookie("grid", grid );
+			}
+			function readCookies() {
+				var ctheme = $.cookie("theme"),
+					cguides = $.cookie("guides"),
+					cgeartext = $.cookie("geartext"),
+					cgrid = $.cookie("grid");
+				if( ctheme != undefined ) theme = ctheme;
+				if( cguides != undefined ) guides = cguides=="true";
+				if( cgeartext != undefined ) geartext = cgeartext=="true";
+				if( cgrid != undefined ) grid = cgrid=="true";
+				setguides( guides );
+				setlabels( geartext );
+				setgrid( grid );
+				setGuidesClass();
+				setLabelsClass();
+				setTheme( theme );
+			}
+			function clearAll() {
+				window.location = "http://geargenerator.com/#clear";
+				window.location.reload();
+			}
+			
+		</script>
+		<link href="./Gear Generator_files/geargenerator.css" rel="stylesheet" type="text/css">
+	</head>
+	<body class="col1" gram_dict="true" cz-shortcut-listen="true">
+		<div id="screencontainer">
+			<div id="screen" style="width: 687.5px; height: 797.307621135332px; background-image: url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48ZyBjbGFzcz0iZ3JpZCIgc3Ryb2tlPSIjZmZmIiBvcGFjaXR5PSIwLjIiPjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1taXRlcmxpbWl0PSIyIiAgcG9pbnRzPSIwLjUgMTAwLjUgMC41IDAuNSAxMDAuNSAwLjUiPjwvcG9seWxpbmU+PHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbWl0ZXJsaW1pdD0iMiIgIHBvaW50cz0iMC41IDEwLjUgMTAwLjUgMTAuNSI+PC9wb2x5bGluZT48cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwLjUiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1taXRlcmxpbWl0PSIyIiAgcG9pbnRzPSIxMC41IDAuNSAxMC41IDEwMC41Ij48L3BvbHlsaW5lPjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiICBwb2ludHM9IjAuNSAyMC41IDEwMC41IDIwLjUiPjwvcG9seWxpbmU+PHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbWl0ZXJsaW1pdD0iMiIgIHBvaW50cz0iMjAuNSAwLjUgMjAuNSAxMDAuNSI+PC9wb2x5bGluZT48cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwLjUiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1taXRlcmxpbWl0PSIyIiAgcG9pbnRzPSIwLjUgMzAuNSAxMDAuNSAzMC41Ij48L3BvbHlsaW5lPjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiICBwb2ludHM9IjMwLjUgMC41IDMwLjUgMTAwLjUiPjwvcG9seWxpbmU+PHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbWl0ZXJsaW1pdD0iMiIgIHBvaW50cz0iMC41IDQwLjUgMTAwLjUgNDAuNSI+PC9wb2x5bGluZT48cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwLjUiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1taXRlcmxpbWl0PSIyIiAgcG9pbnRzPSI0MC41IDAuNSA0MC41IDEwMC41Ij48L3BvbHlsaW5lPjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiICBwb2ludHM9IjAuNSA1MC41IDEwMC41IDUwLjUiPjwvcG9seWxpbmU+PHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbWl0ZXJsaW1pdD0iMiIgIHBvaW50cz0iNTAuNSAwLjUgNTAuNSAxMDAuNSI+PC9wb2x5bGluZT48cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwLjUiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1taXRlcmxpbWl0PSIyIiAgcG9pbnRzPSIwLjUgNjAuNSAxMDAuNSA2MC41Ij48L3BvbHlsaW5lPjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiICBwb2ludHM9IjYwLjUgMC41IDYwLjUgMTAwLjUiPjwvcG9seWxpbmU+PHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbWl0ZXJsaW1pdD0iMiIgIHBvaW50cz0iMC41IDcwLjUgMTAwLjUgNzAuNSI+PC9wb2x5bGluZT48cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwLjUiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1taXRlcmxpbWl0PSIyIiAgcG9pbnRzPSI3MC41IDAuNSA3MC41IDEwMC41Ij48L3BvbHlsaW5lPjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiICBwb2ludHM9IjAuNSA4MC41IDEwMC41IDgwLjUiPjwvcG9seWxpbmU+PHBvbHlsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2UtbGluZWNhcD0ic3F1YXJlIiBzdHJva2UtbWl0ZXJsaW1pdD0iMiIgIHBvaW50cz0iODAuNSAwLjUgODAuNSAxMDAuNSI+PC9wb2x5bGluZT48cG9seWxpbmUgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwLjUiIHN0cm9rZS1saW5lY2FwPSJzcXVhcmUiIHN0cm9rZS1taXRlcmxpbWl0PSIyIiAgcG9pbnRzPSIwLjUgOTAuNSAxMDAuNSA5MC41Ij48L3BvbHlsaW5lPjxwb2x5bGluZSBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiICBwb2ludHM9IjkwLjUgMC41IDkwLjUgMTAwLjUiPjwvcG9seWxpbmU+PC9nPjwvc3ZnPg==);"><div id="gearcontainer0" class="svg selected" style="width: 250px; height: 250px; transform: translate3d(75px, 75px, 0px) rotate(32579.6534deg);"><!--?xml version="1.0" encoding="utf-8"?--><!-- Generator: Iparigrafika Gear Generator by Abel Vincze http://geargenerator.com/ --><svg version="1.2" class="svggear" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="250px" height="250px" viewBox="-125 -125 250 250" overflow="scroll" xml:space="preserve"><polygon id="gearpoly0" data-id="0" class="gear" fill="#ddd" stroke="#444" stroke-width="1" stroke-miterlimit="10" points="71.25,0 89.1142,-0.0002 89.2667,-0.0068 89.5879,-0.0341 90.0758,-0.0968 90.7276,-0.2094 91.5397,-0.3863 92.5073,-0.6417 93.6249,-0.9894 94.8859,-1.4428 96.2829,-2.015 97.8076,-2.7186 99.451,-3.5657 101.2032,-4.5678 103.0534,-5.736 104.9903,-7.0804 107.0017,-8.6107 109.0748,-10.3357 111.1963,-12.2636 113.3522,-14.4015 115.5279,-16.7561 117.7084,-19.3328 119.8783,-22.1362 122.0217,-25.1701 121.8431,-27.9151 121.4423,-29.6103 120.3726,-32.1445 117.0973,-33.8972 113.9017,-35.432 110.7981,-36.7592 107.7983,-37.89 104.9132,-38.836 102.153,-39.6096 99.5268,-40.2235 97.043,-40.6909 94.7091,-41.0254 92.5317,-41.2412 90.5162,-41.3525 88.6675,-41.3739 86.9891,-41.3201 85.4838,-41.206 84.1533,-41.0467 82.9984,-40.857 82.0188,-40.652 81.2135,-40.4465 80.5802,-40.2552 80.1159,-40.0928 79.8165,-39.9734 79.6772,-39.911 63.7047,-31.9104 50.3814,-50.3814 63.0132,-63.0134 63.1163,-63.1259 63.3241,-63.3723 63.6248,-63.7616 64.006,-64.3022 64.4552,-65.0015 64.9588,-65.8663 65.5032,-66.9024 66.0742,-68.1147 66.6575,-69.5071 67.2381,-71.0828 67.8012,-72.8438 68.3315,-74.7914 68.8138,-76.9257 69.2328,-79.2459 69.573,-81.7503 69.8191,-84.436 69.956,-87.2993 69.9687,-90.3355 69.8422,-93.5389 69.5621,-96.9027 69.1141,-100.4194 68.4844,-104.0803 66.4171,-105.8951 64.9351,-106.8103 62.3866,-107.8459 58.8314,-106.7693 55.4865,-105.5948 52.3534,-104.3388 49.4326,-103.0172 46.7236,-101.6461 44.2248,-100.2413 41.9338,-98.8183 39.847,-97.3925 37.9601,-95.9788 36.2678,-94.5917 34.764,-93.2453 33.4416,-91.9531 32.2929,-90.7283 31.3091,-89.5832 30.481,-88.5297 29.7984,-87.579 29.2508,-86.7413 28.8266,-86.0266 28.514,-85.4435 28.3006,-85.0004 28.1734,-84.7043 28.119,-84.5616 22.482,-67.6101 0,-71.25 -0.0002,-89.1142 -0.0068,-89.2667 -0.0341,-89.5879 -0.0968,-90.0758 -0.2094,-90.7276 -0.3863,-91.5397 -0.6417,-92.5073 -0.9894,-93.6249 -1.4428,-94.8859 -2.015,-96.2829 -2.7186,-97.8076 -3.5657,-99.451 -4.5678,-101.2032 -5.736,-103.0534 -7.0804,-104.9903 -8.6107,-107.0017 -10.3357,-109.0748 -12.2636,-111.1963 -14.4015,-113.3522 -16.7561,-115.5279 -19.3328,-117.7084 -22.1362,-119.8783 -25.1701,-122.0217 -27.9151,-121.8431 -29.6103,-121.4423 -32.1445,-120.3726 -33.8972,-117.0973 -35.432,-113.9017 -36.7592,-110.7981 -37.89,-107.7983 -38.836,-104.9132 -39.6096,-102.153 -40.2235,-99.5268 -40.6909,-97.043 -41.0254,-94.7091 -41.2412,-92.5317 -41.3525,-90.5162 -41.3739,-88.6675 -41.3201,-86.9891 -41.206,-85.4838 -41.0467,-84.1533 -40.857,-82.9984 -40.652,-82.0188 -40.4465,-81.2135 -40.2552,-80.5802 -40.0928,-80.1159 -39.9734,-79.8165 -39.911,-79.6772 -31.9104,-63.7047 -50.3814,-50.3814 -63.0134,-63.0132 -63.1259,-63.1163 -63.3723,-63.3241 -63.7616,-63.6248 -64.3022,-64.006 -65.0015,-64.4552 -65.8663,-64.9588 -66.9024,-65.5032 -68.1147,-66.0742 -69.5071,-66.6575 -71.0828,-67.2381 -72.8438,-67.8012 -74.7914,-68.3315 -76.9257,-68.8138 -79.2459,-69.2328 -81.7503,-69.573 -84.436,-69.8191 -87.2993,-69.956 -90.3355,-69.9687 -93.5389,-69.8422 -96.9027,-69.5621 -100.4194,-69.1141 -104.0803,-68.4844 -105.8951,-66.4171 -106.8103,-64.9351 -107.8459,-62.3866 -106.7693,-58.8314 -105.5948,-55.4865 -104.3388,-52.3534 -103.0172,-49.4326 -101.6461,-46.7236 -100.2413,-44.2248 -98.8183,-41.9338 -97.3925,-39.847 -95.9788,-37.9601 -94.5917,-36.2678 -93.2453,-34.764 -91.9531,-33.4416 -90.7283,-32.2929 -89.5832,-31.3091 -88.5297,-30.481 -87.579,-29.7984 -86.7413,-29.2508 -86.0266,-28.8266 -85.4435,-28.514 -85.0004,-28.3006 -84.7043,-28.1734 -84.5616,-28.119 -67.6101,-22.482 -71.25,0 -89.1142,0.0002 -89.2667,0.0068 -89.5879,0.0341 -90.0758,0.0968 -90.7276,0.2094 -91.5397,0.3863 -92.5073,0.6417 -93.6249,0.9894 -94.8859,1.4428 -96.2829,2.015 -97.8076,2.7186 -99.451,3.5657 -101.2032,4.5678 -103.0534,5.736 -104.9903,7.0804 -107.0017,8.6107 -109.0748,10.3357 -111.1963,12.2636 -113.3522,14.4015 -115.5279,16.7561 -117.7084,19.3328 -119.8783,22.1362 -122.0217,25.1701 -121.8431,27.9151 -121.4423,29.6103 -120.3726,32.1445 -117.0973,33.8972 -113.9017,35.432 -110.7981,36.7592 -107.7983,37.89 -104.9132,38.836 -102.153,39.6096 -99.5268,40.2235 -97.043,40.6909 -94.7091,41.0254 -92.5317,41.2412 -90.5162,41.3525 -88.6675,41.3739 -86.9891,41.3201 -85.4838,41.206 -84.1533,41.0467 -82.9984,40.857 -82.0188,40.652 -81.2135,40.4465 -80.5802,40.2552 -80.1159,40.0928 -79.8165,39.9734 -79.6772,39.911 -63.7047,31.9104 -50.3814,50.3814 -63.0132,63.0134 -63.1163,63.1259 -63.3241,63.3723 -63.6248,63.7616 -64.006,64.3022 -64.4552,65.0015 -64.9588,65.8663 -65.5032,66.9024 -66.0742,68.1147 -66.6575,69.5071 -67.2381,71.0828 -67.8012,72.8438 -68.3315,74.7914 -68.8138,76.9257 -69.2328,79.2459 -69.573,81.7503 -69.8191,84.436 -69.956,87.2993 -69.9687,90.3355 -69.8422,93.5389 -69.5621,96.9027 -69.1141,100.4194 -68.4844,104.0803 -66.4171,105.8951 -64.9351,106.8103 -62.3866,107.8459 -58.8314,106.7693 -55.4865,105.5948 -52.3534,104.3388 -49.4326,103.0172 -46.7236,101.6461 -44.2248,100.2413 -41.9338,98.8183 -39.847,97.3925 -37.9601,95.9788 -36.2678,94.5917 -34.764,93.2453 -33.4416,91.9531 -32.2929,90.7283 -31.3091,89.5832 -30.481,88.5297 -29.7984,87.579 -29.2508,86.7413 -28.8266,86.0266 -28.514,85.4435 -28.3006,85.0004 -28.1734,84.7043 -28.119,84.5616 -22.482,67.6101 0,71.25 0.0002,89.1142 0.0068,89.2667 0.0341,89.5879 0.0968,90.0758 0.2094,90.7276 0.3863,91.5397 0.6417,92.5073 0.9894,93.6249 1.4428,94.8859 2.015,96.2829 2.7186,97.8076 3.5657,99.451 4.5678,101.2032 5.736,103.0534 7.0804,104.9903 8.6107,107.0017 10.3357,109.0748 12.2636,111.1963 14.4015,113.3522 16.7561,115.5279 19.3328,117.7084 22.1362,119.8783 25.1701,122.0217 27.9151,121.8431 29.6103,121.4423 32.1445,120.3726 33.8972,117.0973 35.432,113.9017 36.7592,110.7981 37.89,107.7983 38.836,104.9132 39.6096,102.153 40.2235,99.5268 40.6909,97.043 41.0254,94.7091 41.2412,92.5317 41.3525,90.5162 41.3739,88.6675 41.3201,86.9891 41.206,85.4838 41.0467,84.1533 40.857,82.9984 40.652,82.0188 40.4465,81.2135 40.2552,80.5802 40.0928,80.1159 39.9734,79.8165 39.911,79.6772 31.9104,63.7047 50.3814,50.3814 63.0134,63.0132 63.1259,63.1163 63.3723,63.3241 63.7616,63.6248 64.3022,64.006 65.0015,64.4552 65.8663,64.9588 66.9024,65.5032 68.1147,66.0742 69.5071,66.6575 71.0828,67.2381 72.8438,67.8012 74.7914,68.3315 76.9257,68.8138 79.2459,69.2328 81.7503,69.573 84.436,69.8191 87.2993,69.956 90.3355,69.9687 93.5389,69.8422 96.9027,69.5621 100.4194,69.1141 104.0803,68.4844 105.8951,66.4171 106.8103,64.9351 107.8459,62.3866 106.7693,58.8314 105.5948,55.4865 104.3388,52.3534 103.0172,49.4326 101.6461,46.7236 100.2413,44.2248 98.8183,41.9338 97.3925,39.847 95.9788,37.9601 94.5917,36.2678 93.2453,34.764 91.9531,33.4416 90.7283,32.2929 89.5832,31.3091 88.5297,30.481 87.579,29.7984 86.7413,29.2508 86.0266,28.8266 85.4435,28.514 85.0004,28.3006 84.7043,28.1734 84.5616,28.119 67.6101,22.482 "></polygon><g class="guides"><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-miterlimit="10" points="10,0 -10,0"></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-miterlimit="10" points="0,10 0,-10"></polyline></g><circle fill="#c00" class="firstmarker" stroke="none" stroke-miterlimit="10" cx="97.3165" cy="-23.0107" r="9.8125"></circle><g class="geartext"><g class="text"><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-29.29 -45.71 -30.7 -44.77 -32.08 -43.79 -33.44 -42.77 -34.76 -41.7 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-30.08 -41.05 -34.09 -46.53 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-31.12 -48.56 -31.66 -46.17 -32.08 -43.79 -32.39 -41.43 -32.58 -39.09 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-27.46 -42.85 -29.74 -43.37 -32.08 -43.79 -34.48 -44.1 -36.93 -44.31 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-20.45 -46.6 -21.17 -44.41 -22.55 -43.73 -24.73 -44.48 -28.02 -50.41 -27.21 -52.77 -25.55 -53.6 -23.18 -52.82 -20.45 -46.6 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-4.14 -59.23 -3.43 -49.08 -5.22 -51.48 -7.16 -53.81 -9.25 -56.07 -11.49 -58.25 -9.52 -48.27 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="6.57 -55.6 4.83 -55.77 3.09 -55.9 1.34 -55.97 -0.41 -55.98 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="6.17 -52.23 4.54 -52.39 2.9 -52.51 1.26 -52.57 -0.39 -52.59 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="11.39 -53.08 9.42 -51.74 9.12 -50.07 10.32 -48.1 11.82 -47.75 13.31 -47.36 15.29 -48.54 15.8 -50.16 14.68 -52.26 13.04 -52.7 11.39 -53.08 10.03 -55.08 10.34 -56.74 12.46 -58.05 14.27 -57.64 16.06 -57.16 17.33 -55.01 16.82 -53.4 14.68 -52.26 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="27.16 -47 28.61 -46.13 30.04 -45.22 31.44 -44.26 33.83 -44.6 34.86 -45.95 34.39 -48.4 32.86 -49.46 31.3 -50.46 29.7 -51.41 24.61 -42.6 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="32.12 -37.26 36.55 -42.4 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="37.66 -43.69 38.77 -44.97 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="39.83 -31.68 37.53 -31.81 37.78 -34.1 44.07 -39.79 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="43.81 -34.85 42.7 -36.2 41.55 -37.51 40.36 -38.79 39.13 -40.04 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="43.54 -22.91 42.8 -24.26 42.02 -25.58 41.2 -26.88 41.73 -29.13 44.51 -31.07 46.88 -30.59 47.82 -29.11 48.7 -27.6 49.54 -26.07 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="47.98 -21.53 50.2 -20.67 52.41 -19.69 53 -18.04 51.91 -15.88 47.04 -14.39 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="44.88 -20.14 54.17 -24.31 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="49.05 -3.84 49.14 -2.31 49.19 -0.77 49.19 0.77 50.84 2.38 57.62 2.7 59.37 0.93 59.37 -0.93 59.31 -2.78 59.19 -4.63 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="59.31 -2.78 49.14 -2.31 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="54.45 13 54.83 11.29 55.16 9.57 55.43 7.85 55.65 6.11 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="51.15 12.21 51.51 10.61 51.81 8.99 52.07 7.37 52.28 5.74 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="44.88 20.14 45.49 18.73 46.05 17.3 46.57 15.85 47.04 14.39 50.29 15.38 51.39 17.49 50.82 19.09 50.2 20.67 51.07 22.92 52.62 23.62 54.9 22.61 55.58 20.88 56.21 19.13 55.16 16.87 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="43.52 32.45 42.49 33.79 41.41 35.1 40.29 36.38 40.36 38.79 41.58 39.97 44.07 39.79 45.29 38.39 46.47 36.96 47.6 35.49 39.44 29.4 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="32.42 45.64 33.83 44.6 35.21 43.52 36.55 42.4 37.86 41.24 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="30.46 42.87 31.78 41.9 33.07 40.89 34.34 39.83 35.56 38.74 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="21.93 47.8 23.41 47.09 24.87 46.33 26.31 45.54 27.72 44.69 27.44 47.49 27.01 50.32 26.44 53.17 21.9 44.05 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="11.39 53.08 9.73 53.41 8.05 53.68 6.37 53.91 4.83 55.77 4.98 57.46 6.97 58.96 8.81 58.72 10.64 58.41 12.46 58.05 10.32 48.1 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="1.18 49.18 1.26 52.57 -0.41 55.98 -2.29 59.33 -3.91 55.85 -5.31 52.32 -4.96 48.95 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="1.26 52.57 -0.39 52.59 -2.03 52.55 -3.67 52.46 -5.31 52.32 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-15.93 53.67 -14.25 54.14 -12.55 54.56 -10.84 54.92 -9.12 55.23 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-14.97 50.41 -13.38 50.86 -11.79 51.25 -10.18 51.59 -8.56 51.89 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-22.55 43.73 -21.17 44.41 -19.77 45.05 -18.35 45.64 -16.92 46.2 -18.09 49.38 -20.25 50.37 -21.82 49.71 -23.36 49 -25.66 49.76 -26.43 51.26 -25.55 53.6 -23.86 54.37 -22.15 55.09 -19.84 54.16 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="-30.45 50.97 -32.03 49.99 -33.58 48.97 -35.09 47.9 -36.57 46.78 -32.08 43.79 -27.82 40.57 "></polyline></g></g><g class="guides gearguides" opacity="0.2"><circle class="pitch" fill="none" stroke="#f00" stroke-miterlimit="10" cx="0" cy="0" r="100"></circle><circle class="outer" fill="none" stroke="#ccc" stroke-miterlimit="10" stroke-dasharray="2,2" cx="0" cy="0" r="125"></circle><circle class="base" fill="none" stroke="#00f" stroke-miterlimit="10" stroke-dasharray="2,2" cx="0" cy="0" r="89.1"></circle></g></svg></div><div id="gearcontainer1" class="svg" style="width: 450px; height: 450px; transform: translate3d(125px, 234.81px, 0px) rotate(-16016.7466deg);"><!--?xml version="1.0" encoding="utf-8"?--><!-- Generator: Iparigrafika Gear Generator by Abel Vincze http://geargenerator.com/ --><svg version="1.2" class="svggear" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="450px" height="450px" viewBox="-225 -225 450 450" overflow="scroll" xml:space="preserve"><polygon id="gearpoly1" data-id="1" class="gear" fill="#ddd" stroke="#444" stroke-width="1" stroke-miterlimit="10" points="171.25,0 178.2284,-0.0003 178.3387,-0.0036 178.5335,-0.0135 178.8126,-0.0338 179.1757,-0.0681 179.6222,-0.1202 180.1515,-0.1935 180.7628,-0.2919 181.4552,-0.4188 182.2278,-0.5779 183.0794,-0.7727 184.0088,-1.0067 185.0147,-1.2835 186.0955,-1.6064 187.2498,-1.9788 188.4758,-2.4041 189.7718,-2.8856 191.1357,-3.4265 192.5657,-4.03 194.0597,-4.6992 195.6152,-5.4372 197.2302,-6.2469 198.902,-7.1314 200.6283,-8.0934 202.4063,-9.1357 204.2334,-10.261 206.1068,-11.4719 208.0235,-12.771 209.9805,-14.1607 211.9749,-15.6434 214.0034,-17.2213 216.0627,-18.8966 218.1497,-20.6714 220.2608,-22.5476 222.3927,-24.5271 223.4363,-26.4807 222.4715,-33.6371 220.9477,-35.2445 218.3678,-36.5888 215.8351,-37.8389 213.3527,-38.9977 210.9232,-40.0678 208.5493,-41.0521 206.2335,-41.9537 203.9782,-42.7755 201.7859,-43.5206 199.6588,-44.1922 197.5989,-44.7935 195.6083,-45.3277 193.6889,-45.7982 191.8425,-46.2083 190.0708,-46.5615 188.3753,-46.8611 186.7575,-47.1108 185.2188,-47.3141 183.7602,-47.4744 182.3831,-47.5955 181.0882,-47.6809 179.8765,-47.7344 178.7487,-47.7595 177.7055,-47.76 176.7473,-47.7395 175.8745,-47.7019 175.0874,-47.6507 174.3861,-47.5897 173.7705,-47.5227 173.2407,-47.4532 172.7964,-47.3851 172.4372,-47.3221 172.1626,-47.2677 171.9721,-47.2257 171.865,-47.1997 165.1356,-45.3519 158.2144,-65.5345 164.6615,-68.2054 164.7621,-68.2506 164.9382,-68.3343 165.1884,-68.4599 165.5107,-68.6305 165.9033,-68.8495 166.3642,-69.1198 166.8914,-69.4446 167.4825,-69.8268 168.1354,-70.2695 168.8476,-70.7753 169.6167,-71.3472 170.4401,-71.9878 171.3151,-72.6998 172.239,-73.4856 173.2089,-74.3477 174.222,-75.2884 175.2751,-76.3101 176.3653,-77.4149 177.4894,-78.6049 178.6442,-79.882 179.8263,-81.2481 181.0325,-82.705 182.2592,-84.2544 183.503,-85.8978 184.7604,-87.6367 186.0277,-89.4723 187.3014,-91.406 188.5776,-93.4389 189.8528,-95.5719 191.123,-97.806 192.3845,-100.1418 193.6334,-102.5801 194.8659,-105.1214 196.0779,-107.7661 196.2945,-109.9704 192.6645,-116.2127 190.6416,-117.1148 187.7436,-117.3694 184.9253,-117.5552 182.1884,-117.6757 179.5343,-117.7346 176.9644,-117.7356 174.4799,-117.6823 172.0818,-117.5785 169.7713,-117.428 167.549,-117.2344 165.4159,-117.0016 163.3724,-116.7334 161.419,-116.4336 159.5562,-116.1059 157.7842,-115.7541 156.1031,-115.3822 154.5129,-114.9937 153.0135,-114.5926 151.6047,-114.1826 150.286,-113.7675 149.057,-113.3509 147.9171,-112.9366 146.8655,-112.5282 145.9015,-112.1294 145.0241,-111.7439 144.2321,-111.375 143.5245,-111.0265 142.8999,-110.7018 142.3569,-110.4043 141.894,-110.1374 141.5095,-109.9045 141.2018,-109.7087 140.9689,-109.5535 140.809,-109.4417 140.72,-109.3767 135.21,-105.0943 121.092,-121.092 126.0263,-126.0268 126.1019,-126.107 126.2327,-126.2518 126.4157,-126.4635 126.6482,-126.7446 126.9271,-127.0971 127.2495,-127.5232 127.6122,-128.025 128.0121,-128.6044 128.4459,-129.2632 128.9103,-130.0031 129.402,-130.8258 129.9176,-131.7327 130.4535,-132.7253 131.0064,-133.8048 131.5726,-134.9725 132.1485,-136.2293 132.7305,-137.5763 133.3149,-139.0142 133.8981,-140.5437 134.4762,-142.1655 135.0456,-143.88 135.6023,-145.6876 136.1428,-147.5885 136.663,-149.5828 137.1592,-151.6705 137.6276,-153.8514 138.0643,-156.1253 138.4655,-158.4918 138.8273,-160.9505 139.1459,-163.5005 139.4175,-166.1414 139.6382,-168.872 139.8044,-171.6915 139.9121,-174.5987 139.2686,-176.718 133.5261,-181.0961 131.312,-181.1553 128.5371,-180.2815 125.8623,-179.3747 123.2876,-178.4386 120.813,-177.4774 118.4384,-176.4948 116.1633,-175.4948 113.9875,-174.4813 111.9105,-173.4579 109.9315,-172.4287 108.0497,-171.3973 106.2644,-170.3675 104.5745,-169.343 102.9789,-168.3274 101.4764,-167.3243 100.0656,-166.3373 98.7451,-165.3699 97.5134,-164.4255 96.3686,-163.5076 95.3092,-162.6194 94.3332,-161.7642 93.4386,-160.9452 92.6234,-160.1655 91.8853,-159.4282 91.2223,-158.7362 90.6317,-158.0924 90.1113,-157.4996 89.6586,-156.9606 89.2707,-156.4779 88.9452,-156.0542 88.6791,-155.6919 88.4697,-155.3933 88.314,-155.1607 88.209,-154.9963 88.1517,-154.9021 84.6999,-148.8371 65.5345,-158.2144 68.2048,-164.6617 68.2439,-164.7648 68.3093,-164.9486 68.3974,-165.2143 68.5046,-165.5629 68.6274,-165.9953 68.7622,-166.5123 68.9053,-167.1147 69.053,-167.803 69.2017,-168.5777 69.3476,-169.439 69.487,-170.3872 69.6163,-171.4224 69.7316,-172.5446 69.8292,-173.7535 69.9055,-175.049 69.9566,-176.4305 69.9788,-177.8977 69.9685,-179.4498 69.9219,-181.086 69.8354,-182.8056 69.7053,-184.6075 69.528,-186.4906 69.2998,-188.4536 69.0173,-190.4951 68.6768,-192.6138 68.275,-194.808 67.8082,-197.0759 67.2733,-199.4158 66.6666,-201.8257 65.9851,-204.3036 65.2254,-206.8474 64.3844,-209.4546 63.4589,-212.1231 62.4459,-214.8502 61.0404,-216.5619 54.0595,-218.4092 51.9913,-217.6166 49.7621,-215.7474 47.6379,-213.886 45.6174,-212.0359 43.699,-210.2009 41.8811,-208.3844 40.162,-206.5899 38.5397,-204.8208 37.0123,-203.0805 35.5778,-201.3723 34.234,-199.6993 32.9787,-198.0647 31.8095,-196.4714 30.724,-194.9225 29.7198,-193.4208 28.7941,-191.9691 27.9443,-190.57 27.1677,-189.2261 26.4614,-187.94 25.8225,-186.714 25.248,-185.5504 24.7349,-184.4514 24.2801,-183.4191 23.8805,-182.4554 23.5327,-181.5623 23.2335,-180.7416 22.9795,-179.9948 22.7675,-179.3235 22.5939,-178.7292 22.4553,-178.2131 22.3482,-177.7766 22.269,-177.4206 22.2141,-177.1461 22.18,-176.954 22.1631,-176.8451 21.295,-169.9208 0,-171.25 -0.0003,-178.2284 -0.0036,-178.3387 -0.0135,-178.5335 -0.0338,-178.8126 -0.0681,-179.1757 -0.1202,-179.6222 -0.1935,-180.1515 -0.2919,-180.7628 -0.4188,-181.4552 -0.5779,-182.2278 -0.7727,-183.0794 -1.0067,-184.0088 -1.2835,-185.0147 -1.6064,-186.0955 -1.9788,-187.2498 -2.4041,-188.4758 -2.8856,-189.7718 -3.4265,-191.1357 -4.03,-192.5657 -4.6992,-194.0597 -5.4372,-195.6152 -6.2469,-197.2302 -7.1314,-198.902 -8.0934,-200.6283 -9.1357,-202.4063 -10.261,-204.2334 -11.4719,-206.1068 -12.771,-208.0235 -14.1607,-209.9805 -15.6434,-211.9749 -17.2213,-214.0034 -18.8966,-216.0627 -20.6714,-218.1497 -22.5476,-220.2608 -24.5271,-222.3927 -26.4807,-223.4363 -33.6371,-222.4715 -35.2445,-220.9477 -36.5888,-218.3678 -37.8389,-215.8351 -38.9977,-213.3527 -40.0678,-210.9232 -41.0521,-208.5493 -41.9537,-206.2335 -42.7755,-203.9782 -43.5206,-201.7859 -44.1922,-199.6588 -44.7935,-197.5989 -45.3277,-195.6083 -45.7982,-193.6889 -46.2083,-191.8425 -46.5615,-190.0708 -46.8611,-188.3753 -47.1108,-186.7575 -47.3141,-185.2188 -47.4744,-183.7602 -47.5955,-182.3831 -47.6809,-181.0882 -47.7344,-179.8765 -47.7595,-178.7487 -47.76,-177.7055 -47.7395,-176.7473 -47.7019,-175.8745 -47.6507,-175.0874 -47.5897,-174.3861 -47.5227,-173.7705 -47.4532,-173.2407 -47.3851,-172.7964 -47.3221,-172.4372 -47.2677,-172.1626 -47.2257,-171.9721 -47.1997,-171.865 -45.3519,-165.1356 -65.5345,-158.2144 -68.2054,-164.6615 -68.2506,-164.7621 -68.3343,-164.9382 -68.4599,-165.1884 -68.6305,-165.5107 -68.8495,-165.9033 -69.1198,-166.3642 -69.4446,-166.8914 -69.8268,-167.4825 -70.2695,-168.1354 -70.7753,-168.8476 -71.3472,-169.6167 -71.9878,-170.4401 -72.6998,-171.3151 -73.4856,-172.239 -74.3477,-173.2089 -75.2884,-174.222 -76.3101,-175.2751 -77.4149,-176.3653 -78.6049,-177.4894 -79.882,-178.6442 -81.2481,-179.8263 -82.705,-181.0325 -84.2544,-182.2592 -85.8978,-183.503 -87.6367,-184.7604 -89.4723,-186.0277 -91.406,-187.3014 -93.4389,-188.5776 -95.5719,-189.8528 -97.806,-191.123 -100.1418,-192.3845 -102.5801,-193.6334 -105.1214,-194.8659 -107.7661,-196.0779 -109.9704,-196.2945 -116.2127,-192.6645 -117.1148,-190.6416 -117.3694,-187.7436 -117.5552,-184.9253 -117.6757,-182.1884 -117.7346,-179.5343 -117.7356,-176.9644 -117.6823,-174.4799 -117.5785,-172.0818 -117.428,-169.7713 -117.2344,-167.549 -117.0016,-165.4159 -116.7334,-163.3724 -116.4336,-161.419 -116.1059,-159.5562 -115.7541,-157.7842 -115.3822,-156.1031 -114.9937,-154.5129 -114.5926,-153.0135 -114.1826,-151.6047 -113.7675,-150.286 -113.3509,-149.057 -112.9366,-147.9171 -112.5282,-146.8655 -112.1294,-145.9015 -111.7439,-145.0241 -111.375,-144.2321 -111.0265,-143.5245 -110.7018,-142.8999 -110.4043,-142.3569 -110.1374,-141.894 -109.9045,-141.5095 -109.7087,-141.2018 -109.5535,-140.9689 -109.4417,-140.809 -109.3767,-140.72 -105.0943,-135.21 -121.092,-121.092 -126.0268,-126.0263 -126.107,-126.1019 -126.2518,-126.2327 -126.4635,-126.4157 -126.7446,-126.6482 -127.0971,-126.9271 -127.5232,-127.2495 -128.025,-127.6122 -128.6044,-128.0121 -129.2632,-128.4459 -130.0031,-128.9103 -130.8258,-129.402 -131.7327,-129.9176 -132.7253,-130.4535 -133.8048,-131.0064 -134.9725,-131.5726 -136.2293,-132.1485 -137.5763,-132.7305 -139.0142,-133.3149 -140.5437,-133.8981 -142.1655,-134.4762 -143.88,-135.0456 -145.6876,-135.6023 -147.5885,-136.1428 -149.5828,-136.663 -151.6705,-137.1592 -153.8514,-137.6276 -156.1253,-138.0643 -158.4918,-138.4655 -160.9505,-138.8273 -163.5005,-139.1459 -166.1414,-139.4175 -168.872,-139.6382 -171.6915,-139.8044 -174.5987,-139.9121 -176.718,-139.2686 -181.0961,-133.5261 -181.1553,-131.312 -180.2815,-128.5371 -179.3747,-125.8623 -178.4386,-123.2876 -177.4774,-120.813 -176.4948,-118.4384 -175.4948,-116.1633 -174.4813,-113.9875 -173.4579,-111.9105 -172.4287,-109.9315 -171.3973,-108.0497 -170.3675,-106.2644 -169.343,-104.5745 -168.3274,-102.9789 -167.3243,-101.4764 -166.3373,-100.0656 -165.3699,-98.7451 -164.4255,-97.5134 -163.5076,-96.3686 -162.6194,-95.3092 -161.7642,-94.3332 -160.9452,-93.4386 -160.1655,-92.6234 -159.4282,-91.8853 -158.7362,-91.2223 -158.0924,-90.6317 -157.4996,-90.1113 -156.9606,-89.6586 -156.4779,-89.2707 -156.0542,-88.9452 -155.6919,-88.6791 -155.3933,-88.4697 -155.1607,-88.314 -154.9963,-88.209 -154.9021,-88.1517 -148.8371,-84.6999 -158.2144,-65.5345 -164.6617,-68.2048 -164.7648,-68.2439 -164.9486,-68.3093 -165.2143,-68.3974 -165.5629,-68.5046 -165.9953,-68.6274 -166.5123,-68.7622 -167.1147,-68.9053 -167.803,-69.053 -168.5777,-69.2017 -169.439,-69.3476 -170.3872,-69.487 -171.4224,-69.6163 -172.5446,-69.7316 -173.7535,-69.8292 -175.049,-69.9055 -176.4305,-69.9566 -177.8977,-69.9788 -179.4498,-69.9685 -181.086,-69.9219 -182.8056,-69.8354 -184.6075,-69.7053 -186.4906,-69.528 -188.4536,-69.2998 -190.4951,-69.0173 -192.6138,-68.6768 -194.808,-68.275 -197.0759,-67.8082 -199.4158,-67.2733 -201.8257,-66.6666 -204.3036,-65.9851 -206.8474,-65.2254 -209.4546,-64.3844 -212.1231,-63.4589 -214.8502,-62.4459 -216.5619,-61.0404 -218.4092,-54.0595 -217.6166,-51.9913 -215.7474,-49.7621 -213.886,-47.6379 -212.0359,-45.6174 -210.2009,-43.699 -208.3844,-41.8811 -206.5899,-40.162 -204.8208,-38.5397 -203.0805,-37.0123 -201.3723,-35.5778 -199.6993,-34.234 -198.0647,-32.9787 -196.4714,-31.8095 -194.9225,-30.724 -193.4208,-29.7198 -191.9691,-28.7941 -190.57,-27.9443 -189.2261,-27.1677 -187.94,-26.4614 -186.714,-25.8225 -185.5504,-25.248 -184.4514,-24.7349 -183.4191,-24.2801 -182.4554,-23.8805 -181.5623,-23.5327 -180.7416,-23.2335 -179.9948,-22.9795 -179.3235,-22.7675 -178.7292,-22.5939 -178.2131,-22.4553 -177.7766,-22.3482 -177.4206,-22.269 -177.1461,-22.2141 -176.954,-22.18 -176.8451,-22.1631 -169.9208,-21.295 -171.25,0 -178.2284,0.0003 -178.3387,0.0036 -178.5335,0.0135 -178.8126,0.0338 -179.1757,0.0681 -179.6222,0.1202 -180.1515,0.1935 -180.7628,0.2919 -181.4552,0.4188 -182.2278,0.5779 -183.0794,0.7727 -184.0088,1.0067 -185.0147,1.2835 -186.0955,1.6064 -187.2498,1.9788 -188.4758,2.4041 -189.7718,2.8856 -191.1357,3.4265 -192.5657,4.03 -194.0597,4.6992 -195.6152,5.4372 -197.2302,6.2469 -198.902,7.1314 -200.6283,8.0934 -202.4063,9.1357 -204.2334,10.261 -206.1068,11.4719 -208.0235,12.771 -209.9805,14.1607 -211.9749,15.6434 -214.0034,17.2213 -216.0627,18.8966 -218.1497,20.6714 -220.2608,22.5476 -222.3927,24.5271 -223.4363,26.4807 -222.4715,33.6371 -220.9477,35.2445 -218.3678,36.5888 -215.8351,37.8389 -213.3527,38.9977 -210.9232,40.0678 -208.5493,41.0521 -206.2335,41.9537 -203.9782,42.7755 -201.7859,43.5206 -199.6588,44.1922 -197.5989,44.7935 -195.6083,45.3277 -193.6889,45.7982 -191.8425,46.2083 -190.0708,46.5615 -188.3753,46.8611 -186.7575,47.1108 -185.2188,47.3141 -183.7602,47.4744 -182.3831,47.5955 -181.0882,47.6809 -179.8765,47.7344 -178.7487,47.7595 -177.7055,47.76 -176.7473,47.7395 -175.8745,47.7019 -175.0874,47.6507 -174.3861,47.5897 -173.7705,47.5227 -173.2407,47.4532 -172.7964,47.3851 -172.4372,47.3221 -172.1626,47.2677 -171.9721,47.2257 -171.865,47.1997 -165.1356,45.3519 -158.2144,65.5345 -164.6615,68.2054 -164.7621,68.2506 -164.9382,68.3343 -165.1884,68.4599 -165.5107,68.6305 -165.9033,68.8495 -166.3642,69.1198 -166.8914,69.4446 -167.4825,69.8268 -168.1354,70.2695 -168.8476,70.7753 -169.6167,71.3472 -170.4401,71.9878 -171.3151,72.6998 -172.239,73.4856 -173.2089,74.3477 -174.222,75.2884 -175.2751,76.3101 -176.3653,77.4149 -177.4894,78.6049 -178.6442,79.882 -179.8263,81.2481 -181.0325,82.705 -182.2592,84.2544 -183.503,85.8978 -184.7604,87.6367 -186.0277,89.4723 -187.3014,91.406 -188.5776,93.4389 -189.8528,95.5719 -191.123,97.806 -192.3845,100.1418 -193.6334,102.5801 -194.8659,105.1214 -196.0779,107.7661 -196.2945,109.9704 -192.6645,116.2127 -190.6416,117.1148 -187.7436,117.3694 -184.9253,117.5552 -182.1884,117.6757 -179.5343,117.7346 -176.9644,117.7356 -174.4799,117.6823 -172.0818,117.5785 -169.7713,117.428 -167.549,117.2344 -165.4159,117.0016 -163.3724,116.7334 -161.419,116.4336 -159.5562,116.1059 -157.7842,115.7541 -156.1031,115.3822 -154.5129,114.9937 -153.0135,114.5926 -151.6047,114.1826 -150.286,113.7675 -149.057,113.3509 -147.9171,112.9366 -146.8655,112.5282 -145.9015,112.1294 -145.0241,111.7439 -144.2321,111.375 -143.5245,111.0265 -142.8999,110.7018 -142.3569,110.4043 -141.894,110.1374 -141.5095,109.9045 -141.2018,109.7087 -140.9689,109.5535 -140.809,109.4417 -140.72,109.3767 -135.21,105.0943 -121.092,121.092 -126.0263,126.0268 -126.1019,126.107 -126.2327,126.2518 -126.4157,126.4635 -126.6482,126.7446 -126.9271,127.0971 -127.2495,127.5232 -127.6122,128.025 -128.0121,128.6044 -128.4459,129.2632 -128.9103,130.0031 -129.402,130.8258 -129.9176,131.7327 -130.4535,132.7253 -131.0064,133.8048 -131.5726,134.9725 -132.1485,136.2293 -132.7305,137.5763 -133.3149,139.0142 -133.8981,140.5437 -134.4762,142.1655 -135.0456,143.88 -135.6023,145.6876 -136.1428,147.5885 -136.663,149.5828 -137.1592,151.6705 -137.6276,153.8514 -138.0643,156.1253 -138.4655,158.4918 -138.8273,160.9505 -139.1459,163.5005 -139.4175,166.1414 -139.6382,168.872 -139.8044,171.6915 -139.9121,174.5987 -139.2686,176.718 -133.5261,181.0961 -131.312,181.1553 -128.5371,180.2815 -125.8623,179.3747 -123.2876,178.4386 -120.813,177.4774 -118.4384,176.4948 -116.1633,175.4948 -113.9875,174.4813 -111.9105,173.4579 -109.9315,172.4287 -108.0497,171.3973 -106.2644,170.3675 -104.5745,169.343 -102.9789,168.3274 -101.4764,167.3243 -100.0656,166.3373 -98.7451,165.3699 -97.5134,164.4255 -96.3686,163.5076 -95.3092,162.6194 -94.3332,161.7642 -93.4386,160.9452 -92.6234,160.1655 -91.8853,159.4282 -91.2223,158.7362 -90.6317,158.0924 -90.1113,157.4996 -89.6586,156.9606 -89.2707,156.4779 -88.9452,156.0542 -88.6791,155.6919 -88.4697,155.3933 -88.314,155.1607 -88.209,154.9963 -88.1517,154.9021 -84.6999,148.8371 -65.5345,158.2144 -68.2048,164.6617 -68.2439,164.7648 -68.3093,164.9486 -68.3974,165.2143 -68.5046,165.5629 -68.6274,165.9953 -68.7622,166.5123 -68.9053,167.1147 -69.053,167.803 -69.2017,168.5777 -69.3476,169.439 -69.487,170.3872 -69.6163,171.4224 -69.7316,172.5446 -69.8292,173.7535 -69.9055,175.049 -69.9566,176.4305 -69.9788,177.8977 -69.9685,179.4498 -69.9219,181.086 -69.8354,182.8056 -69.7053,184.6075 -69.528,186.4906 -69.2998,188.4536 -69.0173,190.4951 -68.6768,192.6138 -68.275,194.808 -67.8082,197.0759 -67.2733,199.4158 -66.6666,201.8257 -65.9851,204.3036 -65.2254,206.8474 -64.3844,209.4546 -63.4589,212.1231 -62.4459,214.8502 -61.0404,216.5619 -54.0595,218.4092 -51.9913,217.6166 -49.7621,215.7474 -47.6379,213.886 -45.6174,212.0359 -43.699,210.2009 -41.8811,208.3844 -40.162,206.5899 -38.5397,204.8208 -37.0123,203.0805 -35.5778,201.3723 -34.234,199.6993 -32.9787,198.0647 -31.8095,196.4714 -30.724,194.9225 -29.7198,193.4208 -28.7941,191.9691 -27.9443,190.57 -27.1677,189.2261 -26.4614,187.94 -25.8225,186.714 -25.248,185.5504 -24.7349,184.4514 -24.2801,183.4191 -23.8805,182.4554 -23.5327,181.5623 -23.2335,180.7416 -22.9795,179.9948 -22.7675,179.3235 -22.5939,178.7292 -22.4553,178.2131 -22.3482,177.7766 -22.269,177.4206 -22.2141,177.1461 -22.18,176.954 -22.1631,176.8451 -21.295,169.9208 0,171.25 0.0003,178.2284 0.0036,178.3387 0.0135,178.5335 0.0338,178.8126 0.0681,179.1757 0.1202,179.6222 0.1935,180.1515 0.2919,180.7628 0.4188,181.4552 0.5779,182.2278 0.7727,183.0794 1.0067,184.0088 1.2835,185.0147 1.6064,186.0955 1.9788,187.2498 2.4041,188.4758 2.8856,189.7718 3.4265,191.1357 4.03,192.5657 4.6992,194.0597 5.4372,195.6152 6.2469,197.2302 7.1314,198.902 8.0934,200.6283 9.1357,202.4063 10.261,204.2334 11.4719,206.1068 12.771,208.0235 14.1607,209.9805 15.6434,211.9749 17.2213,214.0034 18.8966,216.0627 20.6714,218.1497 22.5476,220.2608 24.5271,222.3927 26.4807,223.4363 33.6371,222.4715 35.2445,220.9477 36.5888,218.3678 37.8389,215.8351 38.9977,213.3527 40.0678,210.9232 41.0521,208.5493 41.9537,206.2335 42.7755,203.9782 43.5206,201.7859 44.1922,199.6588 44.7935,197.5989 45.3277,195.6083 45.7982,193.6889 46.2083,191.8425 46.5615,190.0708 46.8611,188.3753 47.1108,186.7575 47.3141,185.2188 47.4744,183.7602 47.5955,182.3831 47.6809,181.0882 47.7344,179.8765 47.7595,178.7487 47.76,177.7055 47.7395,176.7473 47.7019,175.8745 47.6507,175.0874 47.5897,174.3861 47.5227,173.7705 47.4532,173.2407 47.3851,172.7964 47.3221,172.4372 47.2677,172.1626 47.2257,171.9721 47.1997,171.865 45.3519,165.1356 65.5345,158.2144 68.2054,164.6615 68.2506,164.7621 68.3343,164.9382 68.4599,165.1884 68.6305,165.5107 68.8495,165.9033 69.1198,166.3642 69.4446,166.8914 69.8268,167.4825 70.2695,168.1354 70.7753,168.8476 71.3472,169.6167 71.9878,170.4401 72.6998,171.3151 73.4856,172.239 74.3477,173.2089 75.2884,174.222 76.3101,175.2751 77.4149,176.3653 78.6049,177.4894 79.882,178.6442 81.2481,179.8263 82.705,181.0325 84.2544,182.2592 85.8978,183.503 87.6367,184.7604 89.4723,186.0277 91.406,187.3014 93.4389,188.5776 95.5719,189.8528 97.806,191.123 100.1418,192.3845 102.5801,193.6334 105.1214,194.8659 107.7661,196.0779 109.9704,196.2945 116.2127,192.6645 117.1148,190.6416 117.3694,187.7436 117.5552,184.9253 117.6757,182.1884 117.7346,179.5343 117.7356,176.9644 117.6823,174.4799 117.5785,172.0818 117.428,169.7713 117.2344,167.549 117.0016,165.4159 116.7334,163.3724 116.4336,161.419 116.1059,159.5562 115.7541,157.7842 115.3822,156.1031 114.9937,154.5129 114.5926,153.0135 114.1826,151.6047 113.7675,150.286 113.3509,149.057 112.9366,147.9171 112.5282,146.8655 112.1294,145.9015 111.7439,145.0241 111.375,144.2321 111.0265,143.5245 110.7018,142.8999 110.4043,142.3569 110.1374,141.894 109.9045,141.5095 109.7087,141.2018 109.5535,140.9689 109.4417,140.809 109.3767,140.72 105.0943,135.21 121.092,121.092 126.0268,126.0263 126.107,126.1019 126.2518,126.2327 126.4635,126.4157 126.7446,126.6482 127.0971,126.9271 127.5232,127.2495 128.025,127.6122 128.6044,128.0121 129.2632,128.4459 130.0031,128.9103 130.8258,129.402 131.7327,129.9176 132.7253,130.4535 133.8048,131.0064 134.9725,131.5726 136.2293,132.1485 137.5763,132.7305 139.0142,133.3149 140.5437,133.8981 142.1655,134.4762 143.88,135.0456 145.6876,135.6023 147.5885,136.1428 149.5828,136.663 151.6705,137.1592 153.8514,137.6276 156.1253,138.0643 158.4918,138.4655 160.9505,138.8273 163.5005,139.1459 166.1414,139.4175 168.872,139.6382 171.6915,139.8044 174.5987,139.9121 176.718,139.2686 181.0961,133.5261 181.1553,131.312 180.2815,128.5371 179.3747,125.8623 178.4386,123.2876 177.4774,120.813 176.4948,118.4384 175.4948,116.1633 174.4813,113.9875 173.4579,111.9105 172.4287,109.9315 171.3973,108.0497 170.3675,106.2644 169.343,104.5745 168.3274,102.9789 167.3243,101.4764 166.3373,100.0656 165.3699,98.7451 164.4255,97.5134 163.5076,96.3686 162.6194,95.3092 161.7642,94.3332 160.9452,93.4386 160.1655,92.6234 159.4282,91.8853 158.7362,91.2223 158.0924,90.6317 157.4996,90.1113 156.9606,89.6586 156.4779,89.2707 156.0542,88.9452 155.6919,88.6791 155.3933,88.4697 155.1607,88.314 154.9963,88.209 154.9021,88.1517 148.8371,84.6999 158.2144,65.5345 164.6617,68.2048 164.7648,68.2439 164.9486,68.3093 165.2143,68.3974 165.5629,68.5046 165.9953,68.6274 166.5123,68.7622 167.1147,68.9053 167.803,69.053 168.5777,69.2017 169.439,69.3476 170.3872,69.487 171.4224,69.6163 172.5446,69.7316 173.7535,69.8292 175.049,69.9055 176.4305,69.9566 177.8977,69.9788 179.4498,69.9685 181.086,69.9219 182.8056,69.8354 184.6075,69.7053 186.4906,69.528 188.4536,69.2998 190.4951,69.0173 192.6138,68.6768 194.808,68.275 197.0759,67.8082 199.4158,67.2733 201.8257,66.6666 204.3036,65.9851 206.8474,65.2254 209.4546,64.3844 212.1231,63.4589 214.8502,62.4459 216.5619,61.0404 218.4092,54.0595 217.6166,51.9913 215.7474,49.7621 213.886,47.6379 212.0359,45.6174 210.2009,43.699 208.3844,41.8811 206.5899,40.162 204.8208,38.5397 203.0805,37.0123 201.3723,35.5778 199.6993,34.234 198.0647,32.9787 196.4714,31.8095 194.9225,30.724 193.4208,29.7198 191.9691,28.7941 190.57,27.9443 189.2261,27.1677 187.94,26.4614 186.714,25.8225 185.5504,25.248 184.4514,24.7349 183.4191,24.2801 182.4554,23.8805 181.5623,23.5327 180.7416,23.2335 179.9948,22.9795 179.3235,22.7675 178.7292,22.5939 178.2131,22.4553 177.7766,22.3482 177.4206,22.269 177.1461,22.2141 176.954,22.18 176.8451,22.1631 169.9208,21.295 "></polygon><g class="guides"><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-miterlimit="10" points="10,0 -10,0"></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-miterlimit="10" points="0,10 0,-10"></polyline></g><circle fill="#c00" class="firstmarker" stroke="none" stroke-miterlimit="10" cx="198.2067" cy="-26.7225" r="9.8125"></circle><g class="geartext"><g class="text"><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="11.86 -140.75 8.87 -140.97 5.87 -141.13 2.87 -141.22 -0.13 -141.25 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="5.62 -135.13 6.12 -147.12 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="12.36 -146.73 9.06 -143.97 5.87 -141.13 2.81 -138.22 -0.12 -135.25 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="11.36 -134.77 8.68 -137.98 5.87 -141.13 2.94 -144.22 -0.13 -147.25 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="18.58 -146.07 22.12 -148.61 19.47 -130.81 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="22.25 -130.37 19.47 -130.81 16.69 -131.19 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="58.88 -138.23 51.82 -121.67 50.9 -126.92 49.78 -132.19 48.46 -137.46 46.94 -142.73 41.31 -125.63 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="72.93 -124.45 70.27 -125.97 67.58 -127.44 64.86 -128.84 62.11 -130.19 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="69.9 -119.28 67.35 -120.73 64.77 -122.14 62.16 -123.49 59.53 -124.78 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="79.78 -123.77 84.07 -124.53 74 -109.61 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="76.31 -108.01 74 -109.61 71.65 -111.16 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="86.33 -111.8 88.68 -109.94 91 -108.03 93.27 -106.08 93.47 -101.86 91.44 -99.65 87.33 -99.32 85.2 -101.15 83.03 -102.94 82.66 -107.05 88.16 -114.18 92.45 -114.61 96.79 -114.92 99.21 -112.84 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="109.86 -88.78 111.72 -86.42 113.53 -84.03 115.29 -81.6 119.49 -80.82 121.97 -82.5 122.64 -86.8 120.77 -89.39 118.84 -91.93 116.86 -94.43 102.86 -83.12 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="112.59 -69.37 122.81 -75.67 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="125.36 -77.24 127.92 -78.82 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="123.23 -55.74 119.31 -57.05 120.75 -60.92 134.14 -67.68 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="131.43 -59.45 130.14 -62.23 128.79 -64.98 127.38 -67.7 125.91 -70.39 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="126.45 -38.75 125.6 -41.42 124.69 -44.08 123.72 -46.72 125.49 -50.46 131.05 -52.69 134.95 -50.96 136 -48.08 136.99 -45.18 137.92 -42.26 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="133.78 -34.86 137.41 -32.7 141.01 -30.41 141.62 -27.41 139.22 -23.88 130.35 -22.36 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="127.98 -33.34 145.4 -37.88 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="132.22 -2.81 132.25 0 132.22 2.81 132.13 5.62 134.98 8.61 146.95 9.38 150.11 6.38 150.22 3.19 150.25 0 150.22 -3.19 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="150.25 0 132.25 0 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="141.62 27.41 142.17 24.39 142.66 21.37 143.08 18.33 143.44 15.29 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="135.73 26.27 136.26 23.38 136.72 20.48 137.13 17.57 137.47 14.65 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="131.29 43.3 132.18 40.5 133.01 37.69 133.78 34.86 134.49 32.01 137.65 35.86 140.71 39.87 143.66 44.02 126.45 38.75 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="126.11 63.62 124.73 66.29 123.29 68.92 121.8 71.53 122.81 75.67 125.36 77.24 129.56 76.08 131.15 73.31 132.68 70.51 134.14 67.68 118.07 59.57 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="112.2 90.66 114.1 88.26 115.95 85.82 117.74 83.34 119.49 80.82 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="107.53 86.89 109.35 84.59 111.12 82.25 112.84 79.87 114.52 77.45 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="95.62 99.85 97.71 97.8 99.77 95.7 101.78 93.56 103.74 91.38 104.72 96.27 105.54 101.24 106.2 106.29 93.47 93.56 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="81.5 115.37 79.03 117.07 76.53 118.72 73.99 120.32 72.93 124.45 74.45 127.04 78.7 127.99 81.4 126.29 84.07 124.53 86.69 122.72 76.31 108.01 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="61.96 116.84 64.77 122.14 64.86 128.84 64.69 135.61 59.33 131.48 54.17 127.19 51.82 121.67 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="64.77 122.14 62.16 123.49 59.53 124.78 56.86 126.01 54.17 127.19 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="39.2 138.82 42.14 137.96 45.06 137.03 47.96 136.04 50.84 134.99 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="37.57 133.05 40.39 132.22 43.19 131.33 45.97 130.38 48.72 129.38 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="19.47 130.81 22.25 130.37 25.01 129.86 27.76 129.3 30.5 128.68 31.89 134.52 29.65 138.1 26.71 138.7 23.76 139.24 21.24 142.68 21.68 145.64 25.28 148.11 28.42 147.54 31.54 146.9 33.96 143.28 "></polyline><polyline fill="none" stroke="#444" stroke-width="0.5" stroke-linecap="square" stroke-miterlimit="1" points="15.79 149.42 12.62 149.72 9.43 149.95 6.25 150.12 3.06 150.22 5.87 141.13 8.3 131.99 "></polyline></g></g><g class="guides gearguides" opacity="0.2"><circle class="pitch" fill="none" stroke="#f00" stroke-miterlimit="10" cx="0" cy="0" r="200"></circle><circle class="outer" fill="none" stroke="#ccc" stroke-miterlimit="10" stroke-dasharray="2,2" cx="0" cy="0" r="225"></circle><circle class="base" fill="none" stroke="#00f" stroke-miterlimit="10" stroke-dasharray="2,2" cx="0" cy="0" r="178.2"></circle></g></svg></div></div>
+		</div>
+		<div id="panel">
+			<h1 id="title">Gear Generator</h1>
+			<p class="title"><svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="144px" height="54px" viewBox="0 0 144 54" xml:space="preserve"><g class="text"><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="21 21 27 21 27 39 9 39 3 33 3 9 9 3 27 3 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="63 39 39 39 39 3 63 3 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="39 21 51 21 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="75 39 75 27 87 3 99 27 99 39 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="75 27 99 27 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="135 39 117 21 129 21 135 15 135 9 129 3 111 3 111 39 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="117 21 111 21 "></polyline></g></svg></p><p class="title"><svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="324px" height="54px" viewBox="0 0 324 54" xml:space="preserve"><g class="text"><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="21 21 27 21 27 39 9 39 3 33 3 9 9 3 27 3 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="63 39 39 39 39 3 63 3 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="39 21 51 21 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="99 3 99 39 75 3 75 39 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="135 39 111 39 111 3 135 3 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="111 21 123 21 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="171 39 153 21 165 21 171 15 171 9 165 3 147 3 147 39 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="153 21 147 21 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="183 39 183 27 195 3 207 27 207 39 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="183 27 207 27 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="243 3 219 3 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="231 3 231 39 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="279 21 279 33 273 39 261 39 255 33 255 9 261 3 273 3 279 9 279 21 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="315 39 297 21 309 21 315 15 315 9 309 3 291 3 291 39 "></polyline><polyline fill="none" stroke="#444" stroke-width="6" stroke-linecap="square" stroke-miterlimit="2" points="297 21 291 21 "></polyline></g></svg></p>
+			<div id="animpanel">
+				<label><h2>Animation:</h2></label>
+				<button onclick="anim(0)">Start/Stop</button><button onclick="anim(1)">Freeze</button><button onclick="anim(2)">Reset</button><br>
+				<label for="RPM">Speed (RPM)*:</label>
+				<input type="text" id="RPM" value="6"><br>
+				<span class="rem">* Shift + Enter: Set RPM of the selected gear</span>
+			</div>
+			<div id="gearlist">
+				<label><h2>Gears:</h2></label>
+				<button onclick="addNewGear()" title="Add a new gear connected to the selected one">Add New</button><button class="first" onclick="removeGear()" title="Remove selected gear and all child gears">Remove</button><button onclick="clearAll()" class="last" title="Clear all, and start with a single default gear">Clear</button>
+				
+				<ul id="gearselector">
+					<!--<li class="selected">Gear 1 - Drive gear</li>
+					<li>Gear 2 - second gear</li>-->
+				<li id="gearlistitem0" data-id="0" class="listitem selected">#0 - ratio: 1:1 - RPM: 8</li><li id="gearlistitem1" data-id="1" class="listitem">#1 - ratio: 2:1 - RPM: 4</li></ul>
+			</div>
+			<h2>Connection properties</h2>
+			<p>
+				<label for="PG">Parent gear #:</label>
+				<input type="text" id="PG"> <button class="select" onclick="selectParent()" title="Select parent gear">Select</button>
+				<label for="CAXLE">Axle connection:</label>
+				<input type="checkbox" checked="checked" id="CAXLE" class="thecheckbox"><br>
+	
+				<label for="CA">Connection angle:</label>
+				<input type="text" id="CA"> <button class="first" onclick="Aadd(-5)">–</button><button class="last" onclick="Aadd(5)">+</button>
+			</p>
+			<h2>Gear properties</h2>
+			<p>
+				<label for="N">Number of teeth* (N):</label>
+				<input type="text" id="N"> <button class="first" onclick="Nadd(-1)">–</button><button class="last" onclick="Nadd(1)">+</button><br>
+	
+				<label for="D">Pitch diameter* (D):</label>
+				<input type="text" id="D"><br>
+				
+				<label for="P">Diametral pitch (P):</label>
+				<input type="text" id="P"><br>
+			
+				<label for="PA">Pressure Angle (PA):</label>
+				<input type="text" id="PA"> <button class="first" onclick="PAadd(-1)">–</button><button class="last" onclick="PAadd(1)">+</button><br>
+				<span class="rem">* Shift + Enter: modifies the Diametral pitch</span>
+			</p>
+			<p>
+				</p><form action="http://geargenerator.com/downloadsvg.php" method="post">
+					<input name="data" type="hidden" id="svgdata" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&lt;!-- Generator: Iparigrafika Gear Generator by Abel Vincze http://geargenerator.com/ --&gt;&lt;svg version=&quot;1.2&quot; class=&quot;svggear&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; xmlns:xlink=&quot;http://www.w3.org/1999/xlink&quot; x=&quot;0px&quot; y=&quot;0px&quot; width=&quot;250px&quot; height=&quot;250px&quot; viewBox=&quot;-125 -125 250 250&quot; overflow=&quot;scroll&quot; xml:space=&quot;preserve&quot;&gt;&lt;polygon id=&quot;gearpoly0&quot; data-id=&quot;0&quot; class=&quot;gear&quot; fill=&quot;#ddd&quot; stroke=&quot;#444&quot; stroke-width=&quot;1&quot; stroke-miterlimit=&quot;10&quot; points=&quot;71.25,0 89.1142,-0.0002 89.2667,-0.0068 89.5879,-0.0341 90.0758,-0.0968 90.7276,-0.2094 91.5397,-0.3863 92.5073,-0.6417 93.6249,-0.9894 94.8859,-1.4428 96.2829,-2.015 97.8076,-2.7186 99.451,-3.5657 101.2032,-4.5678 103.0534,-5.736 104.9903,-7.0804 107.0017,-8.6107 109.0748,-10.3357 111.1963,-12.2636 113.3522,-14.4015 115.5279,-16.7561 117.7084,-19.3328 119.8783,-22.1362 122.0217,-25.1701 121.8431,-27.9151 121.4423,-29.6103 120.3726,-32.1445 117.0973,-33.8972 113.9017,-35.432 110.7981,-36.7592 107.7983,-37.89 104.9132,-38.836 102.153,-39.6096 99.5268,-40.2235 97.043,-40.6909 94.7091,-41.0254 92.5317,-41.2412 90.5162,-41.3525 88.6675,-41.3739 86.9891,-41.3201 85.4838,-41.206 84.1533,-41.0467 82.9984,-40.857 82.0188,-40.652 81.2135,-40.4465 80.5802,-40.2552 80.1159,-40.0928 79.8165,-39.9734 79.6772,-39.911 63.7047,-31.9104 50.3814,-50.3814 63.0132,-63.0134 63.1163,-63.1259 63.3241,-63.3723 63.6248,-63.7616 64.006,-64.3022 64.4552,-65.0015 64.9588,-65.8663 65.5032,-66.9024 66.0742,-68.1147 66.6575,-69.5071 67.2381,-71.0828 67.8012,-72.8438 68.3315,-74.7914 68.8138,-76.9257 69.2328,-79.2459 69.573,-81.7503 69.8191,-84.436 69.956,-87.2993 69.9687,-90.3355 69.8422,-93.5389 69.5621,-96.9027 69.1141,-100.4194 68.4844,-104.0803 66.4171,-105.8951 64.9351,-106.8103 62.3866,-107.8459 58.8314,-106.7693 55.4865,-105.5948 52.3534,-104.3388 49.4326,-103.0172 46.7236,-101.6461 44.2248,-100.2413 41.9338,-98.8183 39.847,-97.3925 37.9601,-95.9788 36.2678,-94.5917 34.764,-93.2453 33.4416,-91.9531 32.2929,-90.7283 31.3091,-89.5832 30.481,-88.5297 29.7984,-87.579 29.2508,-86.7413 28.8266,-86.0266 28.514,-85.4435 28.3006,-85.0004 28.1734,-84.7043 28.119,-84.5616 22.482,-67.6101 0,-71.25 -0.0002,-89.1142 -0.0068,-89.2667 -0.0341,-89.5879 -0.0968,-90.0758 -0.2094,-90.7276 -0.3863,-91.5397 -0.6417,-92.5073 -0.9894,-93.6249 -1.4428,-94.8859 -2.015,-96.2829 -2.7186,-97.8076 -3.5657,-99.451 -4.5678,-101.2032 -5.736,-103.0534 -7.0804,-104.9903 -8.6107,-107.0017 -10.3357,-109.0748 -12.2636,-111.1963 -14.4015,-113.3522 -16.7561,-115.5279 -19.3328,-117.7084 -22.1362,-119.8783 -25.1701,-122.0217 -27.9151,-121.8431 -29.6103,-121.4423 -32.1445,-120.3726 -33.8972,-117.0973 -35.432,-113.9017 -36.7592,-110.7981 -37.89,-107.7983 -38.836,-104.9132 -39.6096,-102.153 -40.2235,-99.5268 -40.6909,-97.043 -41.0254,-94.7091 -41.2412,-92.5317 -41.3525,-90.5162 -41.3739,-88.6675 -41.3201,-86.9891 -41.206,-85.4838 -41.0467,-84.1533 -40.857,-82.9984 -40.652,-82.0188 -40.4465,-81.2135 -40.2552,-80.5802 -40.0928,-80.1159 -39.9734,-79.8165 -39.911,-79.6772 -31.9104,-63.7047 -50.3814,-50.3814 -63.0134,-63.0132 -63.1259,-63.1163 -63.3723,-63.3241 -63.7616,-63.6248 -64.3022,-64.006 -65.0015,-64.4552 -65.8663,-64.9588 -66.9024,-65.5032 -68.1147,-66.0742 -69.5071,-66.6575 -71.0828,-67.2381 -72.8438,-67.8012 -74.7914,-68.3315 -76.9257,-68.8138 -79.2459,-69.2328 -81.7503,-69.573 -84.436,-69.8191 -87.2993,-69.956 -90.3355,-69.9687 -93.5389,-69.8422 -96.9027,-69.5621 -100.4194,-69.1141 -104.0803,-68.4844 -105.8951,-66.4171 -106.8103,-64.9351 -107.8459,-62.3866 -106.7693,-58.8314 -105.5948,-55.4865 -104.3388,-52.3534 -103.0172,-49.4326 -101.6461,-46.7236 -100.2413,-44.2248 -98.8183,-41.9338 -97.3925,-39.847 -95.9788,-37.9601 -94.5917,-36.2678 -93.2453,-34.764 -91.9531,-33.4416 -90.7283,-32.2929 -89.5832,-31.3091 -88.5297,-30.481 -87.579,-29.7984 -86.7413,-29.2508 -86.0266,-28.8266 -85.4435,-28.514 -85.0004,-28.3006 -84.7043,-28.1734 -84.5616,-28.119 -67.6101,-22.482 -71.25,0 -89.1142,0.0002 -89.2667,0.0068 -89.5879,0.0341 -90.0758,0.0968 -90.7276,0.2094 -91.5397,0.3863 -92.5073,0.6417 -93.6249,0.9894 -94.8859,1.4428 -96.2829,2.015 -97.8076,2.7186 -99.451,3.5657 -101.2032,4.5678 -103.0534,5.736 -104.9903,7.0804 -107.0017,8.6107 -109.0748,10.3357 -111.1963,12.2636 -113.3522,14.4015 -115.5279,16.7561 -117.7084,19.3328 -119.8783,22.1362 -122.0217,25.1701 -121.8431,27.9151 -121.4423,29.6103 -120.3726,32.1445 -117.0973,33.8972 -113.9017,35.432 -110.7981,36.7592 -107.7983,37.89 -104.9132,38.836 -102.153,39.6096 -99.5268,40.2235 -97.043,40.6909 -94.7091,41.0254 -92.5317,41.2412 -90.5162,41.3525 -88.6675,41.3739 -86.9891,41.3201 -85.4838,41.206 -84.1533,41.0467 -82.9984,40.857 -82.0188,40.652 -81.2135,40.4465 -80.5802,40.2552 -80.1159,40.0928 -79.8165,39.9734 -79.6772,39.911 -63.7047,31.9104 -50.3814,50.3814 -63.0132,63.0134 -63.1163,63.1259 -63.3241,63.3723 -63.6248,63.7616 -64.006,64.3022 -64.4552,65.0015 -64.9588,65.8663 -65.5032,66.9024 -66.0742,68.1147 -66.6575,69.5071 -67.2381,71.0828 -67.8012,72.8438 -68.3315,74.7914 -68.8138,76.9257 -69.2328,79.2459 -69.573,81.7503 -69.8191,84.436 -69.956,87.2993 -69.9687,90.3355 -69.8422,93.5389 -69.5621,96.9027 -69.1141,100.4194 -68.4844,104.0803 -66.4171,105.8951 -64.9351,106.8103 -62.3866,107.8459 -58.8314,106.7693 -55.4865,105.5948 -52.3534,104.3388 -49.4326,103.0172 -46.7236,101.6461 -44.2248,100.2413 -41.9338,98.8183 -39.847,97.3925 -37.9601,95.9788 -36.2678,94.5917 -34.764,93.2453 -33.4416,91.9531 -32.2929,90.7283 -31.3091,89.5832 -30.481,88.5297 -29.7984,87.579 -29.2508,86.7413 -28.8266,86.0266 -28.514,85.4435 -28.3006,85.0004 -28.1734,84.7043 -28.119,84.5616 -22.482,67.6101 0,71.25 0.0002,89.1142 0.0068,89.2667 0.0341,89.5879 0.0968,90.0758 0.2094,90.7276 0.3863,91.5397 0.6417,92.5073 0.9894,93.6249 1.4428,94.8859 2.015,96.2829 2.7186,97.8076 3.5657,99.451 4.5678,101.2032 5.736,103.0534 7.0804,104.9903 8.6107,107.0017 10.3357,109.0748 12.2636,111.1963 14.4015,113.3522 16.7561,115.5279 19.3328,117.7084 22.1362,119.8783 25.1701,122.0217 27.9151,121.8431 29.6103,121.4423 32.1445,120.3726 33.8972,117.0973 35.432,113.9017 36.7592,110.7981 37.89,107.7983 38.836,104.9132 39.6096,102.153 40.2235,99.5268 40.6909,97.043 41.0254,94.7091 41.2412,92.5317 41.3525,90.5162 41.3739,88.6675 41.3201,86.9891 41.206,85.4838 41.0467,84.1533 40.857,82.9984 40.652,82.0188 40.4465,81.2135 40.2552,80.5802 40.0928,80.1159 39.9734,79.8165 39.911,79.6772 31.9104,63.7047 50.3814,50.3814 63.0134,63.0132 63.1259,63.1163 63.3723,63.3241 63.7616,63.6248 64.3022,64.006 65.0015,64.4552 65.8663,64.9588 66.9024,65.5032 68.1147,66.0742 69.5071,66.6575 71.0828,67.2381 72.8438,67.8012 74.7914,68.3315 76.9257,68.8138 79.2459,69.2328 81.7503,69.573 84.436,69.8191 87.2993,69.956 90.3355,69.9687 93.5389,69.8422 96.9027,69.5621 100.4194,69.1141 104.0803,68.4844 105.8951,66.4171 106.8103,64.9351 107.8459,62.3866 106.7693,58.8314 105.5948,55.4865 104.3388,52.3534 103.0172,49.4326 101.6461,46.7236 100.2413,44.2248 98.8183,41.9338 97.3925,39.847 95.9788,37.9601 94.5917,36.2678 93.2453,34.764 91.9531,33.4416 90.7283,32.2929 89.5832,31.3091 88.5297,30.481 87.579,29.7984 86.7413,29.2508 86.0266,28.8266 85.4435,28.514 85.0004,28.3006 84.7043,28.1734 84.5616,28.119 67.6101,22.482 &quot;/&gt;&lt;g class=&quot;guides&quot;&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-miterlimit=&quot;10&quot; points=&quot;10,0 -10,0&quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-miterlimit=&quot;10&quot; points=&quot;0,10 0,-10&quot;/&gt;&lt;/g&gt;&lt;circle fill=&quot;#c00&quot; class=&quot;firstmarker&quot; stroke=&quot;none&quot; stroke-miterlimit=&quot;10&quot; cx=&quot;97.3165&quot; cy=&quot;-23.0107&quot; r=&quot;9.8125&quot;/&gt;&lt;g class=&quot;geartext&quot;&gt;&lt;g class=&quot;text&quot;&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-29.29 -45.71 -30.7 -44.77 -32.08 -43.79 -33.44 -42.77 -34.76 -41.7 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-30.08 -41.05 -34.09 -46.53 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-31.12 -48.56 -31.66 -46.17 -32.08 -43.79 -32.39 -41.43 -32.58 -39.09 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-27.46 -42.85 -29.74 -43.37 -32.08 -43.79 -34.48 -44.1 -36.93 -44.31 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-20.45 -46.6 -21.17 -44.41 -22.55 -43.73 -24.73 -44.48 -28.02 -50.41 -27.21 -52.77 -25.55 -53.6 -23.18 -52.82 -20.45 -46.6 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-4.14 -59.23 -3.43 -49.08 -5.22 -51.48 -7.16 -53.81 -9.25 -56.07 -11.49 -58.25 -9.52 -48.27 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;6.57 -55.6 4.83 -55.77 3.09 -55.9 1.34 -55.97 -0.41 -55.98 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;6.17 -52.23 4.54 -52.39 2.9 -52.51 1.26 -52.57 -0.39 -52.59 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;11.39 -53.08 9.42 -51.74 9.12 -50.07 10.32 -48.1 11.82 -47.75 13.31 -47.36 15.29 -48.54 15.8 -50.16 14.68 -52.26 13.04 -52.7 11.39 -53.08 10.03 -55.08 10.34 -56.74 12.46 -58.05 14.27 -57.64 16.06 -57.16 17.33 -55.01 16.82 -53.4 14.68 -52.26 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;27.16 -47 28.61 -46.13 30.04 -45.22 31.44 -44.26 33.83 -44.6 34.86 -45.95 34.39 -48.4 32.86 -49.46 31.3 -50.46 29.7 -51.41 24.61 -42.6 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;32.12 -37.26 36.55 -42.4 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;37.66 -43.69 38.77 -44.97 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;39.83 -31.68 37.53 -31.81 37.78 -34.1 44.07 -39.79 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;43.81 -34.85 42.7 -36.2 41.55 -37.51 40.36 -38.79 39.13 -40.04 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;43.54 -22.91 42.8 -24.26 42.02 -25.58 41.2 -26.88 41.73 -29.13 44.51 -31.07 46.88 -30.59 47.82 -29.11 48.7 -27.6 49.54 -26.07 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;47.98 -21.53 50.2 -20.67 52.41 -19.69 53 -18.04 51.91 -15.88 47.04 -14.39 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;44.88 -20.14 54.17 -24.31 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;49.05 -3.84 49.14 -2.31 49.19 -0.77 49.19 0.77 50.84 2.38 57.62 2.7 59.37 0.93 59.37 -0.93 59.31 -2.78 59.19 -4.63 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;59.31 -2.78 49.14 -2.31 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;54.45 13 54.83 11.29 55.16 9.57 55.43 7.85 55.65 6.11 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;51.15 12.21 51.51 10.61 51.81 8.99 52.07 7.37 52.28 5.74 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;44.88 20.14 45.49 18.73 46.05 17.3 46.57 15.85 47.04 14.39 50.29 15.38 51.39 17.49 50.82 19.09 50.2 20.67 51.07 22.92 52.62 23.62 54.9 22.61 55.58 20.88 56.21 19.13 55.16 16.87 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;43.52 32.45 42.49 33.79 41.41 35.1 40.29 36.38 40.36 38.79 41.58 39.97 44.07 39.79 45.29 38.39 46.47 36.96 47.6 35.49 39.44 29.4 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;32.42 45.64 33.83 44.6 35.21 43.52 36.55 42.4 37.86 41.24 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;30.46 42.87 31.78 41.9 33.07 40.89 34.34 39.83 35.56 38.74 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;21.93 47.8 23.41 47.09 24.87 46.33 26.31 45.54 27.72 44.69 27.44 47.49 27.01 50.32 26.44 53.17 21.9 44.05 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;11.39 53.08 9.73 53.41 8.05 53.68 6.37 53.91 4.83 55.77 4.98 57.46 6.97 58.96 8.81 58.72 10.64 58.41 12.46 58.05 10.32 48.1 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;1.18 49.18 1.26 52.57 -0.41 55.98 -2.29 59.33 -3.91 55.85 -5.31 52.32 -4.96 48.95 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;1.26 52.57 -0.39 52.59 -2.03 52.55 -3.67 52.46 -5.31 52.32 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-15.93 53.67 -14.25 54.14 -12.55 54.56 -10.84 54.92 -9.12 55.23 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-14.97 50.41 -13.38 50.86 -11.79 51.25 -10.18 51.59 -8.56 51.89 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-22.55 43.73 -21.17 44.41 -19.77 45.05 -18.35 45.64 -16.92 46.2 -18.09 49.38 -20.25 50.37 -21.82 49.71 -23.36 49 -25.66 49.76 -26.43 51.26 -25.55 53.6 -23.86 54.37 -22.15 55.09 -19.84 54.16 &quot;/&gt;&lt;polyline fill=&quot;none&quot; stroke=&quot;#444&quot; stroke-width=&quot;0.5&quot; stroke-linecap=&quot;square&quot; stroke-miterlimit=&quot;1&quot;  points=&quot;-30.45 50.97 -32.03 49.99 -33.58 48.97 -35.09 47.9 -36.57 46.78 -32.08 43.79 -27.82 40.57 &quot;/&gt;&lt;/g&gt;&lt;/g&gt;&lt;g class=&quot;guides gearguides&quot; opacity=&quot;0.2&quot;&gt;&lt;circle class=&quot;pitch&quot; fill=&quot;none&quot; stroke=&quot;#f00&quot; stroke-miterlimit=&quot;10&quot; cx=&quot;0&quot; cy=&quot;0&quot; r=&quot;100&quot;/&gt;&lt;circle class=&quot;outer&quot; fill=&quot;none&quot; stroke=&quot;#ccc&quot; stroke-miterlimit=&quot;10&quot; stroke-dasharray=&quot;2,2&quot; cx=&quot;0&quot; cy=&quot;0&quot; r=&quot;125&quot;/&gt;&lt;circle class=&quot;base&quot; fill=&quot;none&quot; stroke=&quot;#00f&quot; stroke-miterlimit=&quot;10&quot; stroke-dasharray=&quot;2,2&quot; cx=&quot;0&quot; cy=&quot;0&quot; r=&quot;89.1&quot;/&gt;&lt;/g&gt;&lt;/svg&gt;">
+					<input name="filename" type="hidden" id="svgfilename" value="gg_gear N8 D2 P4 PA27 @100.svg">
+					<label>Gear vector image:</label> <button type="submit" name="downloadsvg" id="downloadsvg" title="Download selected Gear in SVG vector image format">Download SVG</button>
+				</form>
+				<!--<textarea id="out"></textarea>-->
+			<p></p>
+			<div>
+				<h2>Display</h2>	
+				<label for="scale">Scale (Pixel per Unit):</label>
+				<input type="text" id="scale" value="100"> <button class="first" onclick="scalem(.5)">–</button><button class="last" onclick="scalem(2)">+</button><br>
+				<label for="grid">Grid:</label>
+				<input type="checkbox" id="grid" class="thecheckbox display"><br>
+				<label for="guides">Gear guides:</label>
+				<input type="checkbox" id="guides" class="thecheckbox display"><br>
+				<label for="labels">Gear label:</label>
+				<input type="checkbox" id="labels" class="thecheckbox display"><br>
+				<label for="theme">Color theme:</label>
+				<button class="first" onclick="setTheme(0)" title="Switch to Light theme">Light</button><button class="next" onclick="setTheme(1)" title="Switch to Blueprint theme">Blueprint</button><button class="last" onclick="setTheme(2)" title="Switch to Dark theme">Dark</button>
+			</div>
+			<div id="about">
+				<h2>About</h2>
+				<p>
+					Gear Generator is a tool for creating <a href="http://en.wikipedia.org/wiki/Involute_gear" target="_blank">involute spur gears</a> and download them in SVG format. In addition it let you compose full gear layouts with connetcted gears to design multiple gears system with control of the input/output ratio and rotation speed. Gears can be animated with various speed to demonstrate working mechanism.
+				</p>
+				<p>
+					Why this tool was created? Just for fun. I'm working on a hobby project, a scale construction machine, which needed some spur gears, and i quickly made a simple <a href="http://geargenerator.com/index_proto.html" target="_blank">spur gear creator</a> script in Javascript with SVG output. As it was done, i couldn't stop, and i added more and more features, and finally i got this tool. It was a pleasure to code the whole thing, i'm a bit sad it is already done, so if you have any idea, what would be a helpful feature, just let me know by sending an <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=abel@iparigrafika.hu" target="_blank">e-mail</a>. 
+				</p>
+				<p>
+					Notes about browser compatibility: all new major browsers are supported (i didn't tested IE), but unfortunately Chrome can't render SVG circle correctly. The winners are: Opera for the best performance (shame on me, i never use it) and Firefox for the best looking SVG render.
+				</p>
+			</div>
+			<div>
+				<p>If you like it, please share:
+					<a href="https://twitter.com/intent/tweet?original_referer=http%3a%2f%2fgeargenerator.com&url=http%3a%2f%2fgeargenerator.com&text=What+a+nice+gear+generator+%23HTML+%23CSS+via+%40AbelVincze" target="_blank"><svg style="margin-left: 12px;" version="1.2" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="34px" height="25px" viewBox="0 0 34 25" xml:space="preserve"><path class="shareicon" d="M31.016,11.572c-0.971,0-1.908-0.136-2.793-0.384c0-0.03,0-0.06,0-0.091c0.154,0.02,0.315,0.03,0.479,0.03c1.3,0,2.445-0.629,3.129-1.587c-0.612,0.246-1.283,0.382-1.987,0.382c-0.63,0-1.233-0.109-1.788-0.308c-0.145-0.658-0.377-1.301-0.709-1.913c-2.406-4.452-6.177-3.977-6.177-3.977s2.776-0.54,2.646-1.276C23.686,1.71,21.12,2.852,21.12,2.852s1.424-0.77,1.224-1.096c-0.189-0.311-2.305,0.961-2.305,0.961s0.348-0.492,0.215-0.635c-0.134-0.143-1.818,1.271-3.108,3.364c-1.291,2.094-1.803,4.013-1.803,4.013s-0.664-0.812-2.166-1.824c-1.606-1.078-8.432-3.583-8.432-3.583S4.483,4.901,5.447,6.391c0.606,0.94,1.946,1.487,1.946,1.487s-0.552,0-0.98,0.06c-0.398,0.056-0.88,0.167-0.88,0.167S5.396,9.21,6.65,10.164c1.253,0.952,2.341,1.048,2.341,1.048s-0.682,0.049-1.197,0.225c-0.534,0.184-0.92,0.644-0.92,0.644s0.409,0.794,1.268,1.365c1.134,0.753,2.604,0.515,2.604,0.515s-1.316,0.338-1.23,1.372c0.123,1.518,2.347,1.211,2.347,1.211c-1.527,1.587-3.729,2.512-6.158,2.512c-2.196,0-4.213-0.74-5.703-2.072c0,0,8.422,11.141,22.605,3.168c2.902-1.633,4.925-4.441,5.47-7.353c0.256,0.049,0.521,0.076,0.792,0.076c1.206,0,2.283-0.52,3.009-1.336C31.591,11.557,31.305,11.572,31.016,11.572z"></path></svg></a>
+					<a href="https://www.facebook.com/sharer/sharer.php?u=http%3a%2f%2fgeargenerator.com" target="_blank"><svg version="1.2" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="25px" viewBox="0 0 30 25" xml:space="preserve"><path class="shareicon" d="M20.035,24.729h-5.323V12.365h-2.659V8.103h2.659V5.545C14.712,2.069,16.216,0,20.48,0h3.551v4.263h-2.219c-1.662,0-1.771,0.596-1.771,1.708l-0.005,2.132h4.022l-0.473,4.262h-3.551V24.729z"></path></svg></a>
+					<a href="http://pinterest.com/pin/create/button/?url=http%3a%2f%2fgeargenerator.com&media=http%3a%2f%2fgeargenerator.com%2fshareimage.jpg&description=Involute+spur+gear+generator+and+simulator+in+%23HTML+%23CSS" target="_blank"><svg version="1.2" baseProfile="tiny" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="32px" height="25px" viewBox="0 0 32 25" xml:space="preserve"><path class="shareicon" d="M19.607,16.155c-0.604,2.542-1.196,4.992-2.489,6.926c-0.394,0.592-0.792,1.337-1.466,1.656c-1-4.937,1.084-9.092,1.912-13.243c-1.055-2.06-0.397-5.552,1.852-5.945c3.262-0.575,2.402,3.206,1.85,4.965c-0.304,0.963-0.851,1.885-0.767,2.944c0.181,2.228,3.099,2.371,4.591,1.226c2.143-1.644,2.76-4.814,2.553-7.419C27.325,3.3,22.65,1.328,18.523,2.913c-2.125,0.819-4.059,2.697-4.338,5.456c-0.147,1.455,0.17,2.614,0.765,3.434c0.092,0.124,0.401,0.343,0.446,0.674c0.094,0.673-0.322,1.399-0.701,1.901c-2.113-0.586-3.205-2.412-3.379-4.719c-0.398-5.255,4.088-9.253,9.373-9.625c5.638-0.396,10.109,2.732,10.523,7.295c0.309,3.392-0.941,6.807-2.933,8.643c-1.493,1.379-4.673,2.73-7.271,1.41C20.434,17.087,20.18,16.729,19.607,16.155z"></path></svg></a>
+				</p>
+			</div>
+		</div>
+		<div id="footer">
+			<p><a href="http://iparigrafika.hu/" target="_blank"><svg version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="274px" height="9px" viewBox="0 0 274 9" xml:space="preserve"><g class="text"><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="4.5 5.5 3.5 6.5 1.5 6.5 0.5 5.5 0.5 1.5 1.5 0.5 3.5 0.5 4.5 1.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="15.5 6.5 11.5 6.5 11.5 4.5 12.5 3.5 14.5 3.5 15.5 2.5 15.5 1.5 14.5 0.5 12.5 0.5 11.5 1.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="20.5 5.5 19.5 6.5 18.5 6.5 17.5 5.5 17.5 1.5 18.5 0.5 19.5 0.5 20.5 1.5 20.5 5.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="22.5 1.5 23.5 0.5 23.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="24.5 6.5 22.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="30.5 4.5 26.5 4.5 29.5 0.5 29.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="41.5 3.5 37.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="52.5 5.5 51.5 6.5 49.5 6.5 48.5 5.5 48.5 1.5 49.5 0.5 51.5 0.5 52.5 1.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="58.5 6.5 55.5 3.5 57.5 3.5 58.5 2.5 58.5 1.5 57.5 0.5 54.5 0.5 54.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="55.5 3.5 54.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="64.5 6.5 60.5 6.5 60.5 0.5 64.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="60.5 3.5 62.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="66.5 6.5 66.5 4.5 68.5 0.5 70.5 4.5 70.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="66.5 4.5 70.5 4.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="76.5 0.5 72.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="74.5 0.5 74.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="82.5 6.5 78.5 6.5 78.5 0.5 82.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="78.5 3.5 80.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="84.5 6.5 87.5 6.5 88.5 5.5 88.5 1.5 87.5 0.5 84.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="85.5 0.5 85.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="95.5 6.5 98.5 6.5 99.5 5.5 99.5 4.5 98.5 3.5 99.5 2.5 99.5 1.5 98.5 0.5 96.5 0.5 96.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="96.5 3.5 98.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="95.5 0.5 96.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="105.5 0.5 103.5 3.5 101.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="103.5 3.5 103.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="112.5 6.5 112.5 4.5 114.5 0.5 116.5 4.5 116.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="112.5 4.5 116.5 4.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="118.5 6.5 121.5 6.5 122.5 5.5 122.5 4.5 121.5 3.5 122.5 2.5 122.5 1.5 121.5 0.5 119.5 0.5 119.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="119.5 3.5 121.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="118.5 0.5 119.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="128.5 6.5 124.5 6.5 124.5 0.5 128.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="124.5 3.5 126.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="134.5 6.5 130.5 6.5 130.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="147.5 0.5 144.5 6.5 141.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="151.5 6.5 149.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="150.5 6.5 150.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="151.5 0.5 149.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="157.5 0.5 157.5 6.5 153.5 0.5 153.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="163.5 5.5 162.5 6.5 160.5 6.5 159.5 5.5 159.5 1.5 160.5 0.5 162.5 0.5 163.5 1.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="169.5 6.5 165.5 6.5 169.5 0.5 165.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="175.5 6.5 171.5 6.5 171.5 0.5 175.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="171.5 3.5 173.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="181.5 0.5 177.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="185.5 6.5 183.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="184.5 6.5 184.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="185.5 0.5 183.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="187.5 3.5 190.5 3.5 191.5 2.5 191.5 1.5 190.5 0.5 187.5 0.5 187.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="193.5 6.5 193.5 4.5 195.5 0.5 197.5 4.5 197.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="193.5 4.5 197.5 4.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="203.5 6.5 200.5 3.5 202.5 3.5 203.5 2.5 203.5 1.5 202.5 0.5 199.5 0.5 199.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="200.5 3.5 199.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="207.5 6.5 205.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="206.5 6.5 206.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="207.5 0.5 205.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="212.5 3.5 213.5 3.5 213.5 6.5 210.5 6.5 209.5 5.5 209.5 1.5 210.5 0.5 213.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="219.5 6.5 216.5 3.5 218.5 3.5 219.5 2.5 219.5 1.5 218.5 0.5 215.5 0.5 215.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="216.5 3.5 215.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="221.5 6.5 221.5 4.5 223.5 0.5 225.5 4.5 225.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="221.5 4.5 225.5 4.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="227.5 6.5 227.5 0.5 231.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="227.5 3.5 229.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="235.5 6.5 233.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="234.5 6.5 234.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="235.5 0.5 233.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="241.5 6.5 238.5 3.5 241.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="237.5 6.5 237.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="238.5 3.5 237.5 3.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="243.5 6.5 243.5 4.5 245.5 0.5 247.5 4.5 247.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="243.5 4.5 247.5 4.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="258.5 6.5 254.5 6.5 254.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="264.5 0.5 260.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="262.5 0.5 262.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="266.5 6.5 269.5 6.5 270.5 5.5 270.5 1.5 269.5 0.5 266.5 0.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="267.5 0.5 267.5 6.5 "></polyline><polyline fill="none" stroke="#444" stroke-width="1" stroke-linecap="square" stroke-miterlimit="2" points="272.5 5.5 272.5 6.5 "></polyline></g></svg></a></p>
+		</div>
+	
+	<script>
+		reset();
+		$("p.title").each(function() { replaceWithSVGText( $( this ), true, 6, 6  ); });
+		replaceWithSVGText( $("#footer a"), true, 1, 1 );
+	</script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-780078-4', 'auto');
+		ga('send', 'pageview');
+	</script>
+</body><div class="gr-context gr-dict gr-context-loader gr-dict-freemium" style="display: none;"><span class="gr-triangle"></span><div class="gr-placeholder"></div><a href="http://www.grammarly.com/?utm_source=dict&utm_medium=link&utm_campaign=chrome_plg" target="_blank" class="gr-hint-settings"></a><strong class="gr-title"></strong><div class="gr-dict-content"></div></div><div class="b-freemium-editor" style="display: none;"><div class="b-freemium-editor-back"></div><iframe class="gr-freemium-ifr"></iframe></div></html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!-- saved from url=(0073)http://cssmojo.com/extras/use-radio-buttons-for-single-option/demo-2.html -->
+<html lang="en-us"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>Demo</title>
+<link href="./Demo_files/css" rel="stylesheet" type="text/css">
+<style>
+/* quick and dirty (no box-sizing though) */
+	* {
+		margin: 0;
+		padding: 0;
+		border: 0;
+		font-family: 'Oswald', sans-serif;
+	}
+	form {
+		margin: 20px;
+		padding: 20px;
+		border: 10px solid rgba(0,17,255,.2);
+	}
+	form p {
+		clear: left;
+		margin: 1em 0;
+	}
+
+/**
+ * legend
+ * This is not kosher but VO announces <legend> *after* the labels
+ * I am using aria-labelledby instead
+ */
+    legend {
+        display: none;
+    }
+    h2 {
+        font-size: 1.4em;
+        font-weight: normal;
+        color: #555;
+    }
+    h2:before {
+		content: "1";
+		font-weight: bold;
+		font-size: 1em;
+		display: inline-block;
+		margin-right: 10px;
+		width: 1.4em;
+		height: 1.4em;
+		line-height: 1.4em;
+		text-align: center;
+		background: rgba(0,0,0,.1);
+		border-radius: 100px;
+	}
+
+/* radio fieldset */
+	#radio-buttons {
+		position: relative;
+		padding-top: 2.5em; /* room for the content of the labels */
+		margin-bottom: 10px;
+		float: left;
+	}
+
+/* hide and remove the radio buttons from the flow */
+	#radio-buttons input {
+		opacity: 0;
+		position: absolute;
+	}
+
+/* the circles */
+	#radio-buttons label {
+		float: left;
+		margin: 10px 10px 0 0;
+		text-align: center;
+	}
+    #radio-buttons input:focus + label:before {
+        text-decoration:underline;
+    }
+	#radio-buttons label,
+	#for500:after {
+		width: 4em;
+		height: 4em;
+		line-height: 2.9em; /* another reason why border-box sucks */
+		box-sizing: border-box;
+		border-radius: 200px;
+		border-width: .6em;
+		border-style: solid;
+		transition: all .4s ease;
+		cursor: pointer;
+	}
+
+
+
+
+/* other amount */
+	#other-amount {
+		text-align: center;
+		color: purple;
+		font-weight: bold;
+		width: 4em;
+		line-height: 2.2;
+		margin-top: 1.7em;
+		font-size: 1.8em;
+		border-width: 0 0 1px 0;
+		border-style: dashed;
+		border-color: #555;
+		outline: 0;
+		cursor: pointer;
+	}
+	/* no need for this */
+	::-webkit-inner-spin-button {
+	    -webkit-appearance: none;
+	}
+	::-webkit-input-placeholder {
+		color: mediumpurple;
+		font-weight: 300;
+
+    }
+	#other-amount:focus::-webkit-input-placeholder {
+		opacity: 0;
+		transition: opacity .3s;
+	}
+	#other-amount::-webkit-textfield-decoration-container:before {
+		content: "$";
+		color: purple;
+	}
+
+
+/* text in circles */
+	#radio-buttons label:before {
+		color: purple;
+		font-size: 1.3em;
+		font-weight: bold;
+		text-shadow: 1px 1px #fff;
+		transition: all .3s ease;
+	}
+	#radio-buttons input:checked + label:before,
+	#radio-buttons label:hover:before {
+		font-size: 1em;
+		text-shadow: none;
+	}
+
+/* labels */
+	#for25:before {	content: '$25'; }
+	#for50:before {	content: '$50'; }
+	#for100:before { content: '$100'; }
+	#for250:before { content: '$250'; }
+	#for500:before { content: '$500'; }
+
+/* content in labels */
+	#radio-buttons label b {
+		text-align: left; /* reset */
+		line-height: 1;  /* reset */
+		position: absolute;
+		top: 10px;
+		left: 40px;
+		right: 0;
+		background: #fff; /* stacked together */
+		display: none;
+	}
+	#radio-buttons label:hover b {
+		z-index: 1; /* put it on top of the stack */
+	}
+
+/* labels pop-up */
+	#D25:focus + label b,
+	#D25:hover + label b {
+		display: block;
+	}
+	#D50:focus + label b,
+	#D50:hover + label b {
+		display: block;
+	}
+	#D100:focus + label b,
+	#D100:hover + label b {
+		display: block;
+	}
+	#D250:focus + label b,
+	#D250:hover + label b {
+		display: block;
+	}
+	#D500:focus + label b,
+	#D500:hover + label b {
+		display: block;
+	}
+	#radio-buttons :checked + label b {
+		display: block !important;
+	}
+
+/* the 'marker' */
+	#for500:after {
+		content: " ";
+		position: absolute;
+		z-index: -1;
+		left: 0;
+		bottom: 0;
+	}
+
+/* COLORS */
+
+/* the circles */
+	#radio-buttons label {
+		background: rgba(0,17,255,.2);
+		border-color: transparent;
+	}
+
+	#radio-buttons :checked + label {
+		background: rgba(255,255,255,.2);
+	}
+
+/* the 'marker' (moving circle) */
+	#for500:after {
+		border-color: mediumpurple;
+	}
+
+/* OFFSETS */
+	#for25:hover ~ label:last-child::after {left:0 !important;margin-left: 0 !important;}
+	#for50:hover ~ label:last-child::after {left:4em !important;margin-left: 10px !important;}
+	#for100:hover ~ label:last-child::after {left:8em !important;margin-left: 20px !important;}
+	#for250:hover ~ label:last-child::after {left:12em !important;margin-left: 30px !important;}
+	#for500:hover ~ label:last-child::after,
+	#for500:hover:after {left:16em !important;margin-left: 40px !important;}
+	#D25:focus  ~ label:last-child::after,
+	#D25:checked  ~ label:last-child::after {left:0;}
+	#D50:focus ~ label:last-child::after,
+	#D50:checked ~ label:last-child::after {left:4em;margin-left: 10px;}
+	#D100:focus ~ label:last-child::after,
+	#D100:checked ~ label:last-child::after {left:8em;margin-left: 20px;}
+	#D250:focus ~ label:last-child::after,
+	#D250:checked ~ label:last-child::after {left:12em;margin-left: 30px;}
+	#D500:focus ~ label:last-child::after,
+	#D500:checked ~ label:last-child::after {left:16em;margin-left: 40px;}
+
+
+/* CHECKBOX */
+
+/* could play with this for IE10 */
+	::-ms-check {}
+
+/* checkbox */
+    #donate-monthly {
+        -webkit-appearance: none;
+        margin: 0 10px;
+        background: rgba(0,0,0,.1);
+        border: 5px solid mediumpurple;
+        border-radius: 100%;
+        width: 24px;
+        height: 24px;
+        outline: 0;
+        cursor: pointer;
+    }
+    #donate-monthly:focus + label {
+        text-decoration: underline;
+    }
+	#donate-monthly:checked {
+		border: 0;
+		background:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI0IDI0IiBoZWlnaHQ9IjI0cHgiIGlkPSJMYXllcl8xIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0cHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnPjxnPjxwYXRoIGQ9Ik0xMiwwQzUuMzczLDAsMCw1LjM3MywwLDEyYzAsNi42MjgsNS4zNzMsMTIsMTIsMTJjNi42MjcsMCwxMi01LjM3MiwxMi0xMkMyNCw1LjM3MywxOC42MjcsMCwxMiwweiBNMTkuNzU0LDkuNTYxICAgIGwtOC42MDcsOC42MDdjLTAuMTc2LDAuMTc3LTAuNDYyLDAuMTc3LTAuNjM3LDBsLTEuMjcyLTEuMjg1Yy0wLjE3NS0wLjE3Ni0wLjQ2Mi0wLjQ2NC0wLjYzNi0wLjY0MmwtMi45Ni0zLjExMiAgICBjLTAuMDg3LTAuMDg3LTAuMTMzLTAuMjEtMC4xMzMtMC4zMjdjMC0wLjExNSwwLjA0Ni0wLjIyNywwLjEzMy0wLjMxNGwxLjI5Ny0xLjE2OWMwLjA4OC0wLjA5LDAuMjA1LTAuMTM0LDAuMzIxLTAuMTM0ICAgIGMwLjExNCwwLjAwMSwwLjIyOCwwLjA0NiwwLjMxNSwwLjEzNGwyLjkzNiwyLjk5NWMwLjE3NSwwLjE3OCwwLjQ2MSwwLjE3OCwwLjYzNywwbDYuNjk5LTYuNjgxYzAuMTc2LTAuMTc3LDAuNDYxLTAuMTc3LDAuNjM2LDAgICAgbDEuMjcyLDEuMjg1QzE5LjkzLDkuMDk0LDE5LjkzLDkuMzg0LDE5Ljc1NCw5LjU2MXoiLz48L2c+PC9nPjwvc3ZnPg==);
+	}
+	#donate-monthly,
+	#donate-monthly + label {
+		vertical-align: middle;
+	}
+/* SUBMIT BUTTON */
+
+.btn {
+	padding: .2em .8em;
+	font-size: 1.5em;
+	border-radius: 3px;
+	margin-top: 5px;
+	color: #fff !important;
+	border: 0 !important;
+	position: relative;
+	text-decoration: none;
+	background-color: mediumpurple;
+	display: inline-block;
+	text-align: center;
+	box-shadow: 0 3px #21487F;
+	border-radius: 3px;
+	text-shadow: 1px 1px purple;
+	letter-spacing: 1px;
+	-webkit-transition: all .3s ease;
+	-moz-transition: all .3s ease;
+	-ms-transition: all .3s ease;
+	-o-transition: all .3s ease;
+	transition: all .3s ease;
+}
+/* http://cssmojo.com/hide-content-from-sighted-users/ */
+	.visually-hidden {
+	    position: absolute !important;
+	    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+	    clip: rect(1px, 1px, 1px, 1px);
+	    padding:0 !important;
+	    border:0 !important;
+	    height: 1px !important;
+	    width: 1px !important;
+	    overflow: hidden;
+	}
+/* quick and dirty to avoid breakage */
+@media screen and (max-width: 585px) {
+	#other-amount {
+		margin-top: 0;
+	}
+}
+@media screen and (max-width: 469px) {
+	#radio-buttons {
+		width: 100%;
+	}
+	#radio-buttons label:last-child:after {
+		display: none;
+	}
+	#for25, #for50, #for250, #for500 {width: 45% !important;margin-right:10% !important;}
+	#for50, #for100, #for500 {margin-right:0 !important;}
+	#for100 {width: 100% !important;}
+	#radio-buttons input:checked + label:before, #radio-buttons label:hover:before {
+		font-size: 1.3em; /* reset */
+	}
+}
+
+@media screen and (min-width: 470px) {
+/* hover effect */
+	#radio-buttons label:hover ~ label:last-child::after,
+	#radio-buttons label:last-child:hover::after {-webkit-transform:scale(1.1);}
+}
+</style>
+</head>
+<body>
+<form action="http://cssmojo.com/use-radio-buttons-for-single-option/">
+  <div>
+      <h2 id="step-1">Choose an amount to donate</h2>
+      <fieldset id="radio-buttons" aria-labelledby="step-1">
+          <legend>Amount to donate</legend>
+   	    <input type="radio" name="donation" id="D25" value="25">
+        <label id="for25" for="D25">
+	      <b>$25 can feed a family for a day</b>
+        </label>
+     <input type="radio" name="donation" id="D50" value="50" checked="checked">
+     <label id="for50" for="D50">
+	      <b>$50 can feed a family for a week</b></label>
+     <input type="radio" name="donation" id="D100" value="100">
+     <label id="for100" for="D100">
+	      <b>$100 can feed a family of 4 for a week</b>
+        </label>
+     <input type="radio" name="donation" id="D250" value="250">
+     <label id="for250" for="D250">
+	      <b>$250 can feed a family of 4 for two weeks</b>
+        </label>
+     <input type="radio" name="donation" id="D500" value="500">
+     <label id="for500" for="D500">
+	      <b>$500 can feed a family of 4 for four weeks</b>
+        </label>
+      </fieldset>
+      <input type="number" value="" id="other-amount" name="other-amount" placeholder="Other"><label for="other-amount" class="visually-hidden">Other amount</label>
+	  <p><input type="checkbox" id="donate-monthly" name="donate-monthly">
+	  <label for="donate-monthly">I would like to make this a monthly donation</label></p>
+	<input type="submit" value="Submit" class="btn">
+  </div>
+  <!--  more fieldsets/sections  -->
+</form>
+
+</body></html>

@@ -1,0 +1,1250 @@
+<?php
+/**
+ * AssignmentsClass.inc File Doc Comment
+ *
+ * AssignmentsClass manipulates MySQL table tAssignments in jlfEDU DB
+ *
+ * PHP version 5+
+ *
+ * @package    TutorMio
+ * @subpackage Tutor
+ * @author     Jim Fuqua <jimfuqua@gmail.com>
+ * @copyright  Jim Fuqua 2010
+ * @category   Manipulates_Db
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License V3+
+ * @link       http://www.jimfuqua.com/
+ */
+
+namespace Tutor\Src;
+use Tutor\Src;
+
+        /**
+         * Assignment.class.php
+         *
+         * A warning will be raised, saying that to document the define, use
+         * another DocBlock
+         **/
+class AssignmentsClass
+{
+
+
+    /**
+     *  Array to SQL.
+     *
+     * Take an array and convert it into a SQL INSERT statement
+     *
+     * @param array $myParametersArray An array to insert into
+     * tGenericAssignment table.
+     *
+     * @return sql string
+     */
+    private function _arrayToSQLstring(array $myParametersArray)
+    {
+        $sql       = 'INSERT INTO tAssignments (';
+        $sqlValues = ') VALUES (';
+        foreach ($myParametersArray as $key => $value) {
+            $sql       = $sql.$key.', ';
+            $sqlValues = $sqlValues."'".$value."', ";
+        }
+
+        $sql       = trim($sql);
+        $sql       = rtrim($sql, ',');
+        $sqlValues = trim($sqlValues);
+        $sqlValues = rtrim($sqlValues, ',');
+        $sql       = $sql.$sqlValues;
+        $sql       = $sql.');';
+        return $sql;
+
+    }//end _arrayToSQLstring()
+
+
+    /**
+     *  Select a lesson.
+     *
+     * From the lesson array select an individual lesson.
+     *
+     * @param array  $valueArray       The source of the lessons.
+     * @param array  $whereArray       Name of the generic assignment.
+     * @param string $mysqliConnection The connextion to the database.
+     *
+     * @return $assignmentFields
+     */
+    private function _arrayToUpdateSQL(
+        array $valueArray,
+        array $whereArray,
+        $mysqliConnection
+    ) {
+        $str = '';
+        $sql = 'UPDATE tAssignments SET ';
+        foreach ($valueArray as $key => $value) {
+                $sql = $sql.$key." = '".$value."', ";
+        }
+
+        $sql = trim($sql);
+        $sql = rtrim($sql);
+        $sql = substr($sql, 0, -1);
+
+        $whereSQL = '';
+        $sql      = $sql.' WHERE ';
+        $whereSQL = '';
+        reset($whereArray);
+        foreach ($whereArray as $key => $value) {
+            $whereSQL = $whereSQL.$key." = '";
+            $whereSQL = $whereSQL.$value."' AND ";
+        }
+
+        $whereSQL = rtrim($whereSQL);
+        $whereSQL = substr($whereSQL, 0, -3);
+        $sql      = $sql.$whereSQL;
+
+        return $sql;
+
+    }//end _arrayToUpdateSQL()
+
+
+    /**
+     *  Select a lesson.
+     *
+     * From the lesson array select an individual lesson.
+     *
+     * @return $mysqliConnection
+     */
+    private function _connectToDb()
+    {
+       include '/var/www/jimfuqua/tutor/src/db_include.php';
+        try {
+          $con = new \PDO( $dbDSN, 'root', $dbPassword ); //our new PDO Object
+        } catch (PDOException $e) {
+              echo $e->getMessage(); //catch and show the error
+              $logFile = fopen("/var/www/jimfuqua/tutor/logs/SplitsClass.php.log", "w");;
+              $string = __LINE__.' PDOException = '.$e->getMessage();
+              fwrite($logFile, $string . "\n");
+        }
+        return $con;
+    }//end _connectToDb()
+
+
+    /**
+     *  Insert record in database..
+     *
+     * Gets its variables from nine mandatory parameters and remaining optional
+     *   parameters contained in an associative array which is an array of
+     *   arrays of key=>value pairs.  It records the data in tAssignments.
+     *
+     * @param array $pramArray The source of the lessons.
+     *
+     * @return $assignmentFields
+     */
+    public function insertRecord(array $pramArray)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $sql    = $this->_arrayToSQLstring($pramArray);
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        // FALSE for failure --- TRUE for success.
+        return $result;
+
+    }//end insertRecord()
+
+
+    /**
+     *  Get columns.
+     *
+     * Query the table tAssignments to get an array of column names.
+     *
+     * @return an array of column names;
+     */
+    public function returnColumnsNamesInArray()
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $sql    = 'SELECT * FROM jlfEDU.tAssignments LIMIT 1';
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        };
+        $row      = $result->fetch_array(MYSQLI_ASSOC);
+        $colnames = array_keys($row);
+        return $colnames;
+
+    }//end returnColumnsNamesInArray()
+
+
+    /**
+     *  Get last lesson.
+     *
+     * Get the last lesson assigned to a particular student.
+     *
+     * @param string $studentID The student.
+     *
+     * @return The_last_lesson as an array.
+     */
+    public function getLastDbEntryAsArray($studentID)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $sql           = "SELECT * FROM tAssignments WHERE tA_S_ID = '".$studentID."'
+                ORDER BY id DESC LIMIT 1";
+        $theLastLesson = $mysqliConnection->query($sql);
+        if ($theLastLesson === FALSE) {
+            $message  = 'Invalid query: '.mysql_error()."\n<br />";
+            $message .= 'Whole query: '.$sql;
+            die($message);
+        }
+
+        $row = $theLastLesson->fetch_array(MYSQLI_ASSOC);
+        return $row;
+
+    }//end getLastDbEntryAsArray()
+
+
+    /**
+     *  Get last lesson assigned to a student..
+     *
+     * Get the last lesson assigned to a particular student by timestamp.
+     *
+     * @param string $studentID The student.
+     *
+     * @return $theLastLesson
+     */
+    public function getNewestDbEntry($studentID)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $sql = "SELECT * FROM tAssignments
+                WHERE tA_S_ID = '".$studentID."'
+                ORDER BY tA_LastModifiedDateTime
+                DESC LIMIT 1";
+        // Can't have spaces in quotestestupdateTaStartRec.
+        $theLastLesson = $mysqliConnection->query($sql);
+        $row           = $theLastLesson->fetch_assoc();
+        return $row;
+
+    }//end getNewestDbEntry()
+
+
+    /**
+     *  Get one row for a particular student.
+     *
+     * Get a row for a student - computer chooses order.
+     *
+     * @param string $studentID The student.
+     *
+     * @return $row
+     */
+    public function getOneRowFromDbAsArrayID($studentID)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $sql    = "SELECT * FROM tAssignments WHERE tA_S_ID = '".$studentID."' LIMIT 1";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $row = $result->fetch_assoc();
+        return $row;
+
+    }//end getOneRowFromDbAsArrayID()
+
+
+    /**
+     *  Get particular assignment  for a particular student.
+     *
+     * Get an assignment for a particular student by the generic assignment name.
+     * There could be multiple records with the same generic assignment name.
+     *
+     * @param string  $studentID        The student.
+     * @param string  $tgAssignmentName The assignment to get.
+     * @param integer $taStartRec       Get the assignment with this start rec.
+     *
+     * @return $result
+     */
+    public function getSpecificStudentAssignmentFromDbAsArray(
+        $studentID,
+        $tgAssignmentName,
+        $taStartRec
+    ) {
+        // Gets a specific row and return mysql_results.
+          $mysqliConnection = $this->_connectToDb();
+          $sql      = "SELECT * FROM tAssignments
+                  WHERE ((tA_S_ID = '".$studentID."') && (tG_AssignmentName =
+                                '".$tgAssignmentName."') &&
+                  (tA_StartRec = '".$taStartRec."'))";
+            $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+            $row = $result->fetch_assoc();
+            return $row;
+
+    }//end getSpecificStudentAssignmentFromDbAsArray()
+
+
+    /**
+     *  Get all rows assigned to a student by the student's id.
+     *
+     * Get rows by student id.
+     *
+     * @param string $studentID The ID.
+     *
+     * @return array of $rows
+     */
+    public function getAssignmentsByStudentID($studentID)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $studentID        = $mysqliConnection->real_escape_string($studentID);
+        $sql    = "SELECT * FROM `tAssignments` WHERE `tA_S_ID`='".$studentID."'";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        while ($row = $result->fetch_assoc()) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+
+    }//end getAssignmentsByStudentID()
+
+
+        /**
+         *  Get row by the id.
+         *
+         * Get row by id.
+         *
+         * @param string $id Is the row index.
+         *
+         * @return array of $columns
+         */
+    public function getRowByIndexId($id)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $id     = $mysqliConnection->real_escape_string($id);
+        $sql    = "SELECT * FROM `tAssignments` WHERE `id`='".$id."'";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $row = $result->fetch_assoc();
+        return $row;
+
+    }//end getRowByIndexId()
+
+
+    /**
+     *  Get one row by id.
+     *
+     * Get a row by its id.
+     *
+     * @param string $ID The ID.
+     *
+     * @return $row
+     */
+    public function getAssignmentByAssignmentID($ID)
+    {
+        // Gets a specific row and return mysql_results.
+        $mysqliConnection = $this->_connectToDb();
+        $sql    = "SELECT * FROM tAssignments WHERE ((id = '".$ID."'))";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $row = $result->fetch_assoc();
+        return $row;
+
+    }//end getAssignmentByAssignmentID()
+
+
+    /**
+     *  Delete the last row.
+     *
+     * Delete the newest row assigned to a student.
+     *
+     * @param string $studentID The student.
+     *
+     * @return $result
+     */
+    public function deleteLastRow($studentID)
+    {
+        // Should get newest row.  Test to make sure it does not get oldest row.
+        $mysqliConnection = $this->_connectToDb();
+        $sql    = "DELETE FROM tAssignments
+                WHERE (tA_S_ID = '".$studentID."')
+                ORDER BY id DESC
+                LIMIT 1";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $affectedRows          = mysqli_affected_rows($mysqliConnection);
+        $returnValue['result'] = $result;
+        $returnValue['affected_rows'] = $affectedRows;
+        return $returnValue;
+
+    }//end deleteLastRow()
+
+
+    /**
+     *  Delete all of a student's assignments.
+     *
+     * Delete all lessons assigned to a particular student.
+     *
+     * @param string $studentID Identifies the student.
+     *
+     * @return $numRowsChanged
+     */
+    public function delRowsByStudentId($studentID)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $sql = 'DELETE FROM tAssignments WHERE (tA_S_ID = "'.$studentID.'" )';
+        // Necessary that there be no spaces between the ' and " above.
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $numRowsChanged = mysqli_affected_rows($mysqliConnection);
+        return $numRowsChanged;
+
+    }//end delRowsByStudentId()
+
+
+    /**
+     *  Delete a particular row.
+     *
+     * Delete one row identified by its id.
+     *
+     * @param integer $id The student.
+     *
+     * @return $result
+     */
+    public function deleteRowByRowId($id)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $sql    = "DELETE FROM tAssignments WHERE (id = '".$id."')";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $affectedRows = mysqli_affected_rows($mysqliConnection);
+        return $affectedRows;
+
+    }//end deleteRowByRowId()
+
+
+    /**
+     *  Update fields.
+     *
+     * Update particular fields.
+     *
+     * @param array $valueArray Values for the changes.
+     * @param array $whereArray Fields to change.
+     *
+     * @return $result
+     */
+    public function updateFields(array $valueArray, array $whereArray)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $sql    = $this->_arrayToUpdateSQL(
+            $valueArray,
+            $whereArray,
+            $mysqliConnection
+        );
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $affectedRows = mysqli_affected_rows($mysqliConnection);
+        $mysqliConnection->close();
+        return $affectedRows;
+
+    }//end updateFields()
+
+
+    /**
+     *  Update tA_RepsTowardM.
+     *
+     * Update the database field.
+     *
+     * @param integer $taRepsTowardM  New value for the column.
+     * @param integer $tgRepsToMaster Required reps.
+     * @param string  $studentID      Identifies the student.
+     * @param integer $lessonID       Time change was made.
+     *
+     * @return $result
+     */
+    public function updateTaRepsTowardM(
+        $taRepsTowardM,
+        $tgRepsToMaster,
+        $studentID,
+        $lessonID
+    ) {
+        // Check RepsTowardM to see if === or > Reps_to_master.
+        $row = $this->getRowByIndexId($lessonID);
+        // Next commands increment RepsTowardM.
+        if (is_numeric($taRepsTowardM) === TRUE) {
+            $mysqliConnection = $this->_connectToDb();
+            $sql    = 'UPDATE tAssignments SET tA_RepsTowardM = "'.$taRepsTowardM.'" WHERE tA_S_ID = "';
+            $sql    = $sql.$studentID.'" AND id = "'.$lessonID.'"';
+            $result = $mysqliConnection->query($sql);
+            if (mysql_error() === TRUE) {
+                die(__LINE__.' AssignmentsClass:'.mysql_error());
+            }
+
+            $affectedRows = mysqli_affected_rows($mysqliConnection);
+            // Get assignment back and check for tA_RepsTowardM equal of greater than tA_Reps_To_Master.
+            $result         = $this->getLastDbEntryAsArray($studentID);
+            $taRepsTowardM  = $result['tA_RepsTowardM'];
+            $tgRepsToMaster = $result['tG_Reps_to_master'];
+            $returnArray    = [
+                               'affected_rows'     => $affectedRows,
+                               'tA_RepsTowardM'    => $taRepsTowardM,
+                               'tG_Reps_to_master' => $tgRepsToMaster,
+                              ];
+            $mysqliConnection->close();
+            return $returnArray;
+        } else if ($taRepsTowardM === 'lesson_if_error') {
+            $this->transformAssignmentToNextLesson($lessonID, $taRepsTowardM);
+        } else if ($taRepsTowardM === 'lesson_if_correct') {
+            $this->transformAssignmentToNextLesson($lessonID, $taRepsTowardM);
+        } else {
+            trigger_error("Improper call to 'AC updateTaRepsTowardM'", E_USER_ERROR);
+        }//end if
+
+    }//end updateTaRepsTowardM()
+
+
+     /**
+      * IncrementErrorsMade.
+      *
+      * Update field tA_StartRec.
+      *
+      * @param integer $lessonID Index of lesson.
+      *
+      * @return $result
+      */
+    public function incrementErrorsMade($lessonID)
+    {
+        $mysqliConnection = $this->_connectToDb();
+        $row = $this->getRowByIndexId($lessonID);
+        // Returns array.
+        $errorsMade = ($row['tA_ErrorsMade'] + 1);
+        $errorsMade = intval($errorsMade);
+        $sql        = 'UPDATE tAssignments SET tA_ErrorsMade=tA_ErrorsMade+1  WHERE id='.$lessonID;
+        $result     = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $affectedRows = mysqli_affected_rows($mysqliConnection);
+        $mysqliConnection->close();
+        return $affectedRows;
+
+    }//end incrementErrorsMade()
+
+
+    /**
+     *  Update field tA_StartRec.
+     *
+     * Update field tA_StartRec.
+     *
+     * @param integer $taStartRec          The record to change.
+     * @param string  $studentID           The student.
+     * @param integer $tAoriginalTimestamp Time record changed.
+     *
+     * @return $result
+     */
+    public function updateTaStartRec(
+        $taStartRec,
+        $studentID,
+        $tAoriginalTimestamp
+    ) {
+        $mysqliConnection = $this->_connectToDb();
+        $sql    = "UPDATE  tAssignments
+                SET     tA_StartRec = '".$taStartRec."'
+                WHERE   tA_S_ID   = '".$studentID."' AND
+                tA_OriginalTimestamp = '".$tAoriginalTimestamp."'";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $affectedRows = mysqli_affected_rows($mysqliConnection);
+        $mysqliConnection->close();
+        return $affectedRows;
+
+    }//end updateTaStartRec()
+
+
+    /**
+     *  Sum assigned time.
+     *
+     * Get the sum of the time assigned from an array of lessons assigned.
+     *
+     * @param array $lessonsArray All of the lessons assigned to this student.
+     *
+     * @return $result
+     */
+    public function getSumOfAssignedTimeFromArray(array $lessonsArray)
+    {
+        $sum = 0;
+        foreach ($lessonsArray as $k => $row) {
+            // Loop through each row.
+            // Loop through each field in an individual assignment.
+            $sum += $row['tA_PercentTime'];
+            // Calculate the total of all assignments.
+        }
+
+        return $sum;
+
+    }//end getSumOfAssignedTimeFromArray()
+
+
+    /**
+     *  Select the student assignments that are ready for administration
+     *
+     * From the lesson array select all lesson.
+     *
+     * @param string  $studentID The student.
+     * @param integer $phpTime   Is compared against post date field.
+     *
+     * @return $assignmentFields
+     */
+    public function getCurrentStudentAssignmentsInAnArray($studentID, $phpTime)
+    {
+        $result           = NULL;
+        $mysqliConnection = $this->_connectToDb();
+        // Variables in mysql times and php times are very different.  I use an integer
+        // instead of now().
+        // will give erroneous results if $studentID contains spaces.
+        // Spaces should not be allowed in table.
+        trim($studentID);
+        $sql    = " SELECT * FROM tAssignments
+                WHERE tA_S_ID = '".$studentID."'
+                ORDER BY tA_PercentTime DESC";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $index       = 0;
+        $resultArray = array();
+        while ($row = $result->fetch_assoc()) {
+            ++$index;
+            $resultArray[$index] = $row;
+        }
+
+        reset($resultArray);
+        $returnArray = array();
+        $index       = 0;
+        $include     = FALSE;
+        if (count($resultArray) > 0) {
+            reset($resultArray);
+            foreach ($resultArray as $k => $value) {
+                foreach ($value as $k1 => $value2) {
+                    if ($k1 === 'tA_Post_date') {
+                        if ($value2 <= $phpTime) {
+                            $include = TRUE;
+                        }
+                    }
+                }
+
+                if ($include === TRUE) {
+                    ++$index;
+                    $returnArray[$index] = $value;
+                }
+
+                $include = FALSE;
+            }
+        } else {
+            // Variable $returnArray is empty.
+            return NULL;
+        }//end if
+        reset($returnArray);
+        if (count($returnArray) > 0) {
+            return $returnArray;
+        } else {
+            return 0;
+        }
+
+    }//end getCurrentStudentAssignmentsInAnArray()
+
+
+    /**
+     *  Select all student lessons.
+     *
+     * From the lesson array select all assignments.
+     *
+     * @return $assignmentFields
+    this function would return too much data -- has no test.
+    public function getAllAssignmentsInAnArray()
+    {
+        $result = NULL;
+        $mysqliConnection = $this->_connectToDb();
+        $sql = "SELECT * FROM tAssignments";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+        if ($result === FALSE) {
+            return 0;
+        } else {
+            $resultArray = array();
+            while ($row = mysql_fetch_assoc($result)) {
+                array_push($resultArray, $row);
+            }
+            if (count($resultArray)== 0) {
+                return 0;
+            } else {
+                return $resultArray;
+            }
+        }
+    }
+     */
+
+    /**
+     * RepairRowIfStartRecIsLlargerThanStopRec.
+     *
+     * StartRec should be less than or equal to StopRec.  Fix it if this is not TRUE.
+     *
+     * @param string  $studentID        The source of the lessons.
+     * @param string  $tgAssignmentName The assignment to do.
+     * @param integer $taStartRec       The assignment start position.
+     *
+     * @return $assignmentFields or NULL
+     */
+    public function repairRowIfStartRecIsLargerThanStopRec(
+        $studentID,
+        $tgAssignmentName,
+        $taStartRec
+    ) {
+        $currentRow  = $this->getSpecificStudentAssignmentFromDbAsArray(
+            $studentID,
+            $tgAssignmentName,
+            $taStartRec
+        );
+        $returnArray = array();
+        if ($currentRow === NULL) {
+            $returnArray['NULL_input'] = TRUE;
+        }
+
+        if (array_key_exists('NULL_input', $returnArray) === FALSE) {
+            if ($taStartRec > $currentRow['tA_StopRec']) {
+                $returnArray['tA_StartRecWasGreater'] = TRUE;
+                // Update the tAssignment row by adding a new row based upon
+                // the gA and deleting the current row.
+                // Get tG_Lesson_if_Correct in this assignment's tG_AssignmentName.
+                // Get the name of the next lesson which is tG_Lesson_if_Correct
+                // column in the current tG_AssignmentName.
+                include_once 'GenericAClass.inc';
+                $classInstance = new GenericAClass;
+                // Get the row of the current lesson's tG_AssignmentName
+                // Then get the name of the new gA.
+                // Then get the row of the new gA.
+                $thisGAname = $classInstance->getRowFromDbAsArray(
+                    $currentRow['tG_AssignmentName']
+                );
+                $nextGAname = $thisGAname['tG_Lesson_if_Correct'];
+                // This is the name of the next gA.
+                $nextGA = $classInstance->getRowFromDbAsArray($nextGAname);
+                // Now we replace the current tA row with a new tA row with the new gA.
+                $x         = $currentRow['tA_StudentName'];
+                $pramArray = array(
+                // For a new tA row.
+                              'tA_S_ID'                => $studentID,
+                              'tA_StudentName'         => $currentRow['tA_StudentName'],
+                              'tG_AssignmentName'      => $nextGA['tG_AssignmentName'],
+                              'tA_Consequtive_Reps_OK' => 'tA_Consequtive_Reps_OK',
+                              'tA_StartRec'            => $nextGA['tG_StartRec'],
+                              'tA_StopRec'             => $nextGA['tG_StopRec'],
+                              'tA_Immediate_Loops'     => $nextGA['tG_Immediate_Loops'],
+                              'tA_Reps_to_master'      => $nextGA['tG_Reps_to_master'],
+                              'tA_RepsTowardM'         => '0',
+                              'tA_ErrorsMade'          => '0',
+                              'tA_PercentTime'         => $currentRow['tA_PercentTime'],
+                              'tA_SumPercent'          => '0',
+                              'tA_QueOrder'            => $currentRow['tA_QueOrder'],
+                              'tA_SavedAssignment'     => '',
+                              'tA_SavedStartRec'       => '',
+                              'tA_Post_date'           => '',
+                              'tA_iterations_to_do'    => '',
+                              'tA_Errors_Allowed '     => '',
+                             );
+                $result = $this->insertRecord($pramArray);
+                // FALSE for failure or TRUE for success.
+                $returnArray['tA_subsequentAssignmentInserted'] = TRUE;
+                // Now delete the current assignment.
+                $row    = $this->getSpecificStudentAssignmentFromDbAsArray(
+                    $studentID,
+                    $tgAssignmentName,
+                    $taStartRec
+                );
+                $result = $this->deleteRowByRowId($row['id']);
+                if ($result === 1) {
+                    $returnArray['tA_ErroneousAssignmentDeleted'] = TRUE;
+                } else {
+                    $returnArray['tA_ErroneousAssignmentDeleted'] = FALSE;
+                }
+            } else {
+                $returnArray['tA_StartRecWasGreater'] = FALSE;
+            }//end if
+        }//end if
+
+            return $returnArray;
+
+    }//end repairRowIfStartRecIsLargerThanStopRec()
+
+
+    /**
+     *  Select a lesson.
+     *
+     * From the lesson array select an individual lesson.
+     *
+     * @param string  $studentID        The student.
+     * @param string  $tgAssignmentName Name of the assignment.
+     * @param integer $taStartRec       The starting record.
+     *
+     * @return $assignmentFields
+     */
+    public function okToRepeatAssignment(
+        $studentID,
+        $tgAssignmentName,
+        $taStartRec
+    ) {
+        $row = $this->getSpecificStudentAssignmentFromDbAsArray(
+            $studentID,
+            $tgAssignmentName,
+            $taStartRec
+        );
+        return $row['tA_Consecutive_Reps_OK'];
+
+    }//end okToRepeatAssignment()
+
+
+    /**
+     * SetRepsTowardMToZero
+     *
+     * @param string  $studentID        The student.
+     * @param string  $tgAssignmentName Name of the assignment.
+     * @param integer $taID             The index.
+     *
+     * @category Class
+     * @package  MyPackage
+     * @author   Jim Fuqua
+     * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
+     * @link     http://www.jim-fuqua.com/
+     * @return   1 on success
+     */
+    public function setRepsTowardMToZero($studentID, $tgAssignmentName, $taID)
+    {
+        $row = $this->getAssignmentByAssignmentID($taID);
+        if (($row['tA_S_ID'] === $studentID) && ($row['tG_AssignmentName'] === $tgAssignmentName)) {
+            // We must modify the db record.
+            $mysqliConnection = $this->_connectToDb();
+            $sql    = "UPDATE tAssignments
+                    SET tA_RepsTowardM = '0'
+                    WHERE id = '".$taID."'";
+            $result = $mysqliConnection->query($sql);
+            if (mysql_error() === TRUE) {
+                die(__LINE__.' AssignmentsClass:'.mysql_error());
+            } else {
+                $result = NULL;
+            }
+            return $result;
+        }
+
+        // Should return TRUE on success or FALSE on error or NULL on parameter error.
+        return $result;
+
+    }//end setRepsTowardMToZero()
+
+
+    /**
+     *  Select a lesson.
+     *
+     * From the lesson array select an individual lesson.
+     *
+     * @param array $lessonArray The source of the lessons.
+     *
+     * @return $assignmentFields
+     */
+    public function removeLastLessonFromArrayIfRequired(array $lessonArray)
+    {
+        // Variable $lessonArray is an array of arrays.  The interior arrays are specific
+        // assignments.
+        if (count($lessonArray) > 0) {
+            // Remove last lesson  and duplicates of last lesson if
+            // tA_Consequtive_Reps_OK = 0  -- In MySQL 0 is FALSE.
+            $removeLastAssignmentFromResultArray = TRUE;
+            while ($removeLastAssignmentFromResultArray === TRUE) {
+                $removeLastAssignmentFromResultArray = FALSE;
+                // Limit to one pass unless last lesson was removed.
+                foreach ($lessonArray as $k1 => $assignmentFields) {
+                    if (($assignmentFields['tG_AssignmentName'] === $tgAssignmentName)
+                        && ($assignmentFields['tA_StartRec'] === $taStartRec)
+                    ) {
+                        unset($lessonArray[$k1]);
+                        $removeLastAssignmentFromResultArray = TRUE;
+                        // Make one more pass.
+                    }
+                }//end foreach
+            }//end while
+        }
+
+        return $lessonArray;
+
+    }//end removeLastLessonFromArrayIfRequired()
+
+
+    /**
+     * Compare two numbers.
+     *
+     * Compare two numbers and return a number indicating which is larger.
+     *
+     * @param integer $x The first of two numbers to compare.
+     * @param integer $y The second of two numbers to compare.
+     *
+     * @return $assignmentFields
+     */
+    public function compare($x, $y)
+    {
+        if ($x === $y) {
+            return 0;
+        } else if ($x > $y) {
+            return -1;
+        } else {
+            return 1;
+        }
+
+    }//end compare()
+
+
+    /**
+     *  Normalize array of arrays to sum 100% time assigned.
+     *
+     * Normalizes the lessons array so that time assigned is 100.
+     * Does not change the sum assigned in the database.
+     *
+     * @param array $lessonsArray The array of lesson arrays.
+     *
+     * @return $assignmentFields
+     */
+    public function normalizePercentTimeTo100Percent(array $lessonsArray)
+    {
+        // Run through array calculating the sum of tA_PercentTime assigned.
+        // May be more or less than 100%.
+        $sum = 0;
+        foreach ($lessonsArray as $k => $assignmentFields) {
+            // Loop through the list of all assignments for this student.
+            $sum = ($sum + $assignmentFields['tA_PercentTime']);
+        }
+
+        // Variable $sum should now have the total of all the time assigned
+        // For each lesson, $sum may be more or less than 100 percent.
+        reset($lessonsArray);
+        $runningSum = 0;
+        // The & is necessary or it returns NULL.
+        foreach ($lessonsArray as $k => &$assignmentFields) {
+            // Each field in an individual assignment.
+            // normalize this lesson so all assigned PercentTime will total
+            // exactly 100%.
+            $assignmentFields['tA_PercentTime'] = ($assignmentFields['tA_PercentTime'] * 100 / $sum);
+            // Now the tA_PercentTime is normalized.
+            // Now let's adjust the sum % time.
+            $assignmentFields['tA_SumPercent'] = ($runningSum + $assignmentFields['tA_PercentTime']);
+            $runningSum = ($runningSum + $assignmentFields['tA_PercentTime']);
+        }
+
+        // Next line sorts the $resultArray by using the function compare.
+        // Sorts this student's assignments in order of assigned time.
+        // The problem is here.  Check if usort handles numbers with decimals.
+        // check if array_reverse works.  There does not seem to be a
+        // local function by that name.
+        return $lessonsArray;
+
+    }//end normalizePercentTimeTo100Percent()
+
+
+    /**
+     *  Select a lesson.
+     *
+     * From the array of lessons select an individual lesson.
+     *
+     * @param array  $lessonsArray The source of the lessons.
+     * @param string $lastLessonId Identifies the previous lesson.
+     *
+     * @return $assignmentFields
+     */
+    public function selectALesson(array $lessonsArray, $lastLessonId)
+    {
+        if (count($lessonsArray) === 0) {
+            // Count must be at least 1.  Empty not allowed.
+            return NULL;
+        } else {
+            // Variable $lessonsArray is an array of arrays.
+            // It is a collection of student assignments.  It is not empty.
+            // Check to see if $lastLessonId is set.
+            if ($lastLessonId !== '') {
+                // Here reject the last lesson if tA_Consecutive_Reps_OK is not "1" which is TRUE.
+                foreach ($lessonsArray as $elementKey => $assignmentFields) {
+                    foreach ($assignmentFields as $valueKey => $value) {
+                        if ($valueKey === 'id' && $value === $lastLessonId) {
+                            if ($assignmentFields['tA_Consecutive_Reps_OK'] !== '1') {
+                                // Delete this particular object from the $lessonsArray.
+                                unset($lessonsArray[$elementKey]);
+                            }
+                        }
+                    }
+                }
+            }//end if
+
+            if (count($lessonsArray) === 0) {
+                // Count must be at least 1.  Empty not allowed.
+                return NULL;
+            }
+
+            // Assignments are a collection of fields in the db.
+            // One field is tA_PercentTime.  Another is tA_SumPercent.
+            // tA_QueOrder is not considered here yet.  May remove QueOrder.
+            // Copy input array and remove post-dated assignments from copy.
+            // If count is 0 revert to input array.
+            // Objective is to select a lesson at random based upon it' % time.
+            // Will return lesson ID in tAssignments.
+            // First step is to normalize lessons to 100% and calculate the
+            // running sum that totals 100.
+            // Then calcualte a random number between 1 and 100.
+            $normalizedArray = $this->normalizePercentTimeTo100Percent($lessonsArray);
+            // The $normalized array is an array of all lessons for this
+            // student with the time assigned
+            // normalized to 100%.  May have started more or less than 100%.
+            // Use a the random number to select the lesson based on 100%.
+            // Pick a random integer between 1 and 100000.
+            // Divide by 100000 minimize chance of boundary of 1 or 100.
+                $targetPercent = mt_rand(1, 100000);
+            if ($targetPercent === 0) {
+                // Avoid 0%.
+                $targetPercent = 1;
+            }//end if
+            if ($targetPercent === 100000) {
+                // Avoid 100%.
+                $targetPercent = 99999;
+            }//end if
+            $targetPercent = ($targetPercent / 1000);
+            // Same as dividing by 100000 then multiplying by 100 to get %;
+            // Cycle through each of the student's assignments and select
+            // the first assignment where tA_SumPercent is less than or =
+            // to $targetPercent.
+            foreach ($normalizedArray as $assignmentFields) {
+                // Loop thru all assignments.
+                if ($targetPercent <= $assignmentFields['tA_SumPercent']) {
+                    // Found the assignment.
+                    return $assignmentFields;
+                }
+            }
+        }//end if
+
+    }//end selectALesson()
+
+
+    /**
+     *  Return NULL.
+     *
+     * Check to see if a variable is NULL.  If so return "NULL".
+     *
+     * @param string $varable The variable to check..
+     *
+     * @return Number_Of_Rows
+     */
+    public function printNullIfNull($varable)
+    {
+        if ($varable === NULL) {
+            return 'NULL';
+        } else {
+            return $varable;
+        }
+
+    }//end printNullIfNull()
+
+
+    /**
+     *  Insert a single split in tA.
+     *
+     * Take one split and insert it into tA table.
+     *
+     * @param string $onetAAssignmentSplit The split to process.
+     *
+     * @return Number_Of_Rows
+     */
+    public function insertTaSplitIntoTa($onetAAssignmentSplit)
+    {
+        include_once 'SplitsClass.inc';
+        // Must get an array of the splits; make assignments of them insert
+        // assignments into tA.
+        $studentName = $onetAAssignmentSplit[1]['tA_StudentName'];
+        $studentID   = $onetAAssignmentSplit[1]['tA_S_ID'];
+        // This assignment should be a split.
+        if (substr($onetAAssignmentSplit[1]['tG_AssignmentName'], 0, 3) === 'tS_') {
+            // Now get an array of all of the tSplits with that name.
+            // add assignment info not in tSplits.
+            $insertionArray = array(
+                               'tA_StudentName' => $studentName,
+                               'tA_S_ID'        => $studentID,
+                              );
+            include_once 'SplitsClass.inc';
+            $splitsClassInstance = new SplitsClass;
+            // The $splitsArray is an array of the relevant tSplits splits with
+            // this name.  There may be many.
+            $splitsArray = $splitsClassInstance->getSplitsByName(
+                $onetAAssignmentSplit[1]['tG_AssignmentName']
+            );
+            // The $splitsArray keys are numeric & $values are associative arrays.
+            // Keys are id, tS_Name, tS_tA_Parameter, tSplit_gA,
+            // tS_gA_Parameter, tSplit_PercentageTime.
+            foreach ($splitsArray as $key => $value) {
+                // Is an array of arrays.
+                // Add field to $insertionArray.
+                $insertionArray['tG_AssignmentName'] = $value['tSplit_gA'];
+                // Now insert the content of the insertion_Array into the tA.
+                $result = $this->insertRecord($insertionArray);
+            }
+
+            // Clean up.
+            $this->deleteRowByRowId($onetAAssignmentSplit[1]['id']);
+            return $result;
+        }//end if
+
+    }//end insertTaSplitIntoTa()
+
+
+    /**
+     *  Manage assignments that split..
+     *
+     * Check assignment array for splits.  A split is designed to split into two
+     *  or more assignments and is not an assignment to an individual lesson.
+     *  If splits are found modify the database by converting the splits to
+     *  multiple individual lesson assignments.  Then delete the split
+     *  assignment.
+     *
+     * @param string $assignmentArray All assignments for a student..
+     *
+     * @return Number_Of_Rows
+     */
+    public function checkAndProcessSplits($assignmentArray)
+    {
+        if (is_array($assignmentArray === FALSE)) {
+            $dataToReturn = 'Error at '.__LINE__.'Ac';
+        }
+
+        if (is_array($assignmentArray) === TRUE) {
+            foreach ($assignmentArray as $key => $value) {
+                // All of a student's assignments.
+                if (is_array($value) === FALSE) {
+                    $dataToReturn = 'Error at 923 Ac';
+                    break;
+                } else {
+                    if (substr($value['tG_AssignmentName'], 0, 3) === 'tS_') {
+                        $this->insertTaSplitIntoTa($value);
+                        $dataToReturn = TRUE;
+                    } else {
+                        $dataToReturn = FALSE;
+                    }//end if
+                }//end if
+            }//end foreach
+
+            return $dataToReturn;
+        }//end if
+
+    }//end checkAndProcessSplits()
+
+
+     /**
+      *  Gets the next lesson for a student.
+      *
+      * Find the identified student's next lesson.
+      *
+      * @param string $studentID    Identifies the student who will do the next lesson.
+      * @param string $lastLessonId Make sure lesson is not repeated unles OK.
+      *
+      * @return Number_Of_Rows
+      */
+    public function getNextAssignmentToDo($studentID, $lastLessonId)
+    {
+        do {
+            // Must resolve all splits before can process results.
+            $lookingForLesson = FALSE;
+            $resultArray      = $this->getCurrentStudentAssignmentsInAnArray(
+                $studentID,
+                time()
+            );
+            if ($resultArray === NULL) {
+                // This student has no lessons.
+                return NULL;
+            } else {
+                // NOT NULL.
+                if (is_array($resultArray) === TRUE) {
+                    // Next reset the array pointer to first element.
+                    reset($resultArray);
+                    // Next command may modify the database.
+                    // Should return TRUE if it did.
+                    $result = FALSE;
+                    $result = $this->checkAndProcessSplits($resultArray);
+                    if ($result === TRUE) {
+                        // Must go around again because a split may contain a split.
+                        $lookingForLesson = TRUE;
+                    } else {
+                        $lookingForLesson = FALSE;
+                    }
+                } else {
+                    $lookingForLesson = FALSE;
+                }
+            }//end if
+        } while ($lookingForLesson === TRUE);
+        reset($resultArray);
+        if (count($resultArray) > 0) {
+            // Takes an array of lessons and returns a lesson id.
+            $lesson = $this->selectALesson($resultArray, $lastLessonId);
+            // Should always return array but does not sometimes.
+            $str = __LINE__.' AC   count($resultArray) = '.count($resultArray)."\n";
+            return $lesson;
+        }
+
+    }//end getNextAssignmentToDo()
+
+
+    /**
+     *  Gets the next lesson for a student.
+     *
+     * Find the identified student's next lesson.
+     *
+     * @param string $studentID Identifies the student who will do the next lesson.
+     *
+     * @return boolean
+     */
+    public function verifyStudentHasAssignments($studentID)
+    {
+        $result           = NULL;
+        $mysqliConnection = $this->_connectToDb();
+        $sql    = "SELECT * FROM tAssignments WHERE tA_S_ID = '".$studentID."' ORDER BY tA_S_ID LIMIT 1";
+        $result = $mysqliConnection->query($sql);
+        if (mysql_error() === TRUE) {
+            die(__LINE__.' AssignmentsClass:'.mysql_error());
+        }
+
+        $resultArray = $result->fetch_assoc();
+        if ($resultArray === NULL) {
+            return $studentID.' does not have any assignments.';
+        } else {
+            return TRUE;
+        }
+
+    }//end verifyStudentHasAssignments()
+
+
+}//end class

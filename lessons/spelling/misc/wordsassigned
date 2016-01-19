@@ -1,0 +1,163 @@
+var wordsAssigned =
+{
+"1": [
+{
+"Name": "am",
+"Ordinal": "01",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"2": [
+{
+"Name": "an",
+"Ordinal": "02",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"3": [
+{
+"Name": "as",
+"Ordinal": "03",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"4": [
+{
+"Name": "at",
+"Ordinal": "04",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"5": [
+{
+"Name": "be",
+"Ordinal": "05",
+"TotalRepsToDo": 10,
+"RepsDone": 4
+}
+],
+"6": [
+{
+"Name": "by",
+"Ordinal": "06",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"7": [
+{
+"Name": "do",
+"Ordinal": "07",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"8": [
+{
+"Name": "go",
+"Ordinal": "08",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"9": [
+{
+"Name": "he",
+"Ordinal": "09",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"10": [
+{
+"Name": "if",
+"Ordinal": "10",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"11": [
+{
+"Name": "in",
+"Ordinal": "11",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"12": [
+{
+"Name": "is",
+"Ordinal": "12",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"13": [
+{
+"Name": "it",
+"Ordinal": "13",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"14": [
+{
+"Name": "me",
+"Ordinal": "14",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"15": [
+{
+"Name": "my",
+"Ordinal": "15",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"16": [
+{
+"Name": "no",
+"Ordinal": "16",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"17": [
+{
+"Name": "of",
+"Ordinal": "17",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"18": [
+{
+"Name": "oh",
+"Ordinal": "18",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"19": [
+{
+"Name": "on",
+"Ordinal": "19",
+"TotalRepsToDo": 10,
+"RepsDone": 0
+}
+],
+"20": [
+{
+    "Name": "or",
+    "Ordinal": "20",
+    "TotalRepsToDo": 10,
+    "RepsDone": 0
+    }
+]
+}

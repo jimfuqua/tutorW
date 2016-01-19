@@ -1,0 +1,60 @@
+html {
+   overflow: hidden;
+}
+
+body {
+background:#5F9EA0;  /*CadetBlue*/
+color:black;
+font-family:Verdana, "Myriad Web", Syntax, sans-serif;
+font-size: 1em;
+margin: 0;
+padding: 0;
+height:99%;
+}
+
+h1{
+text-align: center;
+font-size:1.5em;
+}
+
+#answer_block{
+    text-align: center;
+    height:90%;
+}
+
+#student_identifier_div{
+font-size:1.2em;
+text-align: center;
+}
+
+#left{
+position:absolute;
+left:0%;
+top: 25%;
+height:70%;
+width:50.3%;
+border: solid thin blue;
+}
+
+#face{
+border: solid thin yellow;
+}
+
+#face_pic{
+position: absolute;
+top: 25%;
+border: none;
+outline: none;
+max-width: 61%;
+height: auto;
+}
+
+
+#right{
+position:absolute;
+left:50.5%;
+top: 25%;
+height:70%;
+width:50%;
+border: solid thin red;
+}

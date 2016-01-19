@@ -1,0 +1,167 @@
+<?php
+$session_id = session_id();
+ if(!isset($session_id)){
+    session_start();
+ }
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+$_SESSION['page']="Typing_lessons_cl.php in frame in container.php ";
+$_SESSION['tC_ServerTimeStarted']=time()+0;
+$log_file = fopen("/var/www/tutor/php_log.txt", "a");
+// $str =  "\nTyping_lessons_cl.php \n";
+// fwrite  (  $log_file, $str);
+// $str =  "\$_SESSION['session_id']=".session_id()."\n";
+// fwrite  (  $log_file, $str);
+// foreach($_SESSION as $key=>$value)
+//     {
+// 	$str =  'The value of $_SESSION['."'".$key."'".'] is '."'".$value."'"." \n";
+// 	fwrite  (  $log_file, $str);
+//     }
+ // Insure that include files are included. ***************************
+ $filename="./css/Typing_Single_Template.css";
+ if(!file_exists($filename)){
+        $string = "Missing critical file -- Typing_Single_Template.css";
+        trigger_error($string, E_USER_ERROR);
+    }
+$filename="../../css/quit_valid.css";
+ if(!file_exists($filename)){
+        $string = "Missing critical file -- quit_valid.css";
+        trigger_error($string, E_USER_ERROR);
+    }
+$filename="../../scripts/jquery-1.5.1.js";
+ if(!file_exists($filename)){
+        $string = "Missing critical file -- jquery-1.5.1.js";
+        trigger_error($string, E_USER_ERROR);
+    }
+$filename="/var/www/tutor/scripts/capslock.jquery.js";
+ if(!file_exists($filename)){
+        $string = "Missing critical file -- capslock.jquery.js";
+        trigger_error($string, E_USER_ERROR);
+    }
+require_once "/var/www/tutor/lib/lib_lesson_header.php";
+// End -- Insure that include files are included. ***************************
+
+$selected_student = $_SESSION['student_name'];
+//$_SESSION['views'] = $_SESSION['views'] + 1;
+$lesson_no = $_SESSION['tA_StartRec'];
+	//$gA_assignment_name=$_SESSION['gA_assignment_name']
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" >
+<head>
+<title>Typing Lesson</title>
+<meta http-equiv="content-Type" content="text/html; charset=iso-8859-1"/>
+<meta http-equiv="Cache-Control" content="no-cache">  <!-- see if this stops a cache  -->
+<!-- Author: Jim Fuqua  Jim@Jim-Fuqua.com
+ToDo:     -->
+<link rel="stylesheet" type="text/css" href="./css/master.css" media='screen'/>
+<link rel="stylesheet" type="text/css" href="./css/quit_valid.css" media='screen' />
+<link rel="stylesheet" type="text/css" href="./css/Typing_Single_Template.css"  media='screen' />
+<script src="http://localhost/tutor/scripts/jquery-1.5.1.js" type="text/javascript"></script>
+<script src="./scripts/xxxxxxxxxxxxxxxxxxjquery.url.js" type="text/javascript"></script>
+<script src="http://localhost/tutor/scripts/capslock.jquery.js" type="text/javascript"></script>
+<script src="/tutor/scripts/jquery.form.js" type="text/javascript"></script>
+<script type="text/javascript" src="./scripts/Typing_Single_Template_js.php"></script>
+</head>
+
+<body>
+
+<div>
+    <span>
+    <a id='quit_button_top_left' href='javascript:close_window()'><img id='image-exit' src='./images/stop2.gif' alt='Quit'/></a>
+    <a id="help_button" href="javascript:fHelp()"><img id="image-help" src="./images/Help.png" alt="help"/></a>
+    </span>
+</div>
+
+<div id="Title1" >Title</div>
+<div id="student_identifier"><p><?php if(isset($_SESSION['student_name'])){echo $_SESSION['student_name'];} else {echo 'Unknown Student';}?></p></div>
+<form id="myform" autocomplete="off"  method="post" action="dummy.php">
+<!--<form id="myform" method="post" action="dummy.php">-->
+<div id="center_div" >
+    <table id="typing_lesson_display"> <!--Encloses six typing lines contained in divs.-->
+        <tr class="line_display">
+            <td class='displayLine2'>
+            <input type="text" class="InputLines" id="displayLine1" name="displayLine1" readonly="readonly" tabindex="0" maxlength="44" /></td>
+            <td><input type="text" class="Labels"     id="WPM"          tabindex="0" value="WPM" maxlength="3"   readonly="readonly" /></td>
+            <td class='Errors'>
+                <input type="text" class="Labels"     id="Error"        tabindex="0" value="Error" maxlength="5" readonly="readonly" /></td>
+        </tr>
+        <tr class="line_display">
+            <td class='displayLine2'><input type="text" class="InputLines"   id="txt1a" name="txt1a" tabindex="1"          maxlength="44" /></td>
+            <td class='td_WPM'>      <input type="text" class="WPM"          id="wpm1a" name="wpm1a" tabindex="0" readonly="readonly" value='' maxlength="3"  /></td>
+            <td class='td_Errors'>   <input type="text" class="Errors_made"  id="err1a" name="err1a" tabindex="0" readonly="readonly" value="" maxlength="3"  /></td>
+        </tr>
+        <tr class="line_display">
+            <td class='displayLine2'><input type="text" class="InputLines"  id="txt1b" name="txt1b" tabindex="1"           maxlength="44" /></td>
+            <td class='td_WPM'>      <input type="text" class="WPM"         id="wpm1b" name="wpm1b" tabindex="0" readonly="readonly" value=""  maxlength="3"  /></td>
+            <td class='td_Errors'>   <input type="text" class="Errors_made" id="err1b" name="err1b" tabindex="0" readonly="readonly" value=""  maxlength="3"  /></td>
+        </tr>
+        <tr class="line_display">
+            <td class='displayLine2'><input type="text" class="InputLines"  id="txt1c" name="txt1c" tabindex="1"           maxlength="44" /></td>
+            <td class='td_WPM'>      <input type="text" class="WPM"         id="wpm1c" name="wpm1c" tabindex="0" readonly="readonly" value=''  maxlength="3"  /></td>
+            <td class='td_Errors'>   <input type="text" class="Errors_made" id="err1c" name="err1c" tabindex="0" readonly="readonly" value=""  maxlength="3" /></td>
+        </tr>
+        <tr class="line_display">
+            <td class='displayLine2'><input type="text" class="InputLines"  id="txt1d" name="txt1d" tabindex="1"           maxlength="44" /></td>
+            <td class='td_WPM'>      <input type="text" class="WPM"         id="wpm1d" name="wpm1d" tabindex="0" readonly="readonly" value=''  maxlength="3"  /></td>
+            <td class='td_Errors'>   <input type="text" class="Errors_made" id="err1d" name="err1d" tabindex="0" readonly="readonly" value=""  maxlength="3"  /></td>
+        </tr>
+        <tr class="line_display">
+            <td class='displayLine2'><input type="text" class="InputLines"  id="txt1e" name="txt1e" tabindex="1"           maxlength="44"  /></td>
+            <td class='td_WPM'>      <input type="text" class="WPM"         id="wpm1e" name="wpm1e" tabindex="0" readonly="readonly" value=''  maxlength="3" /></td>
+            <td class='td_Errors'>   <input type="text" class="Errors_made" id="err1e" name="err1e" tabindex="0" readonly="readonly" value=""  maxlength="3" /></td>
+        </tr>
+    </table><!--typing_lesson_display-->
+
+<div id="BottomData" >
+    <div id='bottom_line_1'>
+            <label id="cklabel"  for="CorrectKeyStrokes" >Correct key strokes:</label>
+            <input type="text" class="data"  id="CorrectKeyStrokes" name="CorrectKeyStrokes" tabindex="0" readonly="readonly" value='0'  maxlength="3" />
+            <label id="KSSlabel" for="KSSecond" >Strokes/sec:</label>
+            <input type="text" class="data"  id="KSSecond" name="KSSecond" tabindex="0" readonly="readonly" value=''  maxlength="1" />
+            <label id="WPMLabel" for="AverageSpeed" >WPM:</label>
+            <input type="text" class="data"   id="AverageSpeed" name="AverageSpeed" tabindex="0" value=''  maxlength="3" />
+            <label id="TErrorslabel" for="t_err" >Errors:</label>
+            <input type="text" class="data"   id="t_err" name="t_err" tabindex="0" readonly="readonly" value=''  maxlength="2" />
+    </div>
+    <div id='bottom_line_2'>
+            <label id="ElapsedTimeLabel"  for="Time_Working">Elapsed Time:</label>
+            <input type="text" class="data" id="Time_Working" name="Time_Working" tabindex="0" readonly="readonly" value=''  maxlength="4" />
+            <label id="Date_DisplayLabel"  for="Date_Display">Date Time:</label>
+            <input type="text" class="data" id="Date_Display" name="Date_Display" tabindex="0" readonly="readonly" value=''  maxlength="24" />
+        </div>
+</div> <!--id="BottomData"-->
+</div><!--id="center_div"-->
+
+<div><span id="myspan">&#160;</span></div>
+
+<div id="Hide">
+    <input type="text" class="park" id="park" name="park" size="1" tabindex="1" />
+    <input type="hidden" id="LineNo" name="LineNo" size="2" tabindex="100" value="" />
+    <input type="hidden" id="L1_WPM" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="L2_WPM" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="L3_WPM" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="L4_WPM" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="L5_WPM" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="L1_err" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="L2_err" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="L3_err" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="L4_err" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="L5_err" readonly="readonly" tabindex="100" />
+    <input type="hidden" id="Student_Id" value="" tabindex="100" />
+    <input type="hidden" id="Student_Name" value="" tabindex="100" />
+    <input type="hidden" id="Data_Form" value="Typing_Single_Template.html" tabindex="100" />
+    <input type="hidden" id="Data_File" value="" tabindex="100" />
+    <input type="hidden" id="Answer_Correct" value="" tabindex="100" />
+    <input type="hidden" id="Date_Done" value="" tabindex="100" />
+    <input type="hidden" id="Time_In" value="" tabindex="100" />
+    <input type="hidden" id="Teacher" value="Ellen Fuqua" tabindex="100" />
+    <input type="hidden" id="State" value="TN" tabindex="100" />
+    <input type="hidden" id="County" value="" tabindex="100" />
+    <input type="hidden" id="School" value="" tabindex="100" />
+    <input type="hidden" id="School_System" value="" tabindex="100" />
+    <input type="hidden" id="lesson_index" value='<?php $_SESSION["tA_StartRec"] ?>' tabindex="100" />
+  </div><!--id="Hide"-->
+ </form>
+</body>
+</html>

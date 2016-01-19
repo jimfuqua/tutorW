@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0068)http://line25.com/wp-content/uploads/2009/css-button/demo/demo.html# -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>CSS Button</title>
+
+<style type="text/css">
+
+* { margin: 0; padding: 0; /* Quick and Dirty Reset */ }
+
+body {
+	background: url(bg-repeat.png);
+}
+
+#demo {
+	width: 433px; margin: 100px auto;
+}
+
+	#demo p a.press-it-btn {
+		display: block; /* Change anchor to block element */
+		width: 433px; height: 174px; /* Specify width and height of the image. Height is value of each individual button graphic */
+		background-image: url(button-sprite.png); /* Add the image as a background */
+		background-position: top; /* Set the position to the top */
+		text-indent: -9999px; /* Send the rendered HTML wording off screen */
+	}
+		#demo p a.press-it-btn:hover, #demo p a.press-it-btn:focus {
+			background-position: center; /* Set the position to the center */
+		}
+		#demo p a.press-it-btn:active {
+			background-position: bottom; /* Set the position to the bottom */
+		}
+
+a { outline: none; }
+</style>
+</head>
+
+<body>
+
+<div id="demo">
+	<p><a href="./CSS Button_files/CSS Button.html" class="press-it-btn">Press it</a></p>
+</div>
+
+
+</body></html>

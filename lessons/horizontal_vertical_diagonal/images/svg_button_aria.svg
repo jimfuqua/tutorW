@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<!-- Created by Tavmjong Bah, based on button by Doug Schepers -->
+
+<svg
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   width="300"
+   height="100"
+   id="svg2">
+  <title>ARIA SVG Button</title>
+  <desc>A demonstration of an ARIA compliant button.</desc>
+
+  <style type="text/css">
+   stop#stop_a {stop-color: #df0000;stop-opacity:1}
+   stop#stop_b {stop-color: #5f0000;stop-opacity:1}
+   stop#stop_c {stop-color: #ffdbdb;stop-opacity:1}
+   stop#stop_a[aria-pressed="true"] {stop-color: #00df00;stop-opacity:1}
+   stop#stop_b[aria-pressed="true"] {stop-color: #005f00;stop-opacity:1}
+   stop#stop_c[aria-pressed="true"] {stop-color: #dbffdb;stop-opacity:1}
+   g#button:hover {stroke:#000000;stroke-width:5;}
+  </style>
+
+  <script type="text/ecmascript">
+   <![CDATA[
+     function buttonEvent(event) {
+       // Toggle on click or space/carriage return
+       // (But SVG 1.1 doesn't include key events!)
+       if( (event.type == "click"   && event.button == 0)  ||
+           (event.type == "keydown" &&
+             (event.keyCode == 32 || event.keyCode == 13))  ) {
+         var target = event.currentTarget; // object that called this function
+         var pressed = (target.getAttribute( "aria-pressed" ) == "false");
+         target.setAttribute( "aria-pressed", pressed );
+         var stop_a = document.getElementById('stop_a');
+         var stop_b = document.getElementById('stop_b');
+         var stop_c = document.getElementById('stop_c');
+         stop_a.setAttribute( "aria-pressed" , pressed )
+         stop_b.setAttribute( "aria-pressed" , pressed )
+         stop_c.setAttribute( "aria-pressed" , pressed )
+         // alert('Pressed: ' + pressed + ' ' + target.getAttribute( "id" ) );
+       }
+     };
+   ]]>
+  </script>
+
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3011">
+      <stop
+         id="stop_a"
+         offset="0" />
+      <stop
+         id="stop_b"
+         offset="0.75" />
+      <stop
+         id="stop_c"
+         offset="1" />
+    </linearGradient>
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter3690">
+      <feOffset
+         dx="3"
+         dy="3"
+         id="feOffset3692"
+         in="SourceAlpha" />
+      <feGaussianBlur
+         stdDeviation="3"
+         id="feGaussianBlur3694"
+         result="result1" />
+      <feMerge
+         id="feMerge3696">
+        <feMergeNode
+           id="feMergeNode3698"
+           in="result1" />
+        <feMergeNode
+           id="feMergeNode3700"
+           in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <linearGradient
+       x1="150"
+       y1="90"
+       x2="150"
+       y2="10"
+       id="linearGradient3851"
+       xlink:href="#linearGradient3011"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g id="layer1"
+     style="stroke-width:3">
+  <g id="button"
+     role="button"
+     aria-pressed="false"
+     cursor="pointer"
+     focusable="true"
+     onkeydown="return buttonEvent(evt);"
+     onclick="return buttonEvent(evt);">
+  <rect
+     width="280"
+     height="80"
+     ry="40"
+     x="10"
+     y="10"
+     id="rect3010"
+     style="fill:url(#linearGradient3851);fill-opacity:1;stroke:#000000;filter:url(#filter3690)" />
+  <g
+     id="g3029"
+     pointer-events="none"
+     style="fill:#ffffff">
+    <use
+       transform="translate(-2,-2)"
+       id="use3027"
+       style="fill:#000000"
+       xlink:href="#text3023" />
+    <text
+       x="150"
+       y="70"
+       id="text3023"
+       style="font-size:56px;text-anchor:middle;stroke:none;font-family:Sans"><tspan
+         x="150"
+         y="70"
+         id="tspan3025">ARIA</tspan></text>
+  </g>
+  </g>
+  </g>
+</svg>

@@ -1,0 +1,26 @@
+93 $pramArray = array (
+  'tA_S_ID' => 'Abcdxyz',
+  'tA_StudentName' => 'Tim T. Test',
+  'tC_Session' => 'q4fsqoolkeqfje15urja165gd4',
+  'tC_gA' => 'gA_spelling',
+  'tC_tAStartRec' => '1',
+  'tC_tAStopRec' => '3',
+  'tC_CompletedTimestamp' => '2016-01-16 18:29:16',
+  'tC_ServerTimeStarted' => '1452990539',
+  'tC_ClientTimeStarted' => '1452990551932',
+  'tC_Time_client_processed_answer' => '1452990556618',
+  'tC_Correct' => '1',
+  'tC_Question_and_Response' => '',
+  'tC_More_data_about_response' => '',
+)
+
+
+
+95 $currentDateTime = 2016-01-16 18:29:16
+
+
+
+INSERT INTO tCompleted (tA_S_ID, tA_StudentName, tC_Session, tC_gA, tC_tAStartRec, tC_tAStopRec, tC_CompletedTimestamp, tC_ServerTimeStarted, tC_ClientTimeStarted, tC_Time_client_processed_answer, tC_Correct, tC_Question_and_Response, tC_More_data_about_response) VALUES ( 'Abcdxyz', 'Tim T. Test', 'q4fsqoolkeqfje15urja165gd4', 'gA_spelling', '1', '3', '2016-01-16 18:29:16', '1452990539', '1452990551932', '1452990556618', '1', '', '')
+
+98 $count = 1
+

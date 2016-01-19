@@ -1,0 +1,20 @@
+
+LeftRight.php
+$_SESSION = array (
+  'session_path' => '/var/lib/php5',
+  'session_id' => 'f888gjnl8upsfnq48o8bnpgab1',
+  'tA_StudentName' => 'Tim T. Test',
+  'tA_S_ID' => 'Abcdxyz',
+  'tC_ServerTimeStarted' => 1453212415.03,
+  'tA_StartRec' => '1',
+  'tA_StopRec' => '3',
+  'tA_RepsTowardM' => '3',
+  'tG_Reps_to_master' => '30',
+  'tA_PercentTime' => '55',
+  'tA_LocalDateTime' => '2016-01-19 14:06:55',
+  'tA_id' => '211245',
+  'tG_AssignmentName' => 'gA_left_right_blocks',
+  'tA_PostDateIncrement' => 2,
+  'tA_Post_date' => 1453212417.447,
+  'page' => 'LeftRight.php',
+)

@@ -1,0 +1,95 @@
+body{
+	background: #5F9EA0; /*cadetblue;*/
+}
+
+#audio1{
+	margin-right:10em;
+    margin-top:.2em;
+	width: 15em;
+	height:2em;
+	border: solid thin red;
+	background:lightblue;
+	padding: .1em;
+	padding-left: .3em;
+	padding-bottom: .3em;
+	border-radius: 14px;
+}
+
+#audio2{
+	margin-left:10em;
+    margin-top:.3em;
+	width: 15em;
+	height:2em;
+	border: solid thin red;
+	background:lightblue;
+	padding: .1em;
+	padding-left: .3em;
+	padding-bottom: .3em;
+	border-radius: 14px;
+}
+
+.audio_controls{
+  text-align:center;
+}
+
+.word_picture{
+	width: 20%;
+	margin-left: 4em;
+	margin-right: 2em;
+}
+
+#absolute_center{
+	/*position:absolute;
+	top:35%;*/
+	margin-top: 5em;
+	height:40%;
+	width:100%;
+}
+
+#play_word{
+	width: 40%;
+	height:2.5em;
+	margin-top: 4.6em;
+	font-size: 1.4em;
+	border: double 3px red;
+	border-radius: 14px;
+	/*margin-right: 1em;*/
+}
+
+#play_sentence{
+	width: 40%;
+	height:2.5em;
+	margin-top: 5em;
+	font-size: 1.4em;
+    border: double 3px red;
+	border-radius: 14px;
+	margin-left: 1em;
+}
+
+#page{
+	text-align:center;
+}
+
+h1{
+	text-align:center;
+}
+
+#instructions{
+	text-align:center;
+}
+
+#spelling_word_input{
+	width: 35%;
+	text-align:center;
+	padding:.1em;
+	font-size:3em;
+	margin-left: 2em;
+	margin-right:2em;
+}
+
+#bottom_buttons{
+	position:absolute;
+	margin-left: 4%;
+	bottom: 3%;
+	width: 90%;
+}

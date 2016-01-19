@@ -1,0 +1,103 @@
+//<!--    var d;
+    //d = document.getElementById('BottomData');
+    //d.style.visibility = 'visible';
+    //post_string = '';
+    // tC_Session, tC_gA, tC_CompletedTimestamp, tC_LessonStartTimeStamp, tC_Correct, tC_Question_and_Response, tC_More_data_about_response
+    //post_string = post_string + "Student_ID=" + document.getElementById("student_identifier").firstChild.nodeValue + '&';
+    //post_string = post_string + "Student=" + document.getElementById("student_identifier").firstChild.nodeValue + '&';
+    //post_string = post_string + "tC_Correct=" + "true" + '&';
+    //     post_string = post_string + "tC_Session
+    //     post_string = post_string + "S_ID=" + "STUDENT ID" + '&';
+    //     post_string = post_string + "line_typed=" + escape(line) + '&';
+    //     post_string = post_string + "title=" + escape(lessons[index][2]) + '&';
+    //     post_string = post_string + "wpm1a=" + document.getElementById("wpm1a").value + "&";
+    //     post_string = post_string + "wpm1b=" + document.getElementById("wpm1b").value + "&";
+    //     post_string = post_string + "wpm1c=" + document.getElementById("wpm1c").value + "&";
+    //     post_string = post_string + "wpm1d=" + document.getElementById("wpm1d").value + "&";
+    //     post_string = post_string + "wpm1e=" + document.getElementById("wpm1e").value + "&";
+    //     post_string = post_string + "err1a=" + document.getElementById("err1a").value + "&";
+    //     post_string = post_string + "err1b=" + document.getElementById("err1b").value + "&";
+    //     post_string = post_string + "err1c=" + document.getElementById("err1c").value + "&";
+    //     post_string = post_string + "err1d=" + document.getElementById("err1d").value + "&";
+    //     post_string = post_string + "err1e=" + document.getElementById("err1e").value + "&";
+    //     post_string = post_string + "CorrectKeyStrokes=" + document.getElementById("CorrectKeyStrokes").value + "&";
+    //     strokes sec
+    //     post_string = post_string + "AverageSpeed=" + document.getElementById("AverageSpeed").value + "&";
+    //     post_string = post_string + "t_err=" + document.getElementById("t_err").value + "&";
+    //     post_string = post_string + "Time_Working=" + document.getElementById("Time_Working").value + "&";
+    //     date time
+    //     var d = new Date();
+    //     post_string = post_string + "StudentUnixTime=" + d.getTime() + "&";
+    //var ans = 0;
+    //var numstrokes = 0;
+    //var sum = 0;
+    //var secondary_index = 0;
+    //alert("Time_Working="+document.getElementById("Time_Working").value);
+    ///*for(primary_index=32; primary_index < 128; primary_index++){
+    //    Calculate_and_record_Median(primary_index, key_speed[primary_index]);
+    //}*/
+
+    //var Preceeding_Char_Code;
+   //var len_Preceeding_Char_Code;
+    //var Preceeding_Char;
+    //var Timed_Character_Code;
+    //var Timed_Character;
+    //var Pair;
+    //var w_str;
+    //var len_Timed_Character_Code;
+    //for (name in object) {
+    //if (object.hasOwnProperty(name)) {
+    //    ....
+    //}
+    //for (var w in key_pair) {
+    <!--    if (key_pair.hasOwnProperty(w)) {
+            w_str = w + "";
+            Preceeding_Char_Code = w_str.substr(0, 3);
+            if (Preceeding_Char_Code[0] === '3') {
+                Preceeding_Char_Code = Preceeding_Char_Code[1] + Preceeding_Char_Code[2];
+            } else {
+                Preceeding_Char_Code = Preceeding_Char_Code;
+            }
+            Preceeding_Char_Code = Preceeding_Char_Code + "";
+            len_Preceeding_Char_Code = Preceeding_Char_Code.length;
+            if (len_Preceeding_Char_Code == 2) {
+                Preceeding_Char = String.fromCharCode(parseInt(Preceeding_Char_Code[0] + Preceeding_Char_Code[1], 10));
+            } else {
+                Preceeding_Char = String.fromCharCode(parseInt(Preceeding_Char_Code[0] + Preceeding_Char_Code[1] + Preceeding_Char_Code[2], 10));
+            }
+
+            Timed_Character_Code = w_str.substr(3, 3);
+            if (Timed_Character_Code[0] == '3') {
+                Timed_Character_Code = Timed_Character_Code[1] + Timed_Character_Code[2];
+            } else {
+                Timed_Character_Code = Timed_Character_Code;
+            }
+            Timed_Character_Code = Timed_Character_Code + "";
+            len_Timed_Character_Code = Timed_Character_Code.length;
+            if (len_Timed_Character_Code == 2) {
+                Timed_Character = String.fromCharCode(parseInt(Timed_Character_Code[0] + Timed_Character_Code[1], 10));
+            } else {
+                Timed_Character = String.fromCharCode(parseInt(Timed_Character_Code[0] + Timed_Character_Code[1] + Timed_Character_Code[2], 10));
+            }
+            if (Timed_Character_Code == "32") {
+                Timed_Character = " ";
+            }
+            Pair = "#" + Preceeding_Char + Timed_Character + "#";
+            Timed_Character = "#" + Timed_Character + "#";
+            Preceeding_Char = "#" + Preceeding_Char + "#";
+
+            // get median from database
+            var db_length = key_pair[w].length;
+            var db_median;
+            if (db_length > 9) {
+                db_median = Median(key_pair[w]);
+                db_median = Math.round(db_median);
+                post_string = post_string + Pair + "=" + db_median + "&";
+                //post_string=post_string+"Preceeding_Char="+Preceeding_Char+"&";
+                //post_string=post_string+"Timed_Character="+Timed_Character+"&";
+                //post_string=post_string+"MedianTime="+db_median+"&";
+            }
+        }
+    }
+    //post_string = post_string + "end=The End";-->
+}-->

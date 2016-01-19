@@ -1,0 +1,15 @@
+<a href="http://www.w3.org/Graphics/SVG/">
+      <svg class="Purple" 
+	   xmlns="http://www.w3.org/2000/svg" 
+	   xmlns:xlink="http://www.w3.org/1999/xlink"
+	   version="1.1"
+	   width="240"
+	   height="100">
+	<defs>
+	  <text id="TheColor">Purple</text>
+	</defs>
+	<use xlink:href="buttonBtext.svg#Root"/>
+      </svg>
+      </a>
+
+

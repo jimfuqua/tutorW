@@ -1,0 +1,615 @@
+65 microtime(TRUE) = 1452988315.341883
+
+
+66 $tG_AssignmentName = gA_horizontal_vertical_diagonal
+70 microtime(TRUE) = 1452988315.341959
+
+
+73 $lesson = array (
+  'id' => '129271',
+  'tG_StartStop' => NULL,
+  'tG_Split' => NULL,
+  'tG_ThreadName' => NULL,
+  'tG_AssignmentName' => 'gA_horizontal_vertical_diagonal',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/horizontal_vertical_diagonal/',
+  'tG_FormName' => 'horizontal_vertical_diagonal.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => NULL,
+  'tG_Consequtive_Reps_OK' => '0',
+  'tG_Reps_to_master' => '20',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => '1',
+  'tG_StopRec' => '1',
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '1',
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '720',
+  'tG_Lesson_if_Error' => '100',
+  'tG_Record_if_Error' => '1',
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '100',
+  'tG_Assignment_Creation_Date' => '2016-01-09 12:06:36',
+)
+
+
+75 microtime(TRUE) = 1452988315.34326
+
+65 microtime(TRUE) = 1452988321.13057
+
+
+66 $tG_AssignmentName = gA_typing_lessons_cl
+70 microtime(TRUE) = 1452988321.130612
+
+
+73 $lesson = array (
+  'id' => '2012',
+  'tG_StartStop' => NULL,
+  'tG_Split' => NULL,
+  'tG_ThreadName' => NULL,
+  'tG_AssignmentName' => 'gA_typing_lessons_cl',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/typing_lessons_cl/',
+  'tG_FormName' => 'typing_lessons_cl.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '1',
+  'tG_Consequtive_Reps_OK' => '1',
+  'tG_Reps_to_master' => '5',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => NULL,
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => NULL,
+  'tG_RecordsPerSet' => NULL,
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => NULL,
+  'tG_Record_if_Error' => NULL,
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-08-29 03:11:25',
+)
+
+
+75 microtime(TRUE) = 1452988321.131566
+
+65 microtime(TRUE) = 1452988353.509679
+
+
+66 $tG_AssignmentName = gA_left_right_blocks
+70 microtime(TRUE) = 1452988353.509732
+
+
+73 $lesson = array (
+  'id' => '1781',
+  'tG_StartStop' => '',
+  'tG_Split' => NULL,
+  'tG_ThreadName' => '',
+  'tG_AssignmentName' => 'gA_left_right_blocks',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/left_right_blocks/',
+  'tG_FormName' => 'left_right_blocks.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '',
+  'tG_Consequtive_Reps_OK' => '0',
+  'tG_Reps_to_master' => '10',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => '0',
+  'tG_Maximum_completion_time' => '0',
+  'tG_StartRec' => '1',
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => '1',
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '20',
+  'tG_Lesson_if_Correct' => '',
+  'tG_Record_if_Correct' => '0',
+  'tG_Parameter_if_Correct' => '',
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => 'Left_Right',
+  'tG_Record_if_Error' => '0',
+  'tG_Parameter_if_Error' => '',
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-06-17 00:50:24',
+)
+
+
+75 microtime(TRUE) = 1452988353.510819
+
+65 microtime(TRUE) = 1452988355.756806
+
+
+66 $tG_AssignmentName = gA_typing_lessons_cl
+70 microtime(TRUE) = 1452988355.756867
+
+
+73 $lesson = array (
+  'id' => '2012',
+  'tG_StartStop' => NULL,
+  'tG_Split' => NULL,
+  'tG_ThreadName' => NULL,
+  'tG_AssignmentName' => 'gA_typing_lessons_cl',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/typing_lessons_cl/',
+  'tG_FormName' => 'typing_lessons_cl.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '1',
+  'tG_Consequtive_Reps_OK' => '1',
+  'tG_Reps_to_master' => '5',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => NULL,
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => NULL,
+  'tG_RecordsPerSet' => NULL,
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => NULL,
+  'tG_Record_if_Error' => NULL,
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-08-29 03:11:25',
+)
+
+
+75 microtime(TRUE) = 1452988355.758114
+
+65 microtime(TRUE) = 1452988383.280338
+
+
+66 $tG_AssignmentName = gA_clockwise_counterclockwise
+70 microtime(TRUE) = 1452988383.280378
+
+
+73 $lesson = array (
+  'id' => '1782',
+  'tG_StartStop' => '',
+  'tG_Split' => NULL,
+  'tG_ThreadName' => '',
+  'tG_AssignmentName' => 'gA_clockwise_counterclockwise',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/clockwise_counterclockwise/',
+  'tG_FormName' => 'clockwise_counterclockwise.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '',
+  'tG_Consequtive_Reps_OK' => '1',
+  'tG_Reps_to_master' => '10',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => '0',
+  'tG_Maximum_completion_time' => '2',
+  'tG_StartRec' => '1',
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => '1',
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '20',
+  'tG_Lesson_if_Correct' => '',
+  'tG_Record_if_Correct' => '0',
+  'tG_Parameter_if_Correct' => '',
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => 'clockwise_counterclockwise',
+  'tG_Record_if_Error' => '0',
+  'tG_Parameter_if_Error' => '',
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-06-17 00:54:20',
+)
+
+
+75 microtime(TRUE) = 1452988383.281166
+
+65 microtime(TRUE) = 1452988385.968832
+
+
+66 $tG_AssignmentName = gA_horizontal_vertical_diagonal
+70 microtime(TRUE) = 1452988385.96886
+
+
+73 $lesson = array (
+  'id' => '129271',
+  'tG_StartStop' => NULL,
+  'tG_Split' => NULL,
+  'tG_ThreadName' => NULL,
+  'tG_AssignmentName' => 'gA_horizontal_vertical_diagonal',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/horizontal_vertical_diagonal/',
+  'tG_FormName' => 'horizontal_vertical_diagonal.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => NULL,
+  'tG_Consequtive_Reps_OK' => '0',
+  'tG_Reps_to_master' => '20',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => '1',
+  'tG_StopRec' => '1',
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '1',
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '720',
+  'tG_Lesson_if_Error' => '100',
+  'tG_Record_if_Error' => '1',
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '100',
+  'tG_Assignment_Creation_Date' => '2016-01-09 12:06:36',
+)
+
+
+75 microtime(TRUE) = 1452988385.969175
+
+65 microtime(TRUE) = 1452988387.675091
+
+
+66 $tG_AssignmentName = gA_horizontal_vertical_diagonal
+70 microtime(TRUE) = 1452988387.675141
+
+
+73 $lesson = array (
+  'id' => '129271',
+  'tG_StartStop' => NULL,
+  'tG_Split' => NULL,
+  'tG_ThreadName' => NULL,
+  'tG_AssignmentName' => 'gA_horizontal_vertical_diagonal',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/horizontal_vertical_diagonal/',
+  'tG_FormName' => 'horizontal_vertical_diagonal.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => NULL,
+  'tG_Consequtive_Reps_OK' => '0',
+  'tG_Reps_to_master' => '20',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => '1',
+  'tG_StopRec' => '1',
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '1',
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '720',
+  'tG_Lesson_if_Error' => '100',
+  'tG_Record_if_Error' => '1',
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '100',
+  'tG_Assignment_Creation_Date' => '2016-01-09 12:06:36',
+)
+
+
+75 microtime(TRUE) = 1452988387.675939
+
+65 microtime(TRUE) = 1452988389.736521
+
+
+66 $tG_AssignmentName = gA_left_right_blocks
+70 microtime(TRUE) = 1452988389.736575
+
+
+73 $lesson = array (
+  'id' => '1781',
+  'tG_StartStop' => '',
+  'tG_Split' => NULL,
+  'tG_ThreadName' => '',
+  'tG_AssignmentName' => 'gA_left_right_blocks',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/left_right_blocks/',
+  'tG_FormName' => 'left_right_blocks.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '',
+  'tG_Consequtive_Reps_OK' => '0',
+  'tG_Reps_to_master' => '10',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => '0',
+  'tG_Maximum_completion_time' => '0',
+  'tG_StartRec' => '1',
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => '1',
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '20',
+  'tG_Lesson_if_Correct' => '',
+  'tG_Record_if_Correct' => '0',
+  'tG_Parameter_if_Correct' => '',
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => 'Left_Right',
+  'tG_Record_if_Error' => '0',
+  'tG_Parameter_if_Error' => '',
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-06-17 00:50:24',
+)
+
+
+75 microtime(TRUE) = 1452988389.73721
+
+65 microtime(TRUE) = 1452988391.495755
+
+
+66 $tG_AssignmentName = gA_typing_lessons_cl
+70 microtime(TRUE) = 1452988391.495815
+
+
+73 $lesson = array (
+  'id' => '2012',
+  'tG_StartStop' => NULL,
+  'tG_Split' => NULL,
+  'tG_ThreadName' => NULL,
+  'tG_AssignmentName' => 'gA_typing_lessons_cl',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/typing_lessons_cl/',
+  'tG_FormName' => 'typing_lessons_cl.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '1',
+  'tG_Consequtive_Reps_OK' => '1',
+  'tG_Reps_to_master' => '5',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => NULL,
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => NULL,
+  'tG_RecordsPerSet' => NULL,
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => NULL,
+  'tG_Record_if_Error' => NULL,
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-08-29 03:11:25',
+)
+
+
+75 microtime(TRUE) = 1452988391.496671
+
+65 microtime(TRUE) = 1452988929.031652
+
+
+66 $tG_AssignmentName = gA_clockwise_counterclockwise
+70 microtime(TRUE) = 1452988929.031725
+
+
+73 $lesson = array (
+  'id' => '1782',
+  'tG_StartStop' => '',
+  'tG_Split' => NULL,
+  'tG_ThreadName' => '',
+  'tG_AssignmentName' => 'gA_clockwise_counterclockwise',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/clockwise_counterclockwise/',
+  'tG_FormName' => 'clockwise_counterclockwise.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '',
+  'tG_Consequtive_Reps_OK' => '1',
+  'tG_Reps_to_master' => '10',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => '0',
+  'tG_Maximum_completion_time' => '2',
+  'tG_StartRec' => '1',
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => '1',
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '20',
+  'tG_Lesson_if_Correct' => '',
+  'tG_Record_if_Correct' => '0',
+  'tG_Parameter_if_Correct' => '',
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => 'clockwise_counterclockwise',
+  'tG_Record_if_Error' => '0',
+  'tG_Parameter_if_Error' => '',
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-06-17 00:54:20',
+)
+
+
+75 microtime(TRUE) = 1452988929.032627
+
+65 microtime(TRUE) = 1452990539.48162
+
+
+66 $tG_AssignmentName = gA_horizontal_vertical_diagonal
+70 microtime(TRUE) = 1452990539.481651
+
+
+73 $lesson = array (
+  'id' => '129271',
+  'tG_StartStop' => NULL,
+  'tG_Split' => NULL,
+  'tG_ThreadName' => NULL,
+  'tG_AssignmentName' => 'gA_horizontal_vertical_diagonal',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/horizontal_vertical_diagonal/',
+  'tG_FormName' => 'horizontal_vertical_diagonal.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => NULL,
+  'tG_Consequtive_Reps_OK' => '0',
+  'tG_Reps_to_master' => '20',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => '1',
+  'tG_StopRec' => '1',
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '1',
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '720',
+  'tG_Lesson_if_Error' => '100',
+  'tG_Record_if_Error' => '1',
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '100',
+  'tG_Assignment_Creation_Date' => '2016-01-09 12:06:36',
+)
+
+
+75 microtime(TRUE) = 1452990539.482046
+
+65 microtime(TRUE) = 1452990542.570356
+
+
+66 $tG_AssignmentName = gA_clockwise_counterclockwise
+70 microtime(TRUE) = 1452990542.570388
+
+
+73 $lesson = array (
+  'id' => '1782',
+  'tG_StartStop' => '',
+  'tG_Split' => NULL,
+  'tG_ThreadName' => '',
+  'tG_AssignmentName' => 'gA_clockwise_counterclockwise',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/clockwise_counterclockwise/',
+  'tG_FormName' => 'clockwise_counterclockwise.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '',
+  'tG_Consequtive_Reps_OK' => '1',
+  'tG_Reps_to_master' => '10',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => '0',
+  'tG_Maximum_completion_time' => '2',
+  'tG_StartRec' => '1',
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => '1',
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '20',
+  'tG_Lesson_if_Correct' => '',
+  'tG_Record_if_Correct' => '0',
+  'tG_Parameter_if_Correct' => '',
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => 'clockwise_counterclockwise',
+  'tG_Record_if_Error' => '0',
+  'tG_Parameter_if_Error' => '',
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-06-17 00:54:20',
+)
+
+
+75 microtime(TRUE) = 1452990542.570845
+
+65 microtime(TRUE) = 1452990545.869984
+
+
+66 $tG_AssignmentName = gA_spelling
+70 microtime(TRUE) = 1452990545.870071
+
+
+73 $lesson = array (
+  'id' => '1935',
+  'tG_StartStop' => 'Start',
+  'tG_Split' => NULL,
+  'tG_ThreadName' => 'spelling_English',
+  'tG_AssignmentName' => 'gA_spelling',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/spelling/',
+  'tG_FormName' => 'spelling.php',
+  'tG_DataFile' => 'word_sentence_array_1-372.php',
+  'tG_Parameters' => '',
+  'tG_Consequtive_Reps_OK' => '0',
+  'tG_Reps_to_master' => '10',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => '1',
+  'tG_StopRec' => '356',
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => NULL,
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '720',
+  'tG_Lesson_if_Error' => NULL,
+  'tG_Record_if_Error' => NULL,
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-07-29 21:15:31',
+)
+
+
+75 microtime(TRUE) = 1452990545.870994
+
+65 microtime(TRUE) = 1452990551.834013
+
+
+66 $tG_AssignmentName = gA_spelling
+70 microtime(TRUE) = 1452990551.834094
+
+
+73 $lesson = array (
+  'id' => '1935',
+  'tG_StartStop' => 'Start',
+  'tG_Split' => NULL,
+  'tG_ThreadName' => 'spelling_English',
+  'tG_AssignmentName' => 'gA_spelling',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/spelling/',
+  'tG_FormName' => 'spelling.php',
+  'tG_DataFile' => 'word_sentence_array_1-372.php',
+  'tG_Parameters' => '',
+  'tG_Consequtive_Reps_OK' => '0',
+  'tG_Reps_to_master' => '10',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => '1',
+  'tG_StopRec' => '356',
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => NULL,
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '720',
+  'tG_Lesson_if_Error' => NULL,
+  'tG_Record_if_Error' => NULL,
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-07-29 21:15:31',
+)
+
+
+75 microtime(TRUE) = 1452990551.834788
+
+65 microtime(TRUE) = 1452990556.63918
+
+
+66 $tG_AssignmentName = gA_typing_lessons_cl
+70 microtime(TRUE) = 1452990556.639272
+
+
+73 $lesson = array (
+  'id' => '2012',
+  'tG_StartStop' => NULL,
+  'tG_Split' => NULL,
+  'tG_ThreadName' => NULL,
+  'tG_AssignmentName' => 'gA_typing_lessons_cl',
+  'tG_path_to_lesson' => '/jimfuqua/tutor/lessons/typing_lessons_cl/',
+  'tG_FormName' => 'typing_lessons_cl.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '1',
+  'tG_Consequtive_Reps_OK' => '1',
+  'tG_Reps_to_master' => '5',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => NULL,
+  'tG_Maximum_completion_time' => NULL,
+  'tG_StartRec' => NULL,
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => NULL,
+  'tG_RepsPerRecord' => NULL,
+  'tG_RecordsPerSet' => NULL,
+  'tG_Lesson_if_Correct' => NULL,
+  'tG_Record_if_Correct' => NULL,
+  'tG_Parameter_if_Correct' => NULL,
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => NULL,
+  'tG_Record_if_Error' => NULL,
+  'tG_Parameter_if_Error' => NULL,
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-08-29 03:11:25',
+)
+
+
+75 microtime(TRUE) = 1452990556.640001
+

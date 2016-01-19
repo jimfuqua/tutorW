@@ -1,0 +1,86 @@
+<?php
+header("Cache-Control: no-cache, must-revalidate, max-age=20");
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+header('Content-Type: application/xhtml+xml;charset=UTF-8');
+session_cache_limiter('nocache');
+$session_id = session_id();
+ if(!isset($session_id)){
+    session_start();
+ }
+ // Insure that include files are included. ***************************
+ $filename="../spelling/css/spelling.css";
+ if(!file_exists($filename)){
+        $string = "Missing critical file -- spelling.css";
+        trigger_error($string, E_USER_ERROR);
+    }
+$filename="../../css/quit_valid.css";
+ if(!file_exists($filename)){
+        $string = "Missing critical file -- quit_valid.css";
+        trigger_error($string, E_USER_ERROR);
+    }
+ $filename="../spelling/scripts/spelling.js";
+ if(!file_exists($filename)){
+        $string = "Missing critical file -- spelling.js";
+        trigger_error($string, E_USER_ERROR);
+    }
+    $filename="../../scripts/jquery-1.7.1.min.js";
+ if(!file_exists($filename)){
+     $string = "Missing critical file -- jquery-1.6.4.js";
+        trigger_error($string, E_USER_ERROR);
+    }
+
+// put essential db variables within html body
+$picture_1 = '/tutor/images/stop2.gif';
+$picture_2 = '/tutor/images/stop2.gif';
+$audio_word = 'age_w.ogg';
+$audio_sentence = "age_s.ogg"
+?>
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <title>Spelling</title>
+  <link rel="stylesheet" type="text/css" href="../../css/quit_valid.css"/>
+  <link rel="stylesheet" type="text/css" href="./css/spelling.css" media="screen"/>
+  <script type="text/javascript" src="../../scripts/jquery-1.7.1.min.js"></script>
+  <script src="./scripts/spelling.js"></script>
+</head>
+<body>
+<div id="page">
+	<header>
+      <h1 id='h1_one' >Spelling</h1>
+      <h3 id='instructions'>Type the word - then the enter key.</h3>
+    </header>
+	<div>
+		<a id='quit_button_top_left' href="javascript:alert(
+			Press Alt key and F4 key together to close the browser.\r\n
+			Press Ctr key and w to close tab in Firefox.\r\n
+			Press Ctrl Key and w to close browser in Chrome.')">
+			<img id='image-exit' src='/tutor/images/stop2.gif' alt='Quit'/>
+		</a>
+        <a id="help_button" onclick="fHelp();"><img id="image-help" src="/tutor/images/Help.png" alt="help"/></a>
+    </div>
+
+	<div id="absolute_center">
+		<p>
+			<?php echo "<span><img id='picture_1' src= ' $picture_1 ' alt=''/></span>";?>
+			<span><input id='spelling_word_input' type='text'></input></span>
+			<?php echo "<span><img id='picture_2' src= ' $picture_2 ' alt=''/></span>";?>
+		</p>
+	</div>
+
+<div id='bottom_buttons'>
+	<span id='span_play_word'> <input type='button' id='play_word' value = 'Play the word again.'
+        onclick="document.getElementById('audio1').play()"></input></span>
+	<input type='button' id='play_sentence'
+        value = 'Play a sentence containing the word.'
+        onclick="document.getElementById('audio2').play()"></input>
+	<?php echo "<audio id='audio1' controls = 'preload' autoplay='autoplay' ><source src='$audio_word' /></audio>";?>
+	<?php echo "<audio id='audio2' controls = 'preload' ><source src='$audio_sentence' /></audio>";?>
+</div>
+<div class="audio_controls">
+
+</div>
+</div><!-- page -->
+</body>
+</html>

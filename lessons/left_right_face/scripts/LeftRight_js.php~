@@ -1,0 +1,139 @@
+<?php
+session_start();
+header('Content-type: text/javascript');
+$_SESSION['tC_ClientTimeStarted'] = time()+0;
+$_SESSION["tC_ServerTimeStarted"] = time()+0;
+$logFile = fopen("/var/www/tutor/logs/LeftRight_js", "w");
+$v = var_export($_SESSION, true);
+fwrite($logFile, "5 LeftRight_js\n\n \$_SESSION below:\n " .  $v . " \n");
+?>
+/*global soundHandleCorrect, soundHandleError, answer_entered, correct_answer,
+    time_lesson_started, time_lesson_answered, question_and_response,
+    error_made, jAlert
+ */
+var Answer_Correct;
+var errors_made;
+var tC_ClientTimeStarted;
+// if got here from roster $_SESSION["tA_StudentName"] will not be set and
+// must be set from post data.
+<?php
+    if (isset($_SESSION["tA_StudentName"])) {
+        echo "var student_name = '" . $_SESSION["tA_StudentName"] . "';";
+    } else {
+        echo "var student_name = 'unknown';";
+    }
+?>
+var server_time_started = <?php echo $_SESSION["tC_ServerTimeStarted"] ?>;
+var today = new Date();
+var tC_Question_and_Response;
+var tC_Time_client_processed_answer = today.getTime();
+var tC_More_data_about_response = "";
+
+function collect_data() {
+    'use strict';
+    var post_string, post_to, update_tCompleted, update_tAssignments;
+    // Put togeter the JSON formatted data.
+    post_string = {
+        "tC_Correct" : Answer_Correct,
+        "tC_ClientTimeStarted" : tC_ClientTimeStarted,
+        "tC_Time_client_processed_answer": tC_Time_client_processed_answer,
+        "tC_Question_and_Response" : tC_Question_and_Response,
+        "tC_More_data_about_response" : tC_More_data_about_response,
+        "tA_ErrorsMade" : errors_made
+    };
+
+    var post_to="http://localhost/tutor/scripts/update_tCompleted.php";
+    // this creates a new entry in tCompleted.
+    var update_tCompleted = $.post(post_to, post_string );
+    console.log('23 updated_tCompleted');
+    post_to = "http://localhost/tutor/scripts/update_tAssignments.php";
+    // this updates tAssignments.
+    update_tAssignments = $.post(post_to, post_string);
+    // THIS IS THE EXIT FROM THIS LESSON
+    document.location.href = "/tutor/scripts/cAssignment_get_next_lesson.php";
+}
+
+$(document).ready(function () {
+    'use strict';
+    var randomnumber;
+    tC_ClientTimeStarted = new Date().getTime();
+    Answer_Correct = null;
+    randomnumber = Math.floor(Math.random() * 2);
+    if (randomnumber === 1) {  // left is the correct answer.
+        $("#instruction_h1").html('Click in the block on the left side of the screen.');
+        tC_Question_and_Response = "Left";
+    } else {  // right is the correct answer and randomunumber === 0
+        $("#instruction_h1").html('Click in the block on the right side of the screen.');
+        tC_Question_and_Response = "Right";
+    }
+
+    var soundHandleCorrect = document.getElementById('soundHandleCorrect');
+    var soundHandleError = document.getElementById('soundHandleError');
+
+    $('#quit_button_top_left').click(function () {
+        alert('Press Alt-F4 to close any window. ');
+    });
+
+    function record_answer() {
+        var question_and_response, post_string, post_to, update_tCompleted;
+        question_and_response = "vertical  " + $('#UnitsDigitOne').text();
+        question_and_response = question_and_response + "+";
+        question_and_response = question_and_response + $('#UnitsDigitTwo').text();
+        question_and_response = question_and_response + "=" + answer_entered;
+        // use ajax to record answer
+        post_string = {
+            "tC_Correct" : correct_answer,
+            "tC_ClientTimeStarted": time_lesson_started,
+            "tC_Time_client_processed_answer" : time_lesson_answered,
+            "tC_Question_and_Response" : question_and_response,
+            "tC_More_data_about_response" : "none",
+            "tA_ErrorsMade" : error_made
+        };
+        post_to = "http://localhost/tutor/scripts/update_tCompleted.php";
+        // this creates a new entry in tCompleted.
+        update_tCompleted = $.post(post_to, post_string);
+    }
+
+    $('#left').click(function () {  // correct
+        if (randomnumber === 1) {
+            soundHandleCorrect.src = "http://localhost/tutor/sounds/c3.wav";
+            soundHandleCorrect.play(); // should there be a } here?
+            if (Answer_Correct === null) {
+                Answer_Correct = 1;  // MySQL stores true as 1 or anything but 0.
+                errors_made = 0;
+            }
+        } else {  // error
+            soundHandleError.src = "http://localhost/tutor/sounds/ohoh.wav";
+            soundHandleError.play();
+            jAlert('Error - You clicked on the box on the <b>right</b> side.');
+            record_answer();
+            if (Answer_Correct === null) {
+                Answer_Correct = 0;  // MySQL stores true as 1 or anything but 0.
+                errors_made = 1;
+            }
+        }
+        collect_data();
+    });
+
+    $('#right').click(function () { // error
+        if (randomnumber === 1) {
+            soundHandleError.src = "http://localhost/tutor/sounds/ohoh.wav";
+            soundHandleError.play();
+            jAlert('Error - You clicked on the box on the <b>left</b> side.');
+            if (Answer_Correct === null) {
+                Answer_Correct = false;
+                errors_made = 1;
+            }
+        } else {  // correct
+            soundHandleCorrect.src = "http://localhost/tutor/sounds/c3.wav";
+            soundHandleCorrect.play();
+            //jAlert('Correct - You clicked on the <b>right</b> box.');
+            if (Answer_Correct === null) {
+                Answer_Correct = true;
+                errors_made = 0;
+            }
+        }
+        collect_data();
+    });
+});
+

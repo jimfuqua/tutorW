@@ -1,0 +1,102 @@
+html {
+   overflow: hidden;
+}
+
+body {
+background:#5F9EA0;  /*CadetBlue*/
+color:black;
+font-family:Verdana, "Myriad Web", Syntax, sans-serif;
+font-size: 1em;
+margin: 0;
+padding: 0;
+height:99%;
+}
+
+#line_block{
+display: block;
+margin-left: auto;
+margin-right: auto;
+margin-top: 4em;
+text-align: center;
+width: 260px;
+height: 260px;
+background-color:#5F9EA0;  /*CadetBlue*/
+}
+
+dialog {
+  position: fixed;
+  top: 50;
+  left: 50;
+  right: 100;
+  bottom: 100;
+  font-size: 1.2em;
+  background-color: red;
+  border: double 5px yellow;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+#error_message{
+    position: absolute;
+    left: 16%;
+    padding-top: .05em;
+    top:1%;
+    width:64%;
+    height:15%;
+    background:white;
+    color:black;
+    text-align: center;
+    font-family:Verdana, "Myriad Web", Syntax, sans-serif;
+    font-size: 1.5em;
+    line-height: 70%;
+    border: double 4px red;
+    display:none;
+}
+
+.a_buttons{
+    height:2em;
+    width:10em;
+    margin: 1em;
+    border:double teal;
+    border-radius: 9px;
+    font-size:1.2em;
+    box-shadow: 5px 5px 5px black;
+}
+
+#problem{
+position: absolute;
+font-size:.7em;
+left:1em;
+bottom:0%;
+padding: .5em;
+border:double thin #5F9EA0;
+}
+
+#problem:hover{
+background: black;
+color: white;
+border-color:yellow;
+border-radius: 2px;
+}
+
+#student_identifier_div{
+font-size:1.2em;
+text-align: center;
+}
+
+.a_buttons:hover{
+background: black;
+color: white;
+border-color:yellow;
+border-radius: 2px;
+}
+
+#answer_buttons{
+position:fixed;
+width: 100%;
+margin-left:auto;
+margin-right:auto;
+text-align:center;
+top:65%;
+z-index: 100;
+visibility:visible;
+}
