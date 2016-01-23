@@ -59,13 +59,12 @@ $_SESSION['session_path'] = session_save_path();
 $_SESSION['session_id']   = session_id();
 
 // Must get tA_id for the lesson to be tested.
-$lesson_path = "/hsphere/local/home/jimfuqua/jim-fuqua.com/tutorW";
 require_once "../test_lesson_include.php";
 
-// $log_file = fopen('/var/www/html/jimfuqua/tutor/logs/test_left_right_blocks.php.log', 'w');
-// $v = var_export($_SESSION, true);
-// $string = __LINE__.' $_SESSION = '.$v."\n\n";
-// fwrite($log_file, $string);
+ $log_file = fopen('../../../logs/test_left_right_blocks.php.log', 'w');
+ $v = var_export($_SESSION, true);
+ $string = __LINE__.' $_SESSION = '.$v."\n\n";
+ fwrite($log_file, $string);
 
 $target_assignment_name = 'gA_left_right_blocks';
 

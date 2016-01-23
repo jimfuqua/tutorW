@@ -12,7 +12,7 @@ $string="\nLeftRight.php";
 fwrite  ( $log_file, $string . "\n");
 $v = var_export($_SESSION , true);
 $string='$_SESSION = ' . $v ;
-fwrite  ( $log_file, $string . "\n");
+fwrite  ( $log_file, $string . "\n"); 
 ?>
 <!DOCTYPE html>
 <html>

@@ -2,28 +2,41 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+use tutor\src\classes;
 /**
  * @file
  * Accepts AJAX call from JavaScript and updates tAssignments and tCompleted.
  *
  * File name: update_tA_tC.php.
  */
-/*
-use tutor\classes;
+
+//'SCRIPT_FILENAME' =>
+//'/hsphere/local/home/jimfuqua/jim-fuqua.com/tutorW/src/scripts/update_tA_tC.php'
+// 'HTTP_REFERER' =>
+// 'http://jim-fuqua.com/tutorW/src/scripts/',
 if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
+date_default_timezone_set('UTC');
 $log_file = fopen("../../logs/update_tA_tC.php.log", "w");
 $v = var_export($_SESSION, TRUE);
 $string = __LINE__ . ' ($_SESSION = ' . $v . "\n\n";
-fwrite($log_file, $string);*/
-require_once "../classes/CompletedClass.inc";
+fwrite($log_file, $string);
+$v = var_export($_SERVER, TRUE);
+$string = __LINE__ . ' ($_SERVER = ' . $v . "\n\n";
+fwrite($log_file, $string);
+$v = var_export($_POST, TRUE);
+$string = __LINE__ . ' ($_POST = ' . $v . "\n\n";
+fwrite($log_file, $string);
+require_once "../../src/classes/CompletedClass.inc";
+$string = __LINE__ . "\n\n";
+fwrite($log_file, $string);
 require_once '../classes/AssignmentsClass.inc';
-echo 19;
+$string = __LINE__ . "\n\n";
+fwrite($log_file, $string);
 $v = var_export($_POST, TRUE);
 $string = __LINE__ . ' $_POST = ' . $v . "\n\n";
 fwrite($log_file, $string);
-
 
 $session_id = session_id();
 
@@ -220,7 +233,7 @@ fwrite($log_file, $string);
 // Sender is a good source of info to detect tampering with input data.;
 // $sender = $_POST['sender'];
 
-$classInstance = new tutor\src\CompletedClass();
+$classInstance = new tutor\src\classes\CompletedClass();
 
 // To tCompleted using the class method.
 // returns count of rows affected.

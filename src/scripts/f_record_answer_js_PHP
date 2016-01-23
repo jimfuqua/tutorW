@@ -23,13 +23,14 @@ function record_answer( result ) {
         tA_ErrorsMade: errors_made,
         tA_LocalDateTime: Math.floor( Date.now() / 1000 ) // Get rid of milliseconds.
     };
-
+console.log(26);
+console.log (data_out);
     if ( result === 1 ) {
         data_out.tA_RepsTowardM = "Plus1";
     } else {
         data_out.tA_RepsTowardM = "0";
     }
-
+console.log(33);
 // Update tCompleted and tAssignments.php.
     //post_to_update_tA_tC = '/jimfuqua/tutor/src/scripts/update_tA_tC.php';
     post_to_update_tA_tC = "../../src/scripts/update_tA_tC.php";

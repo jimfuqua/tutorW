@@ -712,9 +712,9 @@ public function removeUnneededColumns($inArray) {
         $PDO_Connection = $this->_connectToDb();
         // Variable $studentID must never contain spaces.
         trim($studentID);
-$dbUser = 'root';
-$dbPassword = 'pasword';
-$dbDSN = "mysql:host=localhost;dbname=jlfEDU;";
+$dbUser = 'JimFuqu_jim';
+$dbPassword = 'Carbon3';
+$dbDSN = "mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU;";
 
 try {
             // Our new PDO Object.

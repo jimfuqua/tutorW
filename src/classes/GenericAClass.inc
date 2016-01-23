@@ -72,7 +72,7 @@ class GenericAClass
  */
 public function setSessionVariablesFromTGAssignmentName($tG_AssignmentName)
 {
-    $logFile = fopen('/var/www/html/jimfuqua/tutor/logs/cAssignment_get_next_lesson_set_gA_variables.log', 'a');
+    $logFile = fopen('../../logs/cAssignment_get_next_lesson_set_gA_variables.log', 'a');
     fwrite($logFile, __LINE__.' microtime(TRUE) = '.microtime(TRUE)."\n\n");
     $string = "\n".__LINE__.' $tG_AssignmentName = '.$tG_AssignmentName."\n";
     fwrite($logFile, $string);
@@ -171,9 +171,9 @@ public function setSessionVariablesFromTGAssignmentName($tG_AssignmentName)
      */
     private function _connectToDb()
     {
-        include '/var/www/html/jimfuqua/tutor/src/db_include.php';
+        require '../../src/classes/db_include.php';
         try {
-            $con = new \PDO($dbDSN, 'root', $dbPassword);
+            $con = new \PDO('mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU', 'JimFuqu_jim', 'Carbon3');
             // Our new PDO Object.
         } catch (PDOException $e) {
               echo $e->getMessage();

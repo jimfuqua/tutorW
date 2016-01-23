@@ -1,9 +1,9 @@
-18 $current_time = 1453212415
-20 $microtime = 0.02961500 1453212415
-22 $date_mt = 2016-01-19 14:06:55:000000
-24 microtime ($get_as_float = true) = 1453212415.029726
-26 $tt = 1453212415.03
-54 $var_array["tA_Post_date"]    = 1453212415
+18 $current_time = 1453315505
+20 $microtime = 0.53737600 1453315505
+22 $date_mt = 2016-01-20 18:45:05:000000
+24 microtime ($get_as_float = true) = 1453315505.537563
+26 $tt = 1453315505.538
+54 $var_array["tA_Post_date"]    = 1453315505
 56 $var_array    = array (
   'tA_id' => '',
   'tA_S_ID' => 'Abcdxyz',
@@ -22,9 +22,9 @@
   'tA_SavedAssignment' => 'Test 2',
   'tA_SavedStartRec' => '8',
   'tA_PostDateIncrement' => '0',
-  'tA_Post_date' => 1453212415,
+  'tA_Post_date' => 1453315505,
   'tA_iterations_to_do' => '9',
-  'tA_OriginalTimestamp' => 1453212415,
+  'tA_OriginalTimestamp' => 1453315505,
   'tA_LastModifiedDateTime' => '',
-  'tA_LocalDateTime' => '2016-01-19 14:06:55',
+  'tA_LocalDateTime' => '2016-01-20 18:45:05',
 )

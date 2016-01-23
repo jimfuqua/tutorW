@@ -1,7 +1,7 @@
 <?php
 namespace tutor\src\classes;
 use tutor\src\classes;
-require '/var/www/html/jimfuqua/tutor/src/db_include.php';
+require 'db_include.php';
 error_reporting(E_ALL);
 /**********************************************************************
 *  Manage the person database.

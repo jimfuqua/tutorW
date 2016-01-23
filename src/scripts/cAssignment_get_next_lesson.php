@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 /**
  * @file
  * Gets next lesson.
@@ -33,21 +36,22 @@
  * @version SVN: <svn_id>
  * @link http://wwww.jim-fuqua.com
  */
-
 session_start();
-
-use tutor\src\classes;
-
-require_once '../../src/classes/AssignmentsClass.inc';
-require_once '../../src/classes/GenericAClass.inc';
-require_once '../../src/classes/PersonClass.inc';
-require_once '../../src/classes/db_include.php';
-
+// This:/hsphere/local/home/jimfuqua/jim-fuqua.com/tutorW/src/scripts/cAssignment_get_next_lesson.php'
+date_default_timezone_set('UTC');
 $file = '../../logs/cAssignment_get_next_lesson.php_log';
 $log_file = fopen($file, 'w');
 $v       = var_export($_POST, TRUE);
 $string  = __LINE__ . '  $_POST = ' . $v . "\n\n";
 fwrite($log_file, $string);
+use tutor\src\classes;
+
+require_once '../../src/classes/AssignmentsClass.inc';
+require_once '../../src/classes/GenericAClass.inc';
+require_once '../classes/PersonClass.inc';
+require_once '../../src/classes/db_include.php';
+
+
 
 $_SESSION['tC_ServerTimeStarted'] = microtime(TRUE);
 $_SESSION['from']                 = __LINE__ . '  ' . __FILE__;
@@ -113,10 +117,7 @@ do {
   // $next_lesson->setSessionVariablesFromLesson($lesson);
   // From the assignment name retrieve the generic assignment and assign
   // its variables  to the $_SESSION variable.
-  console.log('116');
-  require_once '../src/classes/GenericAClass.inc';
-  console.error(message);
-  console.log('118');
+  require_once '../../src/classes/GenericAClass.inc';
   $my_next_ga = new tutor\src\classes\GenericAClass();
   $my_next_ga->setSessionVariablesFromTGAssignmentName($lesson['tG_AssignmentName']);
   fwrite($log_file, __LINE__ . ' microtime(TRUE) = ' . microtime(TRUE) . "\n\n");
