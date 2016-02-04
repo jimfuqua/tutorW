@@ -1,0 +1,41 @@
+
+function record_answer( result ) {
+    "use strict";
+
+    // data_out will have fields for both tCompleted and tAssignments.
+    // Those programs should ignore unneeded data_out fields.
+    var post_to_update_tA_tC;
+
+    data_out = {
+        tA_S_ID: tA_S_ID,
+        tA_StudentName : tA_StudentName,
+        session_id:session_id,
+        tA_id: tA_id,
+        tG_AssignmentName : tG_AssignmentName,
+        tA_StopRec : tA_StopRec,
+        tA_StartRec : tA_StartRec,
+        tC_Correct: result,
+        tC_ServerTimeStarted:tC_ServerTimeStarted,
+        tC_ClientTimeStarted: tC_ClientTimeStarted,
+        tC_Time_client_processed_answer: Date.now(),
+        tC_Question_and_Response: tC_Question_and_Response,
+        tC_More_data_about_response: tC_More_data_about_response,
+        tA_ErrorsMade: errors_made,
+        tA_LocalDateTime: Math.floor( Date.now() / 1000 ) // Get rid of milliseconds.
+    };
+console.log(26);
+console.log (data_out);
+    if ( result === 1 ) {
+        data_out.tA_RepsTowardM = "Plus1";
+    } else {
+        data_out.tA_RepsTowardM = "0";
+    }
+console.log(33);
+// Update tCompleted and tAssignments.php.
+    //post_to_update_tA_tC = '/jimfuqua/tutor/src/scripts/update_tA_tC.php';
+    post_to_update_tA_tC = "../../src/scripts/update_tA_tC.php";
+    $.post( post_to_update_tA_tC, data_out, function( returned_data, status ) {
+        //alert( 'returned_data: ' + returned_data + "\nStatus: " + status );
+    } );
+
+}// end function record_answer
