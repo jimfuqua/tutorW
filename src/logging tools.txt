@@ -1,4 +1,0 @@
-$logFile = fopen("/var/www/html/jimfuqua/tutor/logs/testgetAssignmentByAssignmentID.log", "w");
-$v = var_export($result, true);
-$string = __LINE__.' AC $result = '.$v."\n\n";
-fwrite($logFile, $string);

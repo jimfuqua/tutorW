@@ -1,6 +1,5 @@
 <?php
-namespace tutor\src\classes;
-use tutor\src\classes;
+namespace jimfuqua\tutorW;
 require 'db_include.php';
 error_reporting(E_ALL);
 /**********************************************************************
@@ -13,6 +12,12 @@ ToDo:
     */
 
 class PersonClass {
+
+  public function __construct()
+  {
+      echo "I am a PersonClass object.<br/>";
+  }
+
     public function logMyMethods()
     {
         // File handle used for debugging messages.
@@ -163,7 +168,7 @@ class PersonClass {
     */
     private function _connectToDb()
     {
-        include '/var/www/html/jimfuqua/tutor/src/db_include.php';
+        include 'db_include.php';
         try {
             // Our new PDO Object.
             $con = new \PDO($dbDSN, $dbUser, $dbPassword);

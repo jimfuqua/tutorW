@@ -1,6 +1,6 @@
 <?php
 use tutor\src\classes;
-require_once('/var/www/jimfuqua/tutor/src/classes/SplitsClass.inc');
+require_once('/var/www/html/jimfuqua/tutor/src/classes/SplitsClass.inc');
 
 class Splitsclass_test extends PHPUnit_Framework_TestCase {
 
@@ -24,14 +24,14 @@ public function testbuildArray() {
         $result = $classInstance->deleteSplitLessonName($this->myArray['tSp_LessonName']);
         $result = $classInstance->insertRow($this->myArray);
         $this->assertTrue(isset($classInstance));
-        $this->assertTrue($result === 1 );
+        $this->assertTrue($result === 1);
         $result = $classInstance->getLastDbEntryAsArray();
         $this->assertTrue(count($result) === count($this->myArray));
         $count = $classInstance->deleteSplitLessonName($this->myArray['tSp_LessonName']);
         $this->assertTrue($count === 1);
     }
 
-public function compareClassMethodsToTests()
+    public function compareClassMethodsToTests()
     {
         //$log_file = fopen("/var/www/tutor/logs/compareClassMethodsToTests.log", "w");
         //$string='43 compareClassMethodsToTests'."\n";
@@ -52,8 +52,8 @@ public function compareClassMethodsToTests()
         }
         // Return an array containing all the entries from $class_methods that are not present
         // in  $testSp_class_methods.
-        $missing_tests = array_diff( $class_methods, $testSp_class_methods );
-        foreach($missing_tests as $key => $value) {
+        $missing_tests = array_diff($class_methods, $testSp_class_methods);
+        foreach ($missing_tests as $key => $value) {
             // remove tests that don't test a method in tested class
             if ($value === "testcompareClassMethodsToTests") {
                     unset($missing_tests[$key]);
@@ -61,7 +61,7 @@ public function compareClassMethodsToTests()
             if ($value === "testbuildArray") {
                     unset($missing_tests[$key]);
             }
-            if ($value === "testfieldsInDbVsMyArray")  {
+            if ($value === "testfieldsInDbVsMyArray") {
                     unset($missing_tests[$key]);
             }
         };

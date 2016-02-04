@@ -1,4 +1,5 @@
 <?php
+namespace jimfuqua\tutorW;
 /**
  * Manage MySQL table Splits
  *
@@ -19,9 +20,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU General Public License V3+
  */
 
-namespace tutor\src\classes;
 
-                
 /**
  * Short description for class
  *
@@ -29,6 +28,11 @@ namespace tutor\src\classes;
  */
 class SplitsClass
 {
+
+  public function __construct()
+  {
+      echo "I am a SplitsClass object.<br/>";
+  }
 
     /**
      * Logs all methods.

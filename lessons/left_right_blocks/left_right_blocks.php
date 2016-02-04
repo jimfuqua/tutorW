@@ -9,10 +9,10 @@ if (session_status() == PHP_SESSION_NONE) {
 $_SESSION['page'] = "LeftRight.php";
 $log_file = fopen("../../logs/LeftRight.php.log", "w");
 $string="\nLeftRight.php";
-fwrite  ( $log_file, $string . "\n");
-$v = var_export($_SESSION , true);
-$string='$_SESSION = ' . $v ;
-fwrite  ( $log_file, $string . "\n"); 
+fwrite($log_file, $string . "\n");
+$v = var_export($_SESSION, true);
+$string = '$_SESSION = ' . $v ;
+fwrite($log_file, $string . "\n");
 ?>
 <!DOCTYPE html>
 <html>

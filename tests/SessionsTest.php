@@ -1,6 +1,5 @@
 <?php
-use tutor\classes;
-require '../classes/Sessionsclass.php';
+require '/var/www/html/jimfuqua/tutor/src/classes/SessionsClass.inc';
 //$logFile = fopen("/var/www/tutor/php_log.txt", "a"); // File handle used for debugging messages.
 //$string = "Assignment.class.php"; fwrite($logFile, $string . "\n");
 
@@ -30,72 +29,78 @@ class SessionsClassSimpletest extends PHPUnit_Framework_TestCase {
     {
         // does not increment cumulative time for student.
         $this->testbuildArray(); // This resets the array to orignial values.
-        $classInstance = new tutor\classes\SessionsClass;
+        $classInstance = new SessionsClass;
         $classInstance ->deleteRowTSSID($this -> mySessionsArray['tS_S_ID']);
         $result = $classInstance->insertRecord($this->mySessionsArray);
-        $this->assertTrue($result === true );
+        $this->assertTrue($result === 1 );
         // Clean Up
         $classInstance ->deleteRowTSSID($this -> mySessionsArray['tS_S_ID']);
         $this->testbuildArray(); // This resets the array to orignial values.
         unset($classInstance);
     }
 
-public function testcompareClassMethodsToTests()
+public function compareClassMethodsToTests()
     {
-        //$log_file = fopen("/var/www/tutor/logs/compareClassMethodsToTests.log", "w");
-        //$string='43 compareClassMethodsToTests' . "\n";
-        //fwrite  (  $log_file, $string);
-        // Create an array.of test methods.
-        $tests_class_methods = get_class_methods(new SessionsClassSimpletest());
-        // Remove methods not starting with 'test'/
+            // Create an array.of test methods.
+            $tests_class_methods = get_class_methods(new SessionsClassTest());
+            // Remove methods not starting with 'test'/
         foreach ($tests_class_methods as $key => $value) {
-            if (substr($value, 0, 4)!=='test') {
+            if (substr($value, 0, 4) !== 'test') {
                 unset($tests_class_methods[$key]);
             }
         }
-        // Create an array.of methods from the tested class.
-        $class_methods = get_class_methods(new \tutor\classes\SessionsClass());
-        // add 'test' to start of each class method before compare.
+
+        // Create an array of methods from the tested class.
+                $class_methods = get_class_methods(new SessionsClass());
+                // add 'test' to start of each class method before compare.
         foreach ($class_methods as $key => $value) {
-            $class_methods[$key] = "test" . $value;
+            $class_methods[$key] = 'test'.$value;
         }
+
         // Return an array containing all the entries from $class_methods that are not present
-        // in  $tests_class_methods.
-        $missing_tests = array_diff( $class_methods, $tests_class_methods );
-        foreach($missing_tests as $key => $value) {
+                // in  $tests_class_methods.
+                $missing_tests = array_diff($class_methods, $tests_class_methods);
+        foreach ($missing_tests as $key => $value) {
             // remove tests that don't test a method in tested class
-            if ($value === "testcompareClassMethodsToTests") {
-                    unset($missing_tests[$key]);
+            if ($value === 'testcompareClassMethodsToTests') {
+                unset($missing_tests[$key]);
             }
-            if ($value === "testbuildArray") {
-                    unset($missing_tests[$key]);
+
+            if ($value === 'testbuildArray') {
+                unset($missing_tests[$key]);
             }
-            if ($value === "testfieldsInDbVsMyArray")  {
-                    unset($missing_tests[$key]);
+
+            if ($value === 'testfieldsInDbVsMyArray') {
+                unset($missing_tests[$key]);
             }
         };
-        $i = 1;
-        $count = count($missing_tests);
-        if ($count > 0){
+                    $i     = 1;
+                    $count = count($missing_tests);
+                    $this->assertTrue(count($missing_tests) === 0);
+        if ($count > 0) {
             foreach ($missing_tests as $key => $value) {
-                $string = $i . ' Missing:  ' . $value;
+                $string = $i.' Missing:  '.$value;
                 echo $string;
                 if ($i < $count) {
-                    echo "<br />";
+                    echo '<br />';
                 }
+
                 $i++;
             }
+
+                echo '<br />';
         }
-    }
+
+    }//end compareClassMethodsToTests()
 
     public function testdeleteRowTSSID()
     {
         $this->testbuildArray(); // This resets the array to orignial values.
-        $classInstance = new tutor\classes\SessionsClass;
+        $classInstance = new SessionsClass;
         $this->assertTrue(isset($classInstance));
         $classInstance ->deleteRowTSSID($this -> mySessionsArray['tS_S_ID']);
         $result = $classInstance -> insertRecord($this -> mySessionsArray);  // Returns true or false
-        $this->assertTrue($result === true );
+        $this->assertTrue($result === 1 );
         $result=$classInstance->deleteRowTSSID($this -> mySessionsArray['tS_S_ID']);
         $this->assertTrue( $result === 1 );
         // Clean Up
@@ -108,7 +113,7 @@ public function testcompareClassMethodsToTests()
     {
         $this->testbuildArray(); // This resets the array to orignial values.
         $this->mySessionsArray['tS_TimeAssigned'] = '1234';  // seconds
-        $classInstance = new tutor\classes\SessionsClass;
+        $classInstance = new SessionsClass;
         $classInstance ->deleteRowTSSID($this -> mySessionsArray['tS_S_ID']);
         $this->assertTrue(isset($classInstance));
         $result = $classInstance->insertRecord($this->mySessionsArray);
@@ -141,7 +146,7 @@ public function testcompareClassMethodsToTests()
     public function testCreation()
     {
         $this->testbuildArray(); // This resets the array to orignial values.
-        $classInstance = new tutor\classes\SessionsClass;
+        $classInstance = new SessionsClass;
         $classInstance ->deleteRowTSSID($this ->mySessionsArray['tS_S_ID']);
         $result = $classInstance->insertRecord($this->mySessionsArray);
         // This inserts data into array but does not have a remaining value.
@@ -165,7 +170,7 @@ public function testcompareClassMethodsToTests()
     {
         //get a list of fields in the db
         $this->testbuildArray(); // This resets the array to orignial values.
-        $classInstance = new tutor\classes\SessionsClass;
+        $classInstance = new SessionsClass;
         $classInstance ->deleteRowTSSID($this ->mySessionsArray['tS_S_ID']);
         $result=$classInstance->insertRecord($this -> mySessionsArray);
         //$result=$classInstance->get_student_last_db_entry($this->
@@ -241,10 +246,10 @@ public function testcompareClassMethodsToTests()
         // add a specific assignment;
         // retrieve the specific assignment;
         // test the specific assignment;
-        $classInstance =  new tutor\classes\SessionsClass;
+        $classInstance =  new SessionsClass;
         $this->testbuildArray(); // This resets the array to orignial values.
         $this -> assertTrue(isset($classInstance));
-        $classInstance ->deleteRowTSSessionID($this ->
+        $classInstance ->deleteRowBySessionID($this ->
                         mySessionsArray['tS_SessionID']);
         // Make sure no lessons exist for this student.
         $result = $classInstance -> insertRecord($this -> mySessionsArray);
@@ -261,20 +266,20 @@ public function testcompareClassMethodsToTests()
             $this -> assertTrue($retrieved_result['tS_S_ID'] === $this->mySessionsArray['tS_S_ID']) ;
             $result_array = array();
         }
-        $classInstance ->deleteRowTSSessionID($this -> mySessionsArray['tS_SessionID']);
+        $classInstance ->deleteRowBySessionID($this -> mySessionsArray['tS_SessionID']);
     }
 
-    public function testdeleteRowTSSessionID()
+    public function testdeleteRowBySessionID()
     {
-        $classInstance = new tutor\classes\SessionsClass;
+        $classInstance = new SessionsClass;
         $this->assertTrue(isset($classInstance));
         $this->testbuildArray(); // This resets the array to orignial values.
-        $classInstance ->deleteRowTSSessionID($this -> mySessionsArray['tS_SessionID']);
+        $classInstance ->deleteRowBySessionID($this -> mySessionsArray['tS_SessionID']);
         $result = $classInstance -> insertRecord($this -> mySessionsArray);  // Returns true or false
         $this->assertTrue( $result === true );
-        $result=$classInstance->deleteRowTSSessionID($this -> mySessionsArray['tS_SessionID']);
+        $result=$classInstance->deleteRowBySessionID($this -> mySessionsArray['tS_SessionID']);
         $this->assertTrue( $result === 1 );
-        $classInstance -> deleteRowTSSessionID($this -> mySessionsArray['tS_SessionID']);
+        $classInstance -> deleteRowBySessionID($this -> mySessionsArray['tS_SessionID']);
     }
 
 

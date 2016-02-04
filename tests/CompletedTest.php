@@ -1,7 +1,6 @@
 <?php
-use tutor\src;
 date_default_timezone_set('America/Chicago');
-require '/var/www/jimfuqua/tutor/src/classes/CompletedClass.inc';
+require '/var/www/html/jimfuqua/tutor/src/classes/CompletedClass.inc';
 
 /**********************************************************************
 *  Test CompletedClass using PHP SimpleTest.
@@ -48,7 +47,7 @@ class CompletedTest extends PHPUnit_Framework_TestCase {
 
     public function testfieldsInDbVsMyArray()
     {
-    $log_file = fopen("/var/www/jimfuqua/tutor/logs/CT testfieldsInDbVsMyArray", "w");
+    $log_file = fopen("/var/www/html/jimfuqua/tutor/logs/CT testfieldsInDbVsMyArray", "w");
         // get a list of fields in the db
         $this->testbuildArray(); // reset myArray to origninal values.
         $classInstance = new tutor\src\CompletedClass;

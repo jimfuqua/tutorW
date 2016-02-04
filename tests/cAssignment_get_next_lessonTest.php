@@ -1,9 +1,12 @@
 <?php
+session_start();
 unset($_SESSION);
 session_start();
 use tutor\classes;
-require_once('../scripts/cAssignment_get_next_lesson.php');
-require_once('../classes/Assignmentsclass.php');
+$_SESSION["tA_S_ID"] = 'Test Student';
+$_SESSION["tA_id"] = '345';
+require_once('./scripts/cAssignment_get_next_lesson.php');
+//require_once('../classes/Assignmentsclass.php');
 //$logFile = fopen("/var/www/tutor/cAssignment_get_next_lessonTest_log.txt", "w"); // File handle used for debugging messages.
 //$string = "cAssignment_get_next_lessonTest.class.php";
 //fwrite($logFile, $string . "\n");

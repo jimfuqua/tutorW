@@ -41,7 +41,9 @@ $(document).ready(function () {
             record_answer(Answer_Correct);
             exit_from_lesson();
         } else {  // error
-            $("#error_notice_div").append("<p>Error - You clicked on the box on the <b>left</b> side.</p><p>Click me to close me.</p>");
+            $("#error_notice_div").append(
+            "<p>Error - You clicked on the box on the
+             <b>left</b> side.</p><p>Click me to close me.</p>");
             $("#error_notice_div").show();
             $("#outer_error_notice_div").show();
             soundHandleError.src = "http://localhost/jimfuqua/tutor/sounds/ohoh.wav";
@@ -56,7 +58,9 @@ $(document).ready(function () {
    $('#right').click(function () {
         if (randomnumber === 1) {
             // error
-            $("#error_notice_div").append("<p>Error - You clicked on the box on the <b>right</b> side.</p></p><p>Click me to close me.</p>");
+            $("#error_notice_div").append(
+            "<p>Error - You clicked on the box on the <b>right</b>
+               side.</p></p><p>Click me to close me.</p>");
             $("#error_notice_div").show();
             $("#outer_error_notice_div").show();
             soundHandleError.src = "http://localhost/jimfuqua/tutor/sounds/ohoh.wav";

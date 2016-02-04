@@ -1,4 +1,5 @@
 <?php
+namespace jimfuqua\tutorW;
 //include_once('trait_UpdateTable.php');
 //use tutor\classes;
 // Sessions Class
@@ -15,6 +16,12 @@ ToDo:
     //fwrite($logFile, $string . "\n");
 
 class SessionsClass {
+
+  public function __construct()
+  {
+      echo "I am a SessionsClass object.<br/>";
+  }
+
 // some of the next few methods are from Session class by Stephen McIntyre
 //  http://stevedecoded.com  At this stage I am studying them but not using them.
     private $alive = true;
