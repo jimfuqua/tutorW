@@ -1,11 +1,11 @@
 <?php
-namespace Tutor\src\classes;
-use jimfuqua\tutor_autoload\classes;
+namespace jimfuqua\tutorW;
+use jimfuqua\tutorW\classes;
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-class AssignmentsTest extends \PHPUnit_Framework_TestCase
+class AssignmentsCTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test test "buildArray()" in Assignments.class.inc
@@ -57,7 +57,7 @@ public function testremoveUneededColumns() {
     "tG_AssignmentName" => "d",
     "Unneeded_2" => "e"
 );
-$classInstance = new tutor\src\classes\AssignmentsClass;
+$classInstance = new AssignmentsClass;
 $returned_array = $classInstance->removeUnneededColumns($arrayIn);
 $this->assertTrue(count($returned_array) === 4);
 $this->assertFalse(array_key_exists ("Unneeded_1", $returned_array));
@@ -84,7 +84,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         // start with empty db entry.
         $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $result = $classInstance->insertRecord($this->myArray);
@@ -116,7 +116,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result        = $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $this->assertTrue($result === 0, 'If this test fails a previous test has not cleaned up.');
         $result        = $classInstance->delRowsByStudentId('getAssignmentsByStudentID');
@@ -154,7 +154,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result        = $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $this->assertEquals($result, 0);
         // Catch other tests sloppy cleanup.
@@ -185,7 +185,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result        = $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $this->assertTrue($result === 0);
         $this->myArray['tA_S_ID']           = 'ghghgh';
@@ -221,7 +221,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
      */
     public function compareClassMethodsToTests()
     {
-        $log_file = fopen("/var/www/html/jimfuqua/tutor/logs/ACT compareClassMethodsToTests.log", "w");
+        $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/ACT compareClassMethodsToTests.log", "w");
         $string = __LINE__.' ACT Missing Tests'."\n";
         fwrite($log_file, $string);
             // Create an array.of test methods.
@@ -283,7 +283,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result        = $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         // remove rows if they exist.
         // $this->assertTrue( mysql_affected_rows() === 0);
@@ -323,11 +323,11 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result        = $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $this->assertTrue($result === 0);
         $this->myArray['tA_S_ID'] = 'ghghgh';
-        $classInstance            = new tutor\src\classes\AssignmentsClass;
+        $classInstance            = new AssignmentsClass;
         $result = $classInstance->delRowsByStudentId('ghghgh');
         // Returns num rows changed.
         $this->assertTrue($result === 0);
@@ -366,7 +366,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
         $arr           = array(
                           $row_1, $row_2, $row_3,
                          );
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result        = $classInstance->getSumOfAssignedTimeFromArray($arr);
         $this->assertTrue($result === 6);
         $arr[]  = $row_4;
@@ -389,7 +389,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
         // get a list of fields in the db
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result        = $classInstance->insertRecord($this->myArray);
         $this->assertTrue($result === 1);
         $row           = $classInstance->getLastDbEntryAsArray($this->myArray['tA_S_ID']);
@@ -410,7 +410,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
         $result = '';
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $result = $classInstance->insertRecord($this->myArray);
         $this->assertTrue(isset($classInstance));
@@ -436,7 +436,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result        = $classInstance->insertRecord($this->myArray);
         $this->assertTrue(isset($classInstance));
         $this->assertTrue(isset($result));
@@ -460,21 +460,30 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
      */
     public function testdeleteLastRow()
     {
+      //$log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/testdeleteLastRow.log", "w");
+          //$v = var_export($studentAssignmentsArray, true);
+          //$string = __LINE__.' $studentAssignmentsArray = '.$v."\n\n";
+          //fwrite($log_file, $string)
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $this->assertTrue(isset($classInstance));
         // start clean
         $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $classInstance->delRowsByStudentId('777777');
         $this->myArray['tA_S_ID'] = 777777;
         $result = $classInstance->insertRecord($this->myArray);
+        //$string = __LINE__.' $result = '. $result ."\n\n";
+        //fwrite($log_file, $string);
         $result = $classInstance->insertRecord($this->myArray);
         $result = $classInstance->insertRecord($this->myArray);
         $phpTime           = time();
         $resultsArray      = $classInstance->getCurrentStudentAssignmentsInAnArray($this->myArray['tA_S_ID']);
         $resultsArrayCount = count($resultsArray);
-        $this->assertTrue($resultsArrayCount === 3);
+        //$string = __LINE__.' $resultsArrayCount = '. $resultsArrayCount ."\n\n";
+        //fwrite($log_file, $string);
+        //$this->assertTrue($resultsArrayCount === 3);
+        //echo __LINE__ . ' $resultsArrayCount = ' . $resultsArrayCount;
         $result = $classInstance->deleteLastRow($this->myArray['tA_S_ID']);
         $this->assertTrue($result === 1);
         $resultsArray = $classInstance->getCurrentStudentAssignmentsInAnArray($this->myArray['tA_S_ID']);
@@ -497,7 +506,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $this->assertTrue(isset($classInstance));
         $tempStudent = 'bcdefgh';
         // insure no previous lessons for this student.
@@ -570,7 +579,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
 
 function testChange_tA_Post_date(){//merge with Assignmentstest
         $this->testbuildArray();
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $this->assertTrue(isset($classInstance));
         $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $this->myArray['tA_Post_date'] = 1000;
@@ -597,7 +606,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $this->assertTrue(isset($classInstance));
         $tempStudent = 'bcdefgh';
         // insure no previous lessons for this student.
@@ -668,20 +677,19 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
     {
         // Objective: Create a db entry and then update it and test for
         // the update.
-        $log_file = fopen("/var/www/html/jimfuqua/tutor/logs/testupdateTaStartRec.log", "w");
+        $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/testupdateTaStartRec.log", "w");
 // the lessons inserted do not have tA_PercentTime  error is in the insert
             //$v = var_export($studentAssignmentsArray, true);
             //$string = __LINE__.' $studentAssignmentsArray = '.$v."\n\n";
             //fwrite($log_file, $string)
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $this->myArray['tA_OriginalTimestamp'] = '0987654321';
+        $this->myArray['tA_OriginalTimestamp'] = '0987654';//987654000
         $this->myArray['tA_S_ID']     = 'x!@#$1112';
         $this->myArray['tA_StartRec'] = 22;
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result1       = $classInstance->insertRecord($this->myArray);
         $this->assertTrue($result1 === 1);
-
         $result2 = $classInstance->updateTaStartRec(
             44,
             $this->myArray['tA_S_ID'],
@@ -693,7 +701,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $this->assertTrue($result2 === 1);
         // mysql_affected_rows
         // Get the row and check the results.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result3       = $classInstance->getNewestDbEntry('x!@#$1112');
         $this->assertTrue($result3['tA_StartRec'] == '44');
         // Now delete the rows.
@@ -701,6 +709,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $classInstance->delRowsByStudentId('!@#$1112');
         // Clean Up
         $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
+        $classInstance->delRowsByStudentId('x!@#$1112');
         $this->testbuildArray();
         // reset myArray to origninal values.
 
@@ -719,7 +728,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
     {
         $this->testbuildArray();
         // reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         // insure no previous lessons for this student.
         $this->myArray['tA_id'] = '88888';
@@ -752,7 +761,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
 //     {
 //         $this->testbuildArray();
 //         // reset myArray to origninal values.
-//         $classInstance = new tutor\src\classes\AssignmentsClass;
+//         $classInstance = new AssignmentsClass;
 //         $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
 //         $tempStudent = 'abcdefg';
 //         $this->myArray['tA_S_ID']           = $tempStudent;
@@ -811,7 +820,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
      */
     public function testprintNullIfNull()
     {
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $a = NULL;
         $this->assertTrue($classInstance->printNullIfNull($a) === 'NULL');
 
@@ -832,7 +841,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         // and retrieve it and run a test.
         $this->testbuildArray();
         // Reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $result        = $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         // Insure no previous lessons for this student.
         $this->assertTrue($result === 0);
@@ -906,7 +915,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         // Create a three lesson array of lessons.
         $this->testbuildArray();
         // Reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $tempStudent   = 'abcdefg';
         $classInstance->delRowsByStudentId($tempStudent);
         // Insure no previous lessons for this student.
@@ -959,7 +968,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         // Reset myArray to origninal values.
         $this->testbuildArray();
 
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $tempStudent   = 'abcdefg';
 
         // Insure no previous lessons for this student.
@@ -1022,7 +1031,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $x['tA_PercentTime'] = 0;
         $y['tA_PercentTime'] = 110;
         $z['tA_PercentTime'] = 100;
-        $classInstance       = new tutor\src\classes\AssignmentsClass;
+        $classInstance       = new AssignmentsClass;
         $test1 = $classInstance->compare($x, $x);
         $this->assertTrue($test1 === 0);
         // Equal returns 0.
@@ -1051,7 +1060,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         // correct ratio.
         $this->testbuildArray();
         // Reset myArray to origninal values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $tempStudent   = 'abcdefg';
         $classInstance->delRowsByStudentId($tempStudent);
         // Insure no previous lessons for this student.
@@ -1144,7 +1153,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $myArray2['tSplit_PercentTime'] = '20';
         $this->assertTrue(count($myArray2) === 4);
         // Prepare to insert split records into db.
-        $splitInstance = new tutor\src\classes\SplitsClass;
+        $splitInstance = new SplitsClass;
         // Make sure no splits with these ids already exist in the db.
         $splitInstance->deleteRowId($myArray1['tSp_id']);
         $splitInstance->deleteRowId($myArray2['tSp_id']);
@@ -1160,7 +1169,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $this->myArray['tA_S_ID'] = $tempStudentID;
         $this->myArray['tA_StudentName'] = $tempStudentName;
         // Now create a new student assignment to use the splits inserted above.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         // Make sure this assignment does not already exist.
         // Next insure no previous lessons for this student.
         $rowsDeleted = $classInstance->delRowsByStudentId('gbcdefg');
@@ -1213,7 +1222,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $myArray2['tSp_gA'] = 'tG_2';
         $myArray2['tSp_PercentTime'] = '20';
         $this->assertTrue(count($myArray2) === 4);
-        $splitInstance = new tutor\src\classes\SplitsClass;
+        $splitInstance = new SplitsClass;
         // Next insert into db.
         $splitInstance->deleteRowId($myArray1['tSp_id']);
         $splitInstance->insertRow($myArray1);
@@ -1247,7 +1256,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
     {
         $this->testbuildArray();
         // Reset myArray to original values.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $classInstance->insertRecord($this->myArray);
         $result = $classInstance->returnColumnsNamesInArray();
         $this->assertTrue(is_array($result));
@@ -1281,7 +1290,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         // the other 150% assigned.
         $this->testbuildArray();
         // Reset myArray to origninal values.
-        $classInstance  = new tutor\src\classes\AssignmentsClass;
+        $classInstance  = new AssignmentsClass;
         $tempStudent591 = 'abcdefg';
         // Next insure no previous lessons for this student.
         $numRows = $classInstance->delRowsByStudentId($tempStudent591);
@@ -1365,7 +1374,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $this->testbuildArray();
         // Reset myArray.
         $tempStudent591           = 'abcdefg';
-        $classInstance            = new tutor\src\classes\AssignmentsClass;
+        $classInstance            = new AssignmentsClass;
         $this->myArray['tA_S_ID'] = $tempStudent591;
         $classInstance->delRowsByStudentId($tempStudent591);
         // Insure no previous lessons for this student.
@@ -1403,7 +1412,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $this->testbuildArray();
         // Reset myArray.
         $tempStudent591           = 'abcdefg';
-        $classInstance            = new tutor\src\classes\AssignmentsClass;
+        $classInstance            = new AssignmentsClass;
         $this->myArray['tA_S_ID'] = $tempStudent591;
         // Insure no previous lessons for this student.
         $classInstance->delRowsByStudentId($tempStudent591);
@@ -1436,7 +1445,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         // Reset myArray.
         $tempStudent591           = 'asdfg  hjkl';
         $this->myArray['tA_S_ID'] = $tempStudent591;
-        $classInstance            = new tutor\src\classes\AssignmentsClass;
+        $classInstance            = new AssignmentsClass;
         $classInstance->delRowsByStudentId($tempStudent591);
         // Previous line insures no previous lessons for this student.
         $this->myArray['tG_AssignmentName'] = 'aaaaa';
@@ -1471,7 +1480,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $count      = 0;
         for ($i = 1; $i <= 100; $i++) {
             // Run through 100 selections and see if they follow % assigned.
-            $classInstance = new tutor\src\classes\AssignmentsClass;
+            $classInstance = new AssignmentsClass;
             $result        = $classInstance->getCurrentStudentAssignmentsInAnArray($tempStudent591);
             $numRows       = count($result);
             $count++;
@@ -1499,6 +1508,8 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         // Clean Up.
         $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $classInstance->delRowsByStudentId('abcdefg');
+        $classInstance->delRowsByStudentId('x!@#$1112');
+        //$classInstance->delRowsByStudentName('asdfg  hjkl');
         unset($classInstance);
 
     }//end testgetNextAssignmentToDo()
@@ -1513,7 +1524,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
       $tempAssignmentName = 'hijklmn';
       $this->myArray['tA_S_ID'] = $tempStudent;
       $this->myArray['tG_AssignmentName'] = $tempAssignmentName;
-      $classInstance = new tutor\src\classes\AssignmentsClass;
+      $classInstance = new AssignmentsClass;
       // Next insure no previous lessons for this student.
       $classInstance->delRowsByStudentId($tempStudent);
       $this->assertTrue(isset($classInstance));
@@ -1538,7 +1549,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $this->testbuildArray();
         $tempStudent = 'abcdefg';
         $this->myArray['tA_S_ID'] = $tempStudent;
-        $classInstance            = new tutor\src\classes\AssignmentsClass;
+        $classInstance            = new AssignmentsClass;
         // Next insure no previous lessons for this student.
         $classInstance->delRowsByStudentId($tempStudent);
         $this->assertTrue(isset($classInstance));
@@ -1583,7 +1594,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         // Next reset myArray to origninal values.
         $this->testbuildArray();
         // Add a new row to delete.
-        $classInstance = new tutor\src\classes\AssignmentsClass;
+        $classInstance = new AssignmentsClass;
         $this->assertTrue(isset($classInstance));
         $classInstance->delRowsByStudentId($this->myArray['tA_S_ID']);
         $tempStudent = 'abcdefg';
@@ -1608,7 +1619,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
         $t       = 2;
         $message = 'abcde';
         $this->assertTrue(1 === 1, $message);
-        $this->assertFileExists('../src/db_include.php', 'Location of connection variables.');
+        $this->assertFileExists('db_include.php', 'Location of connection variables.');
 
     }//end _testconnectToDb()
 

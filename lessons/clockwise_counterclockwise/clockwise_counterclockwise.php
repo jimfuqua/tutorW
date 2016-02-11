@@ -42,26 +42,26 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 $sess    = session_id();
-// $log_file = fopen('/var/www/html/jimfuqua/tutor/logs/clockwise-counterclockwise.php_log', 'w');
+// $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/clockwise-counterclockwise.php_log', 'w');
 // $string  = 'clockwise-counterclockwise.php';
 // fwrite($log_file, $string . "\n");
 //$v = var_export($_SESSION, true);
 //fwrite($log_file, __LINE__.' $_SESSION = '.$v." \n");
 //fwrite($log_file, __LINE__.' $sess = ' . $sess);
 
-$filename = '/var/www/html/jimfuqua/tutor/lessons/clockwise_counterclockwise/css/clockwisecounterclockwise.css';
+$filename = '/var/www/html/jimfuqua/tutorW/lessons/clockwise_counterclockwise/css/clockwisecounterclockwise.css';
 if (file_exists($filename) === FALSE) {
   $string = 'Missing critical file -- ./css/clockwisecounterclockwise.css';
   trigger_error($string, E_USER_ERROR);
 }
 
-$filename = '/var/www/html/jimfuqua/tutor/src/scripts/jquery.js';
+$filename = '/var/www/html/jimfuqua/tutorW/scripts/jquery.js';
 if (file_exists($filename) === FALSE) {
   $string = 'Missing critical file -- jquery.js';
   trigger_error($string, E_USER_ERROR);
 }
 
-$filename = '/var/www/html/jimfuqua/tutor/lessons/clockwise_counterclockwise/scripts/clockwise_counterclockwise.js.php';
+$filename = '/var/www/html/jimfuqua/tutorW/lessons/clockwise_counterclockwise/scripts/clockwise_counterclockwise.js.php';
 if (file_exists($filename) === false) {
     $string = 'Missing critical file -- clockwise_counterclockwise.js.php';
     trigger_error($string, E_USER_ERROR);
@@ -76,14 +76,14 @@ $_SESSION['session_id']   = session_id();
 <head>
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <title>Clockwise-Counterclockwise</title>
-<link rel='stylesheet' type='text/css' href='http://localhost/jimfuqua/tutor/css/quit_valid.css'/>
+<link rel='stylesheet' type='text/css' href='http://localhost/jimfuqua/tutorW/css/quit_valid.css'/>
 <link rel='stylesheet' type='text/css' href='./css/clockwisecounterclockwise.css'  media='screen' />
-<script src='/jimfuqua/tutor/src/scripts/jquery.js'></script>
+<script src='/jimfuqua/tutorW/scripts/jquery.js'></script>
 <script><?php require 'scripts/clockwise_counterclockwise.js.php';?></script>
 </head>
 
 <body>
-<?php require_once '/var/www/html/jimfuqua/tutor/lessons/quit_help_buttons.php'; ?>
+<?php require_once '/var/www/html/jimfuqua/tutorW/lessons/quit_help_buttons.php'; ?>
 <div id='Title1' class="Title1" >Clockwise or Counterclockwise?</div>
 <div id='student_identifier' class="student_identifier"></div>
 <!-- Next div is used for vertical centering of contents.-->
@@ -100,12 +100,12 @@ $_SESSION['session_id']   = session_id();
 <?php
 $x = rand(0, 100);
 if ($x >= 50) {
-  echo '<object id = "rotator" data = "./images/clockwise.svg" type = "image/svg+xml" ></object>';
-  echo '<input type = "hidden" id = "rotation" class= "rotation" value = "clockwise" tabindex = "100" />';
+  echo '<object id   = "rotator" class="rotator" data = "./images/clockwise.svg" type = "image/svg+xml" ></object>';
+  echo '<input  type = "hidden" id = "rotation" class= "rotation" value = "clockwise" tabindex = "100" />';
 }
 else {
-  echo '<object id = "rotator" class="rotator" data = "./images/counterclockwise.svg" type = "image/svg+xml" ></object>';
-  echo '<input  = "hidden" id = "rotation" value = "counterclockwise" tabindex = "100" />';
+  echo '<object id   = "rotator" class="rotator" data = "./images/counterclockwise.svg" type = "image/svg+xml" ></object>';
+  echo '<input  type = "hidden" id = "rotation" value = "counterclockwise" tabindex = "100" />';
 }
 ?>
 <button id='bCounterclockwise' type='button' class="bCounterclockwise" >Counter-Clockwise?</button>
@@ -113,8 +113,8 @@ else {
 </div><!--id='horizon'  This div is used for vertical centering of contents.-->
 
 <div id='results'></div>
-    <audio id ='c3' src='/jimfuqua/tutor/sounds/c3.ogg' preload='auto'></audio>
-    <audio id ='ohoh' src='/jimfuqua/tutor/sounds/ohoh.ogg' preload='auto'></audio>
+    <audio id ='c3' src='/jimfuqua/tutorW/sounds/c3.ogg' preload='auto'></audio>
+    <audio id ='ohoh' src='/jimfuqua/tutorW/sounds/ohoh.ogg' preload='auto'></audio>
 
 </body>
 </html>

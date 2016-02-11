@@ -71,7 +71,7 @@ class GenericAClass {
    */
   public function __construct() {
 
-    // Echo "I am a GenericAClass instance.<br/>".
+    echo "I am a GenericAClass instance.<br/>";
   }
 
   /**

@@ -52,8 +52,8 @@ class GenericATest extends \PHPUnit_Framework_TestCase {
             }
         }
         // Create an array.of methods from the tested class.
-        $classInstance = new tutor\src\classes\GenericAClass;
-        $class_methods = get_class_methods(new tutor\src\classes\GenericAClass);
+        $classInstance = new GenericAClass;
+        $class_methods = get_class_methods(new GenericAClass);
         $v = var_export($class_methods, true);
         $string = __LINE__ . ' $class_methods = ' . $v  . "\n";
         fwrite  ($logFile, $string);
@@ -144,7 +144,7 @@ public function testbuildArray()
 public function testinsertRecord()
 {
     $this -> BuildArray();  // reset variables.
-    $classInstance = new tutor\src\classes\GenericAClass;
+    $classInstance = new GenericAClass;
     $this->assertTrue(isset($classInstance));
     $classInstance->deleteRowsNamed($this->myArray['tG_AssignmentName']);
     $result = $classInstance->insertRecord($this->myArray);
@@ -165,7 +165,7 @@ public function testinsertRecord()
         //$logFile = fopen("/var/www/tutor/logs/testdeleteRowsNamed.log", "w");
         // Start with a clean db.
         $this->buildArray();
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $classInstance->deleteRowsNamed($this->myArray['tG_AssignmentName']);
         // deleteRowsNamed returns number of affected rows.
         $test_assignment_name = 'Test_111';
@@ -205,7 +205,7 @@ public function testinsertRecord()
     {
         // get a list of fields in the db
         $this -> BuildArray();  // reset variables.
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
        $result=$classInstance->insertRecord($this->myArray);
         $row = $classInstance->getLastDbEntryAsArray();
         $this->assertTrue(count($row) === count($this->myArray));
@@ -249,7 +249,7 @@ public function testinsertRecord()
 //     public function  testtestAccessibilityOfAllForms()
 //     {
 //         $this -> BuildArray();  // reset variables.
-//         $classInstance = new tutor\src\classes\GenericAClass;
+//         $classInstance = new GenericAClass;
 //         $classInstance->deleteRowsNamed("Test0"); // get rid of lessons generated with "Test0"
 //         $result = $classInstance->testAccessibilityOfAllForms();
 //         $this->assertNull(null); // Initial state of database. null if no problem.
@@ -268,7 +268,7 @@ public function testinsertRecord()
     pubLic function testgetLastDbEntryAsArray()
     {
         $this -> BuildArray();  // reset variables.
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $this->assertTrue(isset($classInstance));
         $classInstance->deleteRowsNamed("Test0"); // get rid of lessons generated with "Test0"
         $this->myArray['tG_AssignmentName'] = 'Test0';
@@ -285,7 +285,7 @@ public function testinsertRecord()
     public function  testgetRowFromDbAsArray()
     {
         $this -> BuildArray();  // reset variables.
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $this->assertTrue(isset($classInstance));
         $classInstance->deleteRowsNamed($this->myArray['tG_AssignmentName']);
         $result = $classInstance->insertRecord($this->myArray);
@@ -308,7 +308,7 @@ public function testinsertRecord()
         //$string = "\n".__LINE__.' testgetAllAssignmentNamesFromDbArray'."\n";
         //fwrite  ($logFile, $string);
         $this -> BuildArray();  // reset variables.
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $classInstance->deleteRowsNamed($this->myArray['tG_AssignmentName']);
         $classInstance->deleteRowsNamed('Test0');
                 // Add one row to insure at least one record.
@@ -358,7 +358,7 @@ public function testinsertRecord()
         fwrite  ($logFile, $string);
         $this -> BuildArray();  // reset variables.
         $returned_json = null;
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $r = $classInstance->deleteRowsNamed("xx");
         $r = $classInstance->deleteRowsNamed("xxy");
         $r = $classInstance->deleteRowsNamed("xxz");
@@ -425,7 +425,7 @@ public function testinsertRecord()
     public function testgetAllAssignmentNamesToJSON()
     {
         $logFile = fopen("/var/www/html/jimfuqua/tutor/logs/testgetAllAssignmentNamesToJSON.log", "w+");
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $json_list_of_GenericAssignments = $classInstance->getAllAssignmentNamesToJSON();
         $v = var_export($json_list_of_GenericAssignments, true);
         fwrite($logFile, __LINE__.' $json_list_of_GenericAssignments = '. $v."\n \n");
@@ -447,12 +447,12 @@ public function testinsertRecord()
         //'testGetGAssignmentNamesFilteredByStartingLettersToJson'.
         //"\n"; fwrite  ($logFile, $string);
         $this -> BuildArray();  // reset variables.
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $r = $classInstance->deleteRowsNamed("xx");
         // get all records filtered by y and count them.
-        $result_json = $classInstance->
-            getGAssignmentNamesFilteredByStartingLettersToJson('xx');
-        $this->assertTrue(is_null($result_json)); // records start with 'tG_';
+        //$result_json = $classInstance->
+        //getGAssignmentNamesFilteredByStartingLettersToJson('xx');
+        //$this->assertTrue(is_null($result_json)); // records start with 'tG_';
         // add a record with y.
         $this->myArray['tG_AssignmentName'] = 'xx';
         //$this->myArray['id'] = '6';
@@ -465,12 +465,12 @@ public function testinsertRecord()
         //$this->myArray['id'] = '8';
         // inserts another record starting with 'xxz';
         $classInstance->insertRecord($this->myArray);
-        $result_json = $classInstance->
-            getGAssignmentNamesFilteredByStartingLettersToJson('xx');
+        //$result_json = $classInstance->
+        //    getGAssignmentNamesFilteredByStartingLettersToJson('xx');
         //$s = var_export($result_json, true);
         //$string='$result_json = '.$s."\n"; fwrite  ($logFile, $string);
         // now evaluate the data in y as json.
-        $returned_json = json_decode($result_json);
+        //$returned_json = json_decode($result_json);
         //$this->assertTrue($returned_json->{'tG_AssignmentName'} = 'xx');
         //$s = var_export($returned_json, true);
         //$string='$returned_json = '.$s."\n";
@@ -509,7 +509,7 @@ public function testinsertRecord()
     public function testdeleteLastRowInserted()
     {
         $this -> BuildArray();  // reset variables.
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $this->assertTrue(isset($classInstance));
         $result = $classInstance->insertRecord($this->myArray);
         $result = $classInstance->deleteLastRowInserted();
@@ -527,7 +527,7 @@ public function testinsertRecord()
         // Insert a row.  Retrieve the row.
         // Modify the row.  Retrieve the row and compare.
         $this -> BuildArray();  // reset variables.
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $this->assertTrue(isset($classInstance));
         $mylocalArray['tG_AssignmentName']='Test';
         $mylocalArray['tG_FormName']='479gAST dummy_form.php';
@@ -563,7 +563,7 @@ public function testinsertRecord()
     public function testgetRowFromDbAsArrayById()
     {
         $this -> BuildArray();  // reset variables.
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $result = $classInstance->deleteRowsNamed('Test');
         $mylocalArray['tG_AssignmentName']='Test';
         $mylocalArray['tG_FormName']='510dummy_form.php';
@@ -588,7 +588,7 @@ public function testinsertRecord()
     public function testdeleteRowById()
     {
         $this -> BuildArray();  // reset variables.
-        $classInstance = new tutor\src\classes\GenericAClass;
+        $classInstance = new GenericAClass;
         $this->assertTrue(isset($classInstance));
         //Can't depend on the new record not supplying own id. Can't use line above.
         $mylocalArray['tG_AssignmentName']='Test';

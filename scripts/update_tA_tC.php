@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-use tutor\src\classes;
+use jimfuqua\tutorW\classes;
 /**
  * @file
  * Accepts AJAX call from JavaScript and updates tAssignments and tCompleted.
@@ -18,7 +18,7 @@ if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
 date_default_timezone_set('UTC');
-$log_file = fopen("../../logs/update_tA_tC.php.log", "w");
+$log_file = fopen("../logs/update_tA_tC.php.log", "w");
 $v = var_export($_SESSION, TRUE);
 $string = __LINE__ . ' ($_SESSION = ' . $v . "\n\n";
 fwrite($log_file, $string);
@@ -28,10 +28,8 @@ fwrite($log_file, $string);
 $v = var_export($_POST, TRUE);
 $string = __LINE__ . ' ($_POST = ' . $v . "\n\n";
 fwrite($log_file, $string);
-require_once "../../src/classes/CompletedClass.inc";
 $string = __LINE__ . "\n\n";
 fwrite($log_file, $string);
-require_once '../classes/AssignmentsClass.inc';
 $string = __LINE__ . "\n\n";
 fwrite($log_file, $string);
 $v = var_export($_POST, TRUE);
@@ -233,7 +231,7 @@ fwrite($log_file, $string);
 // Sender is a good source of info to detect tampering with input data.;
 // $sender = $_POST['sender'];
 
-$classInstance = new tutor\src\classes\CompletedClass();
+$classInstance = new CompletedClass();
 
 // To tCompleted using the class method.
 // returns count of rows affected.
@@ -276,7 +274,7 @@ $v = var_export($value_array, TRUE);
 $string = __LINE__ . ' $value_array = ' . "$v\n\n";
 fwrite($log_file, $string);
 
-$classInstance = new tutor\src\classes\AssignmentsClass();
+$classInstance = new AssignmentsClass();
 $returnedValue = $classInstance->updateFields($value_array, $where_array);
 
 $string = __LINE__ . ' $returnedValue = ' . $returnedValue . "\n\n";

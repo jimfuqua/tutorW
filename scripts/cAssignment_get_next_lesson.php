@@ -1,9 +1,10 @@
 <?php
+use tutor\classes;
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-use tutor\classes;
+
 /**
  * @file
  * Gets next lesson.
@@ -48,9 +49,9 @@ $string  = __LINE__ . '  $_POST = ' . $v . "\n\n";
 fwrite($log_file, $string);
 
 
-//require_once '../../src/classes/AssignmentsClass.inc';
-//require_once '../../src/classes/GenericAClass.inc';
-//require_once '../classes/PersonClass.inc';
+//require_once '../../src/classes/AssignmentsClass.php';
+//require_once '../../src/classes/GenericAClass.php';
+//require_once '../classes/PersonClass.php';
 //require_once '../../src/classes/db_include.php';
 
 
@@ -108,7 +109,7 @@ do {
 
     // Get next assignment to do from the login data.
     //$next_lesson = new tutor\src\classes\AssignmentsClass();
-    $next_lesson = new tutor\classes\AssignmentsClass();
+    $next_lesson = new AssignmentsClass();
     // Return a single lesson as a tAssignments row.
     $lesson = $next_lesson->getNextAssignmentToDo($_data['tA_S_ID'], $last_lesson_id);
     $v = var_export($lesson, true);
@@ -119,8 +120,8 @@ do {
     // $next_lesson->setSessionVariablesFromLesson($lesson);
     // From the assignment name retrieve the generic assignment and assign
     // its variables  to the $_SESSION variable.
-    require_once '../../src/classes/GenericAClass.inc';
-    $my_next_ga = new tutor\src\classes\GenericAClass();
+    require_once 'GenericAClass.php';
+    $my_next_ga = new GenericAClass();
     $my_next_ga->setSessionVariablesFromTGAssignmentName($lesson['tG_AssignmentName']);
     fwrite($log_file, __LINE__ . ' microtime(true) = ' . microtime(true) . "\n\n");
     $v = var_export($_SESSION, true);

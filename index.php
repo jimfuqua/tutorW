@@ -8,11 +8,35 @@ use jimfuqua\tutorW\LessonsClass;
 use jimfuqua\tutorW\PersonClass;
 use jimfuqua\tutorW\SessionsClass;
 use jimfuqua\tutorW\SplitsClass;
+use jimfuqua\tutorW\ActiveLessonClass;
 
-$AssClassObj = new AssignmentsClass();
-$CompClassObj = new CompletedClass();
-$gAClassObj = new GenericAClass();
-$LessonsClassObj = new LessonsClass();
-$PersonClassObj = new PersonClass();
+$AssignClassObj   = new AssignmentsClass();
+$CompClassObj     = new CompletedClass();
+$gAClassObj       = new GenericAClass();
+$PersonClassObj   = new PersonClass();
 $SessionsClassObj = new SessionsClass();
-$SplitsClassObj = new SplitsClass();
+$SplitsClassObj   = new SplitsClass();
+$LessonClassObj   = new ActiveLessonClass('abc',__FILE__);
+echo __DIR__;
+?>
+<style>
+  :root {
+  --main-color: green;
+}
+
+#foo h2 {
+  color: var(--main-color);
+}
+h1 {color:red;}
+p {color:blue;}
+</style>
+</head>
+<body>
+
+<h1>A heading</h1>
+<p>A paragraph.</p>
+<p id="foo">
+  This is a test of css variables.&#xf088;&#xf087;
+</p>
+</body>
+</html>

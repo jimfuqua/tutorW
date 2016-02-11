@@ -1,4 +1,8 @@
 <?php
+namespace jimfuqua\tutorW;
+require "../../vendor/autoload.php";
+use jimfuqua\tutorW\classes;
+use jimfuqua\tutorW\tests;
 /**
  * @file Test lesson horizontal_vertical_diagonal.php.
  *
@@ -52,17 +56,16 @@ $_SESSION['session_id']   = session_id();
 
 // Must get tA_id for the lesson to be tested.
 
-require_once "/var/www/html/jimfuqua/tutor/lessons/test_lesson_include.php";
+require_once "/var/www/html/jimfuqua/tutorW/lessons/test_lesson_include.php";
 
-//$log_file = fopen('/var/www/html/jimfuqua/tutor/logs/test_horizontal_vertical_diagonal.php.log', 'w');
+//$log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/test_horizontal_vertical_diagonal.php.log', 'w');
 //$v = var_export($_SESSION, true);
 //$string = __LINE__.' $_SESSION = '.$v."\n\n";
 //fwrite($log_file, $string);
 
 $target_assignment_name = 'gA_horizontal_vertical_diagonal';
 
-require_once '/var/www/html/jimfuqua/tutor/src/classes/AssignmentsClass.inc';
-$class_instance = new tutor\src\classes\AssignmentsClass;
+$class_instance = new AssignmentsClass;
 
 // Get target lesson if it exists.
 $result = $class_instance -> getSpecificStudentAssignmentFromDbAsArray(

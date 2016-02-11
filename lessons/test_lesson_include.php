@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-use tutor\src\classes;
+use tutorW\classes;
 
 $var_array = [];
 // in left_right_blocks.  Must go up to lessons then up to tutorW
@@ -84,7 +84,6 @@ $lesson_list_array = array(
 
 // in left_right_blocks.  Must go up to lessons then up to tutorW
 // before going down to src.
-require_once '../../src/classes/AssignmentsClass.inc';
 
 /*
 

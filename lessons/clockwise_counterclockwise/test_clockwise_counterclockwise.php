@@ -1,4 +1,11 @@
 <?php
+namespace jimfuqua\tutorW;
+require "../../vendor/autoload.php";
+use jimfuqua\tutorW\classes;
+use jimfuqua\tutorW\tests;
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 /**
  * @file Test lesson clockwise_counterclockwise.php.
  *
@@ -34,8 +41,6 @@
  * @since File available since Release 1.2.0
  **/
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -52,20 +57,20 @@ $_SESSION['session_id']   = session_id();
 
 // Must get tA_id for the lesson to be tested.
 
-require_once "/var/www/html/jimfuqua/tutor/lessons/test_lesson_include.php";
+require_once "/var/www/html/jimfuqua/tutorW/lessons/test_lesson_include.php";
 
-// $log_file = fopen('/var/www/html/jimfuqua/tutor/logs/test_clockwise_counterclockwise.log', 'w');
+// $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/test_clockwise_counterclockwise.log', 'w');
 // $v = var_export($_SESSION, true);
 // $string = __LINE__.' $_SESSION = '.$v."\n\n";
 // fwrite($log_file, $string);
 
 $target_assignment_name = 'gA_clockwise_counterclockwise';
 
-require_once '/var/www/html/jimfuqua/tutor/src/classes/AssignmentsClass.inc';
-$class_instance = new tutor\src\classes\AssignmentsClass;
-
+$classInstance = new AssignmentsClass;
+echo(isset($classInstance));
+//var_dump($classInstance);
 // Get target lesson if it exists.
-$result = $class_instance -> getSpecificStudentAssignmentFromDbAsArray(
+$result = $classInstance->getSpecificStudentAssignmentFromDbAsArray(
     $_SESSION['tA_S_ID'],
     $target_assignment_name,
     $_SESSION['tA_StartRec']
@@ -81,7 +86,7 @@ $_SESSION['tA_id'] = $result['tA_id'];
 // Remove the lesson to be tested.
 // Add it back with a 2 second post-date.
 //
-$class_instance ->delRowsByStudentId_AssignmentName($_SESSION['tA_S_ID'], 'gA_clockwise_counterclockwise');
+$classInstance ->delRowsByStudentId_AssignmentName($_SESSION['tA_S_ID'], 'gA_clockwise_counterclockwise');
 $_SESSION['tG_AssignmentName'] = $target_assignment_name;
 $_SESSION['tA_PostDateIncrement'] = 2;
 $_SESSION['tA_Post_date'] = round(microtime(true), 3, PHP_ROUND_HALF_EVEN) +
@@ -93,10 +98,10 @@ $_SESSION['tA_PostDateIncrement'];
 // $string =  __LINE__. $s . round(microtime(true), 3, PHP_ROUND_HALF_EVEN)."\n\n";
 // fwrite($log_file, $string);
 
-$result = $class_instance->insertRecord($_SESSION);
+$result = $classInstance->insertRecord($_SESSION);
 // insert the target lesson and get back the tA_id.
 
 // now get back the tA_id for the target lesson.  Get by assignment_name
 
-// $result = $class_instance->insertRecord($var_array);
+// $result = $classInstance->insertRecord($var_array);
 require 'clockwise_counterclockwise.php';

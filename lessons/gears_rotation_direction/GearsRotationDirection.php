@@ -36,25 +36,25 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 $sess    = session_id();
-//$log_file = fopen('/var/www/html/jimfuqua/tutor/logs/GearsRotationDirection.php_log', 'w');
+//$log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/GearsRotationDirection.php_log', 'w');
 //$string = 'GearsRotationDirection.php';
 //fwrite($log_file, $string."\n");
 //$v = var_export($_SESSION, true);
 //fwrite($log_file, __LINE__.' $_SESSION = '.$v." \n");
 //fwrite($log_file, __LINE__.' $sess = ' . $sess);
 
-$filename = '/var/www/html/jimfuqua/tutor/lessons/gears_rotation_direction/css/GearsRotationDirection.css';
+$filename = '/var/www/html/jimfuqua/tutorW/lessons/gears_rotation_direction/css/GearsRotationDirection.css';
 if (file_exists($filename) === false) {
     $string = 'Missing critical file -- ./css/GearsRotationDirection.css';
     trigger_error($string, E_USER_ERROR);
 }
-$filename = '/var/www/html/jimfuqua/tutor/src/scripts/jquery.js';
+$filename = '/var/www/html/jimfuqua/tutorW/src/scripts/jquery.js';
 if (file_exists($filename) === false) {
     $string = 'Missing critical file -- jquery.js';
     trigger_error($string, E_USER_ERROR);
 }
 
-$filename = '/var/www/html/jimfuqua/tutor/lessons/gears_rotation_direction/scripts/GearsRotationDirection.js.php';
+$filename = '/var/www/html/jimfuqua/tutorW/lessons/gears_rotation_direction/scripts/GearsRotationDirection.js.php';
 if (file_exists($filename) === false) {
     $string = 'Missing critical file -- GearsRotationDirection.js.php';
     trigger_error($string, E_USER_ERROR);
@@ -78,17 +78,17 @@ if ($x >= 50) {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Gears</title>
-<link rel="stylesheet" type="text/css" href="http://localhost/jimfuqua/tutor/css/quit_valid.css"/>
+<link rel="stylesheet" type="text/css" href="http://localhost/jimfuqua/tutorW/css/quit_valid.css"/>
 <link rel="stylesheet" type="text/css" href="./css/GearsRotationDirection.css"  media='screen' />
 <link rel="stylesheet" type="text/css"
-href="http://localhost/jimfuqua/tutor/lessons/gears_rotation_direction/css/GearsRotationDirection.css"
+href="http://localhost/jimfuqua/tutorW/lessons/gears_rotation_direction/css/GearsRotationDirection.css"
 media="screen" />
-<script src="/jimfuqua/tutor/src/scripts/jquery.js"></script>
+<script src="/jimfuqua/tutorW/src/scripts/jquery.js"></script>
 <script><?php require 'scripts/GearsRotationDirection.js.php'; ?></script>
 </head>
 
 <body>
-<?php require_once '/var/www/html/jimfuqua/tutor/lessons/quit_help_buttons.php';?>
+<?php require_once '/var/www/html/jimfuqua/tutorW/lessons/quit_help_buttons.php';?>
 <div class = "Title1" >Gear Rotation</div>
 <div class = "student_identifier"><?php echo $_SESSION['tA_StudentName'] ?></div>
 <img class="image1_maroon" class="image1_maroon"
@@ -108,10 +108,10 @@ media="screen" />
     </div>
 </dialog>
 <audio class ='c3'
-src='/jimfuqua/tutor/sounds/c3.ogg' preload="auto">
+src='/jimfuqua/tutorW/sounds/c3.ogg' preload="auto">
 </audio>
 <audio class ='ohoh'
-src='/jimfuqua/tutor/sounds/ohoh.ogg' preload="auto">
+src='/jimfuqua/tutorW/sounds/ohoh.ogg' preload="auto">
 </audio>
 <div class = "message"></div>
 <input type="hidden" id ="rotation"  class="rotation" value=<?php echo $rotation_direction ?> />;

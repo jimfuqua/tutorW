@@ -1,6 +1,5 @@
 <?php
 namespace jimfuqua\tutorW;
-//use tutor\src\classes;
 
 /*
     * AssignmentsClass.inc File Doc Comment
@@ -35,7 +34,7 @@ class AssignmentsClass
 
   public function __construct()
   {
-      echo "I am an AssignmentClass object.<br/>";
+    //echo "I am an AssignmentClass object.<br/>";
   }
 
     /**
@@ -149,14 +148,29 @@ class AssignmentsClass
      */
     private function _connectToDb()
     {
-        //include '../../src/classes/db_include.php';
+        require 'db_include.php';
+        $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/Connect.log', 'w');
+        //$v       = var_export($pramArray, true);
+        $string  = __LINE__.' $dbDSN = '.$dbDSN."\n";
+        fwrite($log_file, $string);
+        $string  = __LINE__.' $dbUser = '.$dbUser."\n";
+        fwrite($log_file, $string);
+        $string  = __LINE__.' $dbPassword = '.$dbPassword."\n";
+        fwrite($log_file, $string);
+        //
         try {
             // Our new PDO Object.
             $con = new \PDO($dbDSN,
                             $dbUser,
-                            $dbPassword,
-                            array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
-                            );
+                            $dbPassword
+                            //array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
+                          );
+            /*$con = new \PDO(
+                  "mysql:host=127.0.0.1;dbname=jlfEDU;",
+                  'root',
+                  'Pasword333',
+                  array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
+                                        );*/
                 //die(json_encode(array('outcome' => true)));
             // Catch and show the error.
         }
@@ -665,7 +679,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function updateTaStartRec($taStartRec, $studentID, $tAoriginalTimestamp)
     {
-      $log_file = fopen("/var/www/html/jimfuqua/tutor/logs/ACupdateTaStartRec.log", "w");
+      $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/ACupdateTaStartRec.log", "w");
         $pdo_connection = $this->_connectToDb();
         $sql            = "UPDATE  tAssignments
                 SET     tA_StartRec = '".$taStartRec."'
@@ -674,7 +688,8 @@ public function removeUnneededColumns($inArray) {
         $string = __LINE__.' $sql = '.$sql."\n\n";
         fwrite($log_file, $string);
         $affectedRows   = $pdo_connection->exec($sql);
-
+        $string = __LINE__.' $affectedRows = '.$affectedRows."\n\n";
+        fwrite($log_file, $string);
         return $affectedRows;
 
     }//end updateTaStartRec()
@@ -718,14 +733,14 @@ public function removeUnneededColumns($inArray) {
         $pdo_connection = $this->_connectToDb();
         // Variable $studentID must never contain spaces.
         trim($studentID);
-$dbUser = 'JimFuqu_jim';
-$dbPassword = 'Carbon3';
-$dbDSN = "mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU;";
+        //$dbUser = 'JimFuqu_jim';
+        //$dbPassword = 'Carbon3';
+        //$dbDSN = "mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU;";
 
 try {
             // Our new PDO Object.
-            $con = new \PDO($dbDSN, $dbUser, $dbPassword);
-            //$con = $this->_connectToDb();
+            //$con = new \PDO($dbDSN, $dbUser, $dbPassword);
+            $con = $this->_connectToDb();
             // Catch and show the error.
         } catch (PDOException $pe) {
             die('Error occurred:'.$pe->getMessage());

@@ -1,0 +1,24 @@
+Known Issues with SmartGit
+==========================
+Linux
+-----
+* SmartGit must be started using bin/smartgit.sh. To install a menu item
+  or a launcher link use bin/add-menuitem.sh. Don't just try to pin the 
+  launched SmartGit instance to the Unity launcher, because clicking this
+  will not launch the script and might cause hard crashes, e.g. because of
+  https://bugs.eclipse.org/bugs/show_bug.cgi?id=419729
+  that require certain environment variables be set.
+
+* KDE desktop with oxygen-gtk theme crashes when a combobox needs to be shown:
+  http://www.syntevo.com/blog/?p=4143
+
+Mac OS X
+--------
+* When the toolbar is hidden and the full-screen option is toggled, it can
+  become visible again, but remains empty:
+  https://bugs.eclipse.org/bugs/show_bug.cgi?id=392803
+
+Windows
+-------
+* The toolbar may lose the font, e.g. by logging in using a different user.
+  https://bugs.eclipse.org/bugs/show_bug.cgi?id=445369

@@ -31,7 +31,7 @@ class SplitsClass
 
   public function __construct()
   {
-      echo "I am a SplitsClass object.<br/>";
+      //echo "I am a SplitsClass object.<br/>";
   }
 
     /**
@@ -123,7 +123,7 @@ class SplitsClass
      */
     private function _connectToDb()
     {
-        include '/var/www/html/jimfuqua/tutor/src/db_include.php';
+        include 'db_include.php';
         try {
             $con = new \PDO($dbDSN, 'root', $dbPassword);
             // Our new PDO Object.

@@ -1,39 +1,92 @@
 47  $_POST = array (
+  'tA_S_ID' => 'Abcdxyz',
+  'tA_StudentName' => 'Tim T. Test',
+  'session_id' => 'jham96squuv42nq3esdn8l56i1',
+  'tA_id' => '213575',
+  'tG_AssignmentName' => 'gA_clockwise_counterclockwise',
+  'tA_StopRec' => '3',
+  'tA_StartRec' => '1',
+  'tC_Correct' => '1',
+  'tC_ServerTimeStarted' => '1455205714.298',
+  'tC_ClientTimeStarted' => '1455205714879',
+  'tC_Time_client_processed_answer' => '1455205720799',
+  'tC_Question_and_Response' => 'counterclockwise',
+  'tC_More_data_about_response' => '',
+  'tA_ErrorsMade' => '0',
+  'tA_LocalDateTime' => '1455205720',
+  'tA_RepsTowardM' => 'Plus1',
 )
 
 61  $_SESSION = array (
-  'tA_S_ID' => 'Test Student',
-  'tA_id' => '345',
-  'tC_ServerTimeStarted' => 1454600144.2280381,
-  'from' => '59  /var/www/html/jimfuqua/tutorW/scripts/cAssignment_get_next_lesson.php',
+  'tC_ServerTimeStarted' => 1455205720.8118601,
+  'from' => '59  /var/www/html/jimfuqua/tutorW/src/scripts/cAssignment_get_next_lesson.php',
 )
 
 67  $_data = array (
-  'tA_S_ID' => 'Test Student',
-  'tA_id' => '345',
-  'tC_ServerTimeStarted' => 1454600144.2280381,
-  'from' => '59  /var/www/html/jimfuqua/tutorW/scripts/cAssignment_get_next_lesson.php',
+  'tC_ServerTimeStarted' => '1455205714.298',
+  'from' => '59  /var/www/html/jimfuqua/tutorW/src/scripts/cAssignment_get_next_lesson.php',
+  'tA_S_ID' => 'Abcdxyz',
+  'tA_StudentName' => 'Tim T. Test',
+  'session_id' => 'jham96squuv42nq3esdn8l56i1',
+  'tA_id' => '213575',
+  'tG_AssignmentName' => 'gA_clockwise_counterclockwise',
+  'tA_StopRec' => '3',
+  'tA_StartRec' => '1',
+  'tC_Correct' => '1',
+  'tC_ClientTimeStarted' => '1455205714879',
+  'tC_Time_client_processed_answer' => '1455205720799',
+  'tC_Question_and_Response' => 'counterclockwise',
+  'tC_More_data_about_response' => '',
+  'tA_ErrorsMade' => '0',
+  'tA_LocalDateTime' => '1455205720',
+  'tA_RepsTowardM' => 'Plus1',
 )
 
 
-87 $_data["tA_S_ID"] = Test Student
+87 $_data["tA_S_ID"] = Abcdxyz
 
 
 100 $_data = array (
-  'tA_S_ID' => 'Test Student',
-  'tA_id' => '345',
-  'tC_ServerTimeStarted' => 1454600144.2280381,
-  'from' => '59  /var/www/html/jimfuqua/tutorW/scripts/cAssignment_get_next_lesson.php',
+  'tC_ServerTimeStarted' => '1455205714.298',
+  'from' => '59  /var/www/html/jimfuqua/tutorW/src/scripts/cAssignment_get_next_lesson.php',
+  'tA_S_ID' => 'Abcdxyz',
+  'tA_StudentName' => 'Tim T. Test',
+  'session_id' => 'jham96squuv42nq3esdn8l56i1',
+  'tA_id' => '213575',
+  'tG_AssignmentName' => 'gA_clockwise_counterclockwise',
+  'tA_StopRec' => '3',
+  'tA_StartRec' => '1',
+  'tC_Correct' => '1',
+  'tC_ClientTimeStarted' => '1455205714879',
+  'tC_Time_client_processed_answer' => '1455205720799',
+  'tC_Question_and_Response' => 'counterclockwise',
+  'tC_More_data_about_response' => '',
+  'tA_ErrorsMade' => '0',
+  'tA_LocalDateTime' => '1455205720',
+  'tA_RepsTowardM' => 'Plus1',
   'last_gA' => NULL,
 )
 
 
 
 106 $_SESSION = array (
-  'tA_S_ID' => 'Test Student',
-  'tA_id' => '345',
-  'tC_ServerTimeStarted' => 1454600144.2280381,
-  'from' => '59  /var/www/html/jimfuqua/tutorW/scripts/cAssignment_get_next_lesson.php',
+  'tC_ServerTimeStarted' => '1455205714.298',
+  'from' => '59  /var/www/html/jimfuqua/tutorW/src/scripts/cAssignment_get_next_lesson.php',
+  'tA_S_ID' => 'Abcdxyz',
+  'tA_StudentName' => 'Tim T. Test',
+  'session_id' => 'jham96squuv42nq3esdn8l56i1',
+  'tA_id' => '213575',
+  'tG_AssignmentName' => 'gA_clockwise_counterclockwise',
+  'tA_StopRec' => '3',
+  'tA_StartRec' => '1',
+  'tC_Correct' => '1',
+  'tC_ClientTimeStarted' => '1455205714879',
+  'tC_Time_client_processed_answer' => '1455205720799',
+  'tC_Question_and_Response' => 'counterclockwise',
+  'tC_More_data_about_response' => '',
+  'tA_ErrorsMade' => '0',
+  'tA_LocalDateTime' => '1455205720',
+  'tA_RepsTowardM' => 'Plus1',
   'last_gA' => NULL,
 )
 
