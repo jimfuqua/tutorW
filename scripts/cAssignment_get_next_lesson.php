@@ -1,5 +1,7 @@
 <?php
-use tutor\classes;
+namespace jimfuqua\tutorW;
+require "../vendor/autoload.php";
+use jimfuqua\tutorW\classes;
 session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -42,7 +44,8 @@ error_reporting(E_ALL);
 
 // This:/hsphere/local/home/jimfuqua/jim-fuqua.com/tutorW/src/scripts/cAssignment_get_next_lesson.php'
 date_default_timezone_set('UTC');
-$file = 'logs/cAssignment_get_next_lesson.php_log';
+
+$file = '../logs/cAssignment_get_next_lesson.log';
 $log_file = fopen($file, 'w');
 $v       = var_export($_POST, true);
 $string  = __LINE__ . '  $_POST = ' . $v . "\n\n";
@@ -120,9 +123,8 @@ do {
     // $next_lesson->setSessionVariablesFromLesson($lesson);
     // From the assignment name retrieve the generic assignment and assign
     // its variables  to the $_SESSION variable.
-    require_once 'GenericAClass.php';
     $my_next_ga = new GenericAClass();
-    $my_next_ga->setSessionVariablesFromTGAssignmentName($lesson['tG_AssignmentName']);
+    $my_next_ga->setSessionVariablesFromTblGenerAssignmentName($lesson['tG_AssignmentName']);
     fwrite($log_file, __LINE__ . ' microtime(true) = ' . microtime(true) . "\n\n");
     $v = var_export($_SESSION, true);
     $string = "\n" . __LINE__ . ' $_SESSION = ' . $v . "\n\n";

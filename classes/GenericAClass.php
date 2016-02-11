@@ -45,8 +45,6 @@ See SimpleTest 'GenericA_class_simpletest.php' in 'test' folder
 for more documentation.
  */
 
-//$require_path = "/hsphere/local/home/jimfuqua/jim-fuqua.com/tutorW";
-// require_once $require_path . '/src/classes/AssignmentsClass.inc';
 // returns the current URL.
 //$url = $_SERVER['REQUEST_URI'];
 //$parts = explode('/', $url);
@@ -71,7 +69,7 @@ class GenericAClass {
    */
   public function __construct() {
 
-    echo "I am a GenericAClass instance.<br/>";
+    //echo "I am a GenericAClass instance.<br/>";
   }
 
   /**
@@ -84,7 +82,7 @@ class GenericAClass {
    */
   public function setSessionVariablesFromTblGenerAssignmentName($tg_assignment_name) {
 
-    $log_file = fopen('../../logs/cAssignment_get_next_lesson_set_gA_variables.log', 'a');
+    $log_file = fopen('../logs/cAssignment_get_next_lesson_set_gA_variables.log', 'a');
     fwrite($log_file, __LINE__ . ' microtime(TRUE) = ' . microtime(TRUE) . "\n\n");
     $string = "\n" . __LINE__ . ' $tg_assignment_name = ' . $tg_assignment_name . "\n";
     fwrite($log_file, $string);

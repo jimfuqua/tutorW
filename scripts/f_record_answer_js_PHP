@@ -33,9 +33,9 @@ console.log (data_out);
 console.log(33);
 // Update tCompleted and tAssignments.php.
     //post_to_update_tA_tC = '/jimfuqua/tutor/scripts/update_tA_tC.php';
-    post_to_update_tA_tC = "../scripts/update_tA_tC.php";
-    $.post( post_to_update_tA_tC, data_out, function( returned_data, status ) {
-        //alert( 'returned_data: ' + returned_data + "\nStatus: " + status );
-    } );
+    post_to_update_tA_tC = "../../../scripts/update_tA_tC.php";
+  //  $.post( post_to_update_tA_tC, data_out, function( returned_data, status ) {
+  //      alert( 'returned_data: ' + returned_data + "\nStatus: " + status );
+  //  } );
 
 }// end function record_answer
