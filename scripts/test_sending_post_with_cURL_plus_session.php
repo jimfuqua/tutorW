@@ -18,7 +18,7 @@ session_start();
 
 // Example using cURL.  $_POST array arrives with data in $myvars below.
 
-$url = 'http://localhost/jimfuqua/tutor/src/scripts/tested_script.php';
+$url = 'http://localhost/jimfuqua/tutorW/scripts/tested_script.php';
 $ch = curl_init( $url );
 
 $myvars = 'tA_S_ID=' . 'AAAAA';
@@ -37,5 +37,5 @@ curl_close ($ch);
 
 
 // line below gets to tested script with sessions data but no post data. Uncomment to try it that way.
-// echo 'To continue, <a href=http://localhost/jimfuqua/tutor/src/scripts/tested_script.php><br/><br/>click';
+// echo 'To continue, <a href=http://localhost/jimfuqua/tutor/scripts/tested_script.php><br/><br/>click';
 ?>

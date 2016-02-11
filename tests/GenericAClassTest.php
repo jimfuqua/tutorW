@@ -1,6 +1,6 @@
 <?php
 namespace jimfuqua\tutorW;
-//require_once '/var/www/html/jimfuqua/tutor/src/classes/GenericAClass.inc';
+
 /**********************************************************************
 *  Test AssignmentsClass using PHP SimpleTest.
 

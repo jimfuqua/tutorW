@@ -2,7 +2,6 @@
 namespace jimfuqua\tutorW;
 use jimfuqua\tutorW\classes;
 date_default_timezone_set('America/Chicago');
-//require '/var/www/html/jimfuqua/tutor/src/classes/CompletedClass.inc';
 
 /**********************************************************************
 *  Test CompletedClass using PHP SimpleTest.

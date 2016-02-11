@@ -48,7 +48,7 @@ if (file_exists($filename) === false) {
     $string = 'Missing critical file -- ./css/GearsRotationDirection.css';
     trigger_error($string, E_USER_ERROR);
 }
-$filename = '/var/www/html/jimfuqua/tutorW/src/scripts/jquery.js';
+$filename = '/var/www/html/jimfuqua/tutorW/scripts/jquery.js';
 if (file_exists($filename) === false) {
     $string = 'Missing critical file -- jquery.js';
     trigger_error($string, E_USER_ERROR);
@@ -83,7 +83,7 @@ if ($x >= 50) {
 <link rel="stylesheet" type="text/css"
 href="http://localhost/jimfuqua/tutorW/lessons/gears_rotation_direction/css/GearsRotationDirection.css"
 media="screen" />
-<script src="/jimfuqua/tutorW/src/scripts/jquery.js"></script>
+<script src="/jimfuqua/tutorW/scripts/jquery.js"></script>
 <script><?php require 'scripts/GearsRotationDirection.js.php'; ?></script>
 </head>
 

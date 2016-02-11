@@ -8,7 +8,6 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 use tutor\classes;
-require_once '/var/www/jimfuqua/tutor/src/classes/AssignmentsClass.inc';
 $logFile = fopen("/var/www/jimfuqua/tutor/logs/update_tAssignments.php.log", "w");
 $v = var_export($_POST, true);
 $string = __LINE__.' $_POST = '.$v."\n\n";

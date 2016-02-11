@@ -2,7 +2,7 @@
 namespace jimfuqua\tutorW;
 
 /*
-    * AssignmentsClass.inc File Doc Comment
+    * AssignmentsClass.php File Doc Comment
     *
     * AssignmentsClass manipulates MySQL table tAssignments in jlfEDU DB
     *

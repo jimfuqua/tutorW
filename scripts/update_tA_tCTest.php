@@ -95,7 +95,7 @@ class test extends PHPUnit_Framework_TestCase
     echo "<br/>";
     echo serialize($_SESSION);
     echo "<br/>";
-$url = 'http://localhost/jimfuqua/tutor/src/scripts/update_tA_tC.php';
+$url = 'http://localhost/jimfuqua/tutorW/scripts/update_tA_tC.php';
 echo $url;
 $myvars = 'tA_S_ID=' . 'AAAAA';
 $myvars = $myvars.'&tA_id=' . '199305';
@@ -138,7 +138,7 @@ $logFile = fopen("/var/www/jimfuqua/tutor/logs/update_tA_tC.php.log", "w");
 $v = var_export($result, TRUE);
 $string = __LINE__ . ' $result = ' . $v . "\n\n";
 //fwrite($logFile, $string);
-$url = 'http://localhost/jimfuqua/tutor/src/scripts/update_tA_tC.php';
+$url = 'http://localhost/jimfuqua/tutorW/scripts/update_tA_tC.php';
 //header( "Location: $url" ); nothing transfers
 //var_dump($result);
 
@@ -167,8 +167,8 @@ echo $response;
 curl_close ($ch);
 */
 //echo '<br /><a href="update_tA_tC.php">page 2</a>';
-//echo header("http://localhost/jimfuqua/tutor/src/scripts/update_tA_tC.php");
-//echo 'To continue, <a href=http://localhost/jimfuqua/tutor/src/scripts/update_tA_tC.php>click';
+//echo header("http://localhost/jimfuqua/W/scripts/update_tA_tC.php");
+//echo 'To continue, <a href=http://localhost/jimfuqua/tutorW/scripts/update_tA_tC.php>click';
 /*}
 $_POST = array (
   'tA_S_ID' => 'qqq4q3q',

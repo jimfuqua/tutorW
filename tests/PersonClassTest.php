@@ -1,5 +1,4 @@
 <?php
-include_once '/var/www/html/jimfuqua/tutor/src/classes/PersonClass.inc';
 
 class PersonClassSimpletest extends PHPUnit_Framework_TestCase {
 
