@@ -1,7 +1,7 @@
 <?php
-require '/var/www/html/jimfuqua/tutorW/scripts/basic_vars_lesson_js_PHP';
-require '/var/www/html/jimfuqua/tutorW/scripts/f_exit_from_lesson_js_PHP';
-require '/var/www/html/jimfuqua/tutorW/scripts/f_record_answer_js_PHP';
+require '../../scripts/basic_vars_lesson_js_PHP';
+require '../../scripts/f_exit_from_lesson_js_PHP';
+require '../../scripts/f_record_answer_js_PHP';
 ?>
 var direction="";
 

@@ -1,0 +1,42 @@
+86 microtime(TRUE) = 1455230338.191
+
+
+87 $tg_assignment_name = gA_clockwise_counterclockwise
+91 microtime(TRUE) = 1455230338.191
+
+
+94 $lesson = array (
+  'id' => '1782',
+  'tG_StartStop' => '',
+  'tG_Split' => NULL,
+  'tG_ThreadName' => '',
+  'tG_AssignmentName' => 'gA_clockwise_counterclockwise',
+  'tG_path_to_lesson' => 'lessons/clockwise_counterclockwise/
+',
+  'tG_FormName' => 'clockwise_counterclockwise.php',
+  'tG_DataFile' => NULL,
+  'tG_Parameters' => '',
+  'tG_Consequtive_Reps_OK' => '1',
+  'tG_Reps_to_master' => '10',
+  'tG_Errors_Allowed' => '0',
+  'tG_Minimum_completion_time' => '0',
+  'tG_Maximum_completion_time' => '2',
+  'tG_StartRec' => '1',
+  'tG_StopRec' => NULL,
+  'tG_Immediate_Loops' => '1',
+  'tG_RepsPerRecord' => '1',
+  'tG_RecordsPerSet' => '20',
+  'tG_Lesson_if_Correct' => '',
+  'tG_Record_if_Correct' => '0',
+  'tG_Parameter_if_Correct' => '',
+  'tG_Delay_Repeat_Corr' => '0',
+  'tG_Lesson_if_Error' => 'clockwise_counterclockwise',
+  'tG_Record_if_Error' => '0',
+  'tG_Parameter_if_Error' => '',
+  'tG_Delay_Repeat_Err' => '0',
+  'tG_Assignment_Creation_Date' => '2013-06-17 01:54:20',
+)
+
+
+96 microtime(TRUE) = 1455230338.4647
+

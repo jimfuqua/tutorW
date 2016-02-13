@@ -10,7 +10,7 @@ ToDo:
     3.   Add docbook type comments to each function and internal comments.
     */
     require "/var/www/html/jimfuqua/tutor/src/db_include.php";
-
+date_default_timezone_set('UTC');
     //$logFile = fopen("/var/www/html/jimfuqua/tutor/logs/Sessions_log.txt", "a");
     //$string = "Sessions.class.php";
     //fwrite($logFile, $string . "\n");
@@ -19,7 +19,7 @@ class SessionsClass {
 
   public function __construct()
   {
-      echo "I am a SessionsClass object.<br/>";
+      //echo "I am a SessionsClass object.<br/>";
   }
 
 // some of the next few methods are from Session class by Stephen McIntyre

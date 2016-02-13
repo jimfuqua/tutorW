@@ -49,27 +49,9 @@ $sess    = session_id();
 //fwrite($log_file, __LINE__.' $_SESSION = '.$v." \n");
 //fwrite($log_file, __LINE__.' $sess = ' . $sess);
 
-$filename = '/var/www/html/jimfuqua/tutorW/lessons/clockwise_counterclockwise/css/clockwisecounterclockwise.css';
-if (file_exists($filename) === FALSE) {
-  $string = 'Missing critical file -- ./css/clockwisecounterclockwise.css';
-  trigger_error($string, E_USER_ERROR);
-}
-
-$filename = '/var/www/html/jimfuqua/tutorW/scripts/jquery.js';
-if (file_exists($filename) === FALSE) {
-  $string = 'Missing critical file -- jquery.js';
-  trigger_error($string, E_USER_ERROR);
-}
-
-$filename = '/var/www/html/jimfuqua/tutorW/lessons/clockwise_counterclockwise/scripts/clockwise_counterclockwise.js.php';
-if (file_exists($filename) === false) {
-    $string = 'Missing critical file -- clockwise_counterclockwise.js.php';
-    trigger_error($string, E_USER_ERROR);
-}
-
 $_SESSION['session_path'] = session_save_path();
 $_SESSION['session_id']   = session_id();
-
+//echo "<br  />clockwise_counterclockwise.php " . __LINE__ ;
 ?>
 <DOCTYPE html>
 <html>
@@ -78,12 +60,12 @@ $_SESSION['session_id']   = session_id();
 <title>Clockwise-Counterclockwise</title>
 <link rel='stylesheet' type='text/css' href='http://localhost/jimfuqua/tutorW/css/quit_valid.css'/>
 <link rel='stylesheet' type='text/css' href='./css/clockwisecounterclockwise.css'  media='screen' />
-<script src='/jimfuqua/tutorW/scripts/jquery.js'></script>
+<script src='../../scripts/jquery.js'></script>
 <script><?php require 'scripts/clockwise_counterclockwise.js.php';?></script>
 </head>
 
 <body>
-<?php require_once '/var/www/html/jimfuqua/tutorW/lessons/quit_help_buttons.php'; ?>
+<?php require_once '../quit_help_buttons.php'; ?>
 <div id='Title1' class="Title1" >Clockwise or Counterclockwise?</div>
 <div id='student_identifier' class="student_identifier"></div>
 <!-- Next div is used for vertical centering of contents.-->
@@ -113,8 +95,8 @@ else {
 </div><!--id='horizon'  This div is used for vertical centering of contents.-->
 
 <div id='results'></div>
-    <audio id ='c3' src='/jimfuqua/tutorW/sounds/c3.ogg' preload='auto'></audio>
-    <audio id ='ohoh' src='/jimfuqua/tutorW/sounds/ohoh.ogg' preload='auto'></audio>
+    <audio id ='c3' src='../../sounds/c3.ogg' preload='auto'></audio>
+    <audio id ='ohoh' src='../../sounds/ohoh.ogg' preload='auto'></audio>
 
 </body>
 </html>

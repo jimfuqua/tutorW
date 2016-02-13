@@ -1,6 +1,9 @@
 <?php
 namespace jimfuqua\tutorW;
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+//echo "<br  />" . __LINE__ ;
 /*
     * AssignmentsClass.php File Doc Comment
     *
@@ -21,7 +24,7 @@ namespace jimfuqua\tutorW;
 
 // in left_right_blocks.  Must go up to lessons then up to tutorW
 // before going down to src.
-
+//echo "<br  />" . __LINE__ . "<br  />";
 
     /**
      * Assignment.class.php
@@ -32,10 +35,10 @@ namespace jimfuqua\tutorW;
 class AssignmentsClass
 {
 
-  public function __construct()
-  {
+  //public function __construct()
+  //{
     //echo "I am an AssignmentClass object.<br/>";
-  }
+  //}
 
     /**
      *  Set session variables from lesson.
@@ -46,9 +49,10 @@ class AssignmentsClass
      * @param array $lesson It is a row from tAssignments.
      *
      * @return void
-     */
+     **/
     public function setSessionVariablesFromLesson(array $lesson)
     {
+      echo "<br  />" . __LINE__ . "<br  />";
         // Set session variables.
         $_SESSION['lesson_id']            = $lesson['tA_id'];
         $_SESSION['tA_id']                = $lesson['tA_id'];
@@ -65,9 +69,8 @@ class AssignmentsClass
         $_SESSION['tA_RepsTowardM']       = $lesson['tA_RepsTowardM'];
         $_SESSION['tA_ErrorsMade']        = $lesson['tA_ErrorsMade'];
         $_SESSION['tC_ServerTimeStarted'] = time();
-
+echo "<br  />" . __LINE__ . "<br  />";
     }//end setSessionVariablesFromLesson()
-
 
     /**
      *  Array to SQL.
@@ -81,6 +84,7 @@ class AssignmentsClass
      */
     private function _arrayToSQLstring(array $myParametersArray)
     {
+      //echo "<br  />" . __LINE__ ;
         $sql       = 'INSERT INTO tAssignments (';
         $sqlValues = ') VALUES (';
         foreach ($myParametersArray as $key => $value) {
@@ -112,12 +116,13 @@ class AssignmentsClass
      */
     private function _arrayToUpdateSQL(array $valueArray, array $whereArray, $pdo_connection)
     {
+      echo "<br  />" . __LINE__ ;
         $sql = '';
         $sql = 'UPDATE tAssignments SET ';
         foreach ($valueArray as $key => $value) {
                 $sql = $sql.$key.' = '.$value.', ';
         }
-
+echo "<br  />" . __LINE__ ;
         $sql = trim($sql);
         $sql = rtrim($sql);
         $sql = substr($sql, 0, -1);
@@ -146,20 +151,33 @@ class AssignmentsClass
      *
      * @return $pdo_connection
      */
-    private function _connectToDb()
+    private function connectToDb()
     {
+      //echo "<br  />" . __LINE__ ;
         require 'db_include.php';
-        $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/Connect.log', 'w');
+        //echo "<br  />" . __LINE__ ." " . "connectToDb" ."<br  />";
+        //echo "<br  />" . __FILE__ ."  <br  />";
+        $file = __FILE__;
+        if ( $file === "/hsphere/local/home/jimfuqua/jim-fuqua.com/tutorW/classes/AssignmentsClass.php"){
+          $host = "mysql:host=mysql507.ixwebhosting.com";
+          $dbUser = 'JimFuqu_jim';
+          $dbPassword = 'Carbon3';
+          $dbDSN = "mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU;";
+        }
+        //$log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/Connect.log', 'w');
         //$v       = var_export($pramArray, true);
-        $string  = __LINE__.' $dbDSN = '.$dbDSN."\n";
-        fwrite($log_file, $string);
-        $string  = __LINE__.' $dbUser = '.$dbUser."\n";
-        fwrite($log_file, $string);
-        $string  = __LINE__.' $dbPassword = '.$dbPassword."\n";
-        fwrite($log_file, $string);
+        //$string  = __LINE__.' $dbDSN = '.$dbDSN."\n";
+        //fwrite($log_file, $string);
+        //$string  = __LINE__.' $dbUser = '.$dbUser."\n";
+        //fwrite($log_file, $string);
+        //$string  = __LINE__.' $dbPassword = '.$dbPassword."\n";
+        //fwrite($log_file, $string);
         //
         try {
             // Our new PDO Object.
+            //echo "<br  />" . __LINE__ ." " . $dbDSN ."<br  />";
+            //echo __LINE__ ." " .  $dbUser ."<br  />";
+            //echo __LINE__ ." " .  $host ."<br  />";
             $con = new \PDO($dbDSN,
                             $dbUser,
                             $dbPassword
@@ -180,7 +198,7 @@ class AssignmentsClass
 
         return $con;
 
-    }//end _connectToDb()
+    }//end connectToDb()
 
 public function removeUnneededColumns($inArray) {
 // what happens to loose a column?
@@ -256,7 +274,7 @@ public function removeUnneededColumns($inArray) {
         //$v       = var_export($pramArrayProcessed, true);
         //$string  = __LINE__.' $pramArrayProcessed = '.$v."\n\n";
         //fwrite($log_file, $string);
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $sql            = $this->_arrayToSQLstring($pramArrayProcessed);
         //$string         = __LINE__.' AC $sql = '.$sql."\n\n";
         //fwrite($log_file, $string);
@@ -278,7 +296,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function returnColumnsNamesInArray()
     {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $sql            = 'SELECT * FROM  `tAssignments` LIMIT 1';
         $result         = $pdo_connection->query($sql);
         $row            = $result->fetch(\PDO::FETCH_ASSOC);
@@ -301,7 +319,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function getLastDbEntryAsArray($studentID)
     {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $sql            = 'SELECT * FROM tAssignments WHERE tA_S_ID = :studentID
                             ORDER BY tA_id DESC LIMIT 1';
         $stmt           = $pdo_connection->prepare($sql);
@@ -328,7 +346,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function getNewestDbEntry($studentID)
     {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $sql            = 'SELECT * FROM tAssignments
                 WHERE tA_S_ID = :studentID
                 ORDER BY tA_LastModifiedDateTime
@@ -353,7 +371,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function getOneRowFromDbAsArrayID($studentID)
     {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $sql            = "SELECT * FROM tAssignments WHERE tA_S_ID = '".$studentID."' LIMIT 1";
         $PDO_Object     = $pdo_connection->query($sql);
         $row            = $PDO_Object->fetch(\PDO::FETCH_ASSOC);
@@ -381,7 +399,7 @@ public function removeUnneededColumns($inArray) {
       )
     {
         // Gets a specific row and return mysql_results.
-          $pdo_connection = $this->_connectToDb();
+          $pdo_connection = $this->connectToDb();
           $sql            = "SELECT * FROM tAssignments
                   WHERE ((tA_S_ID = '".$studentID."') && (tG_AssignmentName =
                                 '".$tgAssignmentName."') &&
@@ -408,7 +426,7 @@ public function removeUnneededColumns($inArray) {
 //$v = var_export($result, true);
 //$string = __LINE__.' AC $result = '.$v."\n\n";
 //fwrite($log_file, $string);
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $stmt = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_S_ID = :tA_S_ID');
     if (!$stmt) {
         //$string = __LINE__." \nPDO::errorInfo():\n";
@@ -435,7 +453,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function getRowByIndexId($id)
     {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $stmt           = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_id = :id');
         $stmt->bindParam('id', $id, \PDO::PARAM_INT);
         $stmt->execute();
@@ -456,7 +474,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function getAssignmentByAssignmentID($tA_id)
     {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $stmt           = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_id = :id');
         $stmt->bindParam(':id', $tA_id, \PDO::PARAM_INT);
         $stmt->execute();
@@ -478,7 +496,7 @@ public function removeUnneededColumns($inArray) {
     public function deleteLastRow($studentID)
     {
         // Should get newest row.  Test to make sure it does not get oldest row.
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $stmt           = $pdo_connection->prepare(
             'DELETE FROM tAssignments
                                                     WHERE (tA_S_ID = :studentID)
@@ -506,7 +524,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function delRowsByStudentId_AssignmentName($studentID, $tG_AssignmentName)
     {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $stmt = $pdo_connection->prepare('DELETE FROM tAssignments WHERE (tA_S_ID = :studentID && tG_AssignmentName = :tG_AssignmentName)');
         // $stmt = $pdo_connection->prepare('DELETE FROM tAssignments WHERE (tA_S_ID = :studentID)');
         // $log_file=fopen("/var/www/html/jimfuqua/tutor/logs/ACdelLessons.php.log", "w");
@@ -535,7 +553,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function delRowsByStudentId($studentID)
     {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $stmt = $pdo_connection->prepare('DELETE FROM tAssignments WHERE (tA_S_ID = :studentID)');
         $stmt->bindParam(':studentID', $studentID, \PDO::PARAM_STR, 80);
         $result = $stmt->execute();
@@ -555,7 +573,7 @@ public function removeUnneededColumns($inArray) {
      */
     public function deleteRowByRowId($id)
     {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $del            = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_id = :id');
         $del->bindParam(':id', $id, \PDO::PARAM_INT);
         $del->execute();
@@ -583,7 +601,7 @@ public function removeUnneededColumns($inArray) {
         //$v      = var_export($whereArray, true);
         //$string = __LINE__.' AC $whereArray = '.$v."\n\n";
         //fwrite($log_file, $string);
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $sql            = $this->_arrayToUpdateSQL(
             $valueArray,
             $whereArray,
@@ -614,7 +632,7 @@ public function removeUnneededColumns($inArray) {
         $row = $this->getRowByIndexId($lessonID);
         // Next commands increment RepsTowardM.
         if (is_numeric($taRepsTowardM) === TRUE) {
-            $pdo_connection = $this->_connectToDb();
+            $pdo_connection = $this->connectToDb();
             $sql            = 'UPDATE tAssignments SET tA_RepsTowardM = "'.$taRepsTowardM.';
                               "WHERE tA_id = "'.$lessonID.'"';
             $affectedRows   = $pdo_connection->exec($sql);
@@ -652,7 +670,7 @@ public function removeUnneededColumns($inArray) {
     /*
         public function incrementErrorsMade($lessonID)
         {
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         $row            = $this->getRowByIndexId($lessonID);
         // Returns array.
         $errorsMade = ($row['tA_ErrorsMade'] + 1);
@@ -679,17 +697,17 @@ public function removeUnneededColumns($inArray) {
      */
     public function updateTaStartRec($taStartRec, $studentID, $tAoriginalTimestamp)
     {
-      $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/ACupdateTaStartRec.log", "w");
-        $pdo_connection = $this->_connectToDb();
+      //$log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/ACupdateTaStartRec.log", "w");
+        $pdo_connection = $this->connectToDb();
         $sql            = "UPDATE  tAssignments
                 SET     tA_StartRec = '".$taStartRec."'
                 WHERE   tA_S_ID   = '".$studentID."' AND
                 tA_OriginalTimestamp = '".$tAoriginalTimestamp."'";
-        $string = __LINE__.' $sql = '.$sql."\n\n";
-        fwrite($log_file, $string);
+        //$string = __LINE__.' $sql = '.$sql."\n\n";
+        //fwrite($log_file, $string);
         $affectedRows   = $pdo_connection->exec($sql);
-        $string = __LINE__.' $affectedRows = '.$affectedRows."\n\n";
-        fwrite($log_file, $string);
+        //$string = __LINE__.' $affectedRows = '.$affectedRows."\n\n";
+        //fwrite($log_file, $string);
         return $affectedRows;
 
     }//end updateTaStartRec()
@@ -730,7 +748,7 @@ public function removeUnneededColumns($inArray) {
     public function getCurrentStudentAssignmentsInAnArray($studentID)
     {
         $result         = NULL;
-        $pdo_connection = $this->_connectToDb();
+        $pdo_connection = $this->connectToDb();
         // Variable $studentID must never contain spaces.
         trim($studentID);
         //$dbUser = 'JimFuqu_jim';
@@ -740,7 +758,7 @@ public function removeUnneededColumns($inArray) {
 try {
             // Our new PDO Object.
             //$con = new \PDO($dbDSN, $dbUser, $dbPassword);
-            $con = $this->_connectToDb();
+            $con = $this->connectToDb();
             // Catch and show the error.
         } catch (PDOException $pe) {
             die('Error occurred:'.$pe->getMessage());

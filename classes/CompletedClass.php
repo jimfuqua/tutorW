@@ -29,7 +29,7 @@ class CompletedClass
 
   public function __construct()
   {
-      echo "I am a CompletedClass object.<br/>";
+      //echo "I am a CompletedClass object.<br/>";
   }
 
     /**

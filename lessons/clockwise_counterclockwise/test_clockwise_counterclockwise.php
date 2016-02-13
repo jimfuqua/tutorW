@@ -3,6 +3,7 @@ namespace jimfuqua\tutorW;
 require "../../vendor/autoload.php";
 use jimfuqua\tutorW\classes;
 use jimfuqua\tutorW\tests;
+date_default_timezone_set('UTC');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -48,17 +49,21 @@ if (session_status() === PHP_SESSION_NONE) {
 session_regenerate_id(true);
 session_destroy();
 session_start();
-if (is_writable(session_save_path()) === false) {
-    echo 'Session path "' . session_save_path() . '" is not writable for PHP!';
-}
+//if (is_writable(session_save_path()) === false) {
+//    echo 'Session path "' . session_save_path() . '" is not writable for PHP!';
+//}/
 
-$_SESSION['session_path'] = session_save_path();
+//$_SESSION['session_path'] = session_save_path();
 $_SESSION['session_id']   = session_id();
 
 // Must get tA_id for the lesson to be tested.
+$file = __FILE__;
+//if ($file = "/var/www/html/jimfuqua/tutorW/test_clockwise_counterclockwise.php") {
+//echo __LINE__ . "<br  />";
+require_once "../test_lesson_include.php";
+//else {
 
-require_once "/var/www/html/jimfuqua/tutorW/lessons/test_lesson_include.php";
-
+//}//
 // $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/test_clockwise_counterclockwise.log', 'w');
 // $v = var_export($_SESSION, true);
 // $string = __LINE__.' $_SESSION = '.$v."\n\n";
@@ -67,7 +72,7 @@ require_once "/var/www/html/jimfuqua/tutorW/lessons/test_lesson_include.php";
 $target_assignment_name = 'gA_clockwise_counterclockwise';
 
 $classInstance = new AssignmentsClass;
-echo(isset($classInstance));
+//echo(isset($classInstance));
 //var_dump($classInstance);
 // Get target lesson if it exists.
 $result = $classInstance->getSpecificStudentAssignmentFromDbAsArray(
@@ -104,4 +109,5 @@ $result = $classInstance->insertRecord($_SESSION);
 // now get back the tA_id for the target lesson.  Get by assignment_name
 
 // $result = $classInstance->insertRecord($var_array);
+//echo "<br  />" . __LINE__ ;
 require 'clockwise_counterclockwise.php';
