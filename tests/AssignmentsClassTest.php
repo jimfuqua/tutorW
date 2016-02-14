@@ -49,6 +49,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase
 
 
 public function testremoveUneededColumns() {
+  $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/ACT_testremoveUnneededColumns.log", "w");
   $arrayIn = array(
     "Unneeded_1" => "aa",
     "tA_id" => "a",
@@ -59,6 +60,10 @@ public function testremoveUneededColumns() {
 );
 $classInstance = new AssignmentsClass;
 $returned_array = $classInstance->removeUnneededColumns($arrayIn);
+
+$v = var_export($returned_array, true);
+$string  = __LINE__.' $returned_array = '.$v."\n\n";
+fwrite($log_file, $string);
 $this->assertTrue(count($returned_array) === 4);
 $this->assertFalse(array_key_exists ("Unneeded_1", $returned_array));
 $this->assertFalse(array_key_exists ("Unneeded_2", $returned_array));
@@ -66,7 +71,7 @@ $this->assertTrue(array_key_exists ("tA_id", $returned_array));
 $this->assertTrue(array_key_exists ("tA_S_ID", $returned_array));
 $this->assertTrue(array_key_exists ("tA_StudentName", $returned_array));
 $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
-//$log_file = fopen("/var/www/html/jimfuqua/tutor/logs/ACT_testremoveUnneededColumns.log", "w");
+
     //$v = var_export($returned_array, true);
     //$string = __LINE__.' $returned_array = '.$v."\n\n";
     //fwrite($log_file, $string);
@@ -201,6 +206,7 @@ $this->assertTrue(array_key_exists ("tG_AssignmentName", $returned_array));
             $this->myArray['tG_AssignmentName'],
             $this->myArray['tA_StartRec']
         );
+        //exit;
         $this->assertTrue(is_array($row));
         $this->assertTrue($row['tA_S_ID'] === 'ghghgh');
         $this->assertTrue($row['tG_AssignmentName'] === 'TestAssignment');
@@ -1046,14 +1052,14 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
 
 
         /**
-         * Test "testselectALesson()" in Assignments.class.inc
+         * Test "testselectOneLesson()" in Assignments.class.inc
          *
          * A *description*, that can span multiple lines, to go _in-depth_ into the details of this element
          * and to provide some background information or textual references.
          *
          * @return void
          */
-    public function testselectALesson()
+    public function testselectOneLesson()
     {
         // Construct a fake student.  Populate with three lessons.
         // Run about 100 selections and test that a lesson is returned in the
@@ -1093,7 +1099,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
             // Trying to select a lesson many times and
             // Checking for frequency.
             $lastLessonId   = '';
-            $selectedLesson = $classInstance->selectALesson($allLessonArray, $lastLessonId);
+            $selectedLesson = $classInstance->selectOneLesson($allLessonArray, $lastLessonId);
             // Should return array containing one lesson.
             if (is_array($selectedLesson) === TRUE) {
                 if ($selectedLesson['tG_AssignmentName'] === 'abc') {
@@ -1121,7 +1127,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
             // Insure no previous lessons for this student.
             $classInstance->delRowsByStudentId('abcdefg');
 
-    }//end testselectALesson()
+    }//end testselectOneLesson()
 
 
     /**
@@ -1515,10 +1521,10 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
     }//end testgetNextAssignmentToDo()
 
     /**
-     *   Test delRowsByStudentId_AssignmentName()
+     *   Test delRowsByStudentIdAndAssignmentName()
      * @return void
       */
-    public function testdelRowsByStudentId_AssignmentName() {
+    public function testdelRowsByStudentIdAndAssignmentName() {
       $this->testbuildArray();
       $tempStudent = 'abcdefg';
       $tempAssignmentName = 'hijklmn';
@@ -1532,7 +1538,7 @@ function testChange_tA_Post_date(){//merge with Assignmentstest
       $this->assertTrue($result === 1);
       $this->assertTrue(isset($classInstance));
       // Now delete the row.
-      $result = $classInstance->delRowsByStudentId_AssignmentName($tempStudent, $tempAssignmentName);
+      $result = $classInstance->delRowsByStudentIdAndAssignmentName($tempStudent, $tempAssignmentName);
       $result = $this->assertTrue($result === 1);
       // Now try deleting the row again  -- should not be one to delete.
       $result = $classInstance->delRowsByStudentId($tempStudent);

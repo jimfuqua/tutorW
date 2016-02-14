@@ -125,7 +125,7 @@ class SplitsClass
     {
         include 'db_include.php';
         try {
-            $con = new \PDO($dbDSN, 'root', $dbPassword);
+            $con = new \PDO($db_dsn, 'root', $db_password);
             // Our new PDO Object.
         } catch (PDOException $e) {
               echo $e->getMessage();

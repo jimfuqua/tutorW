@@ -1,3 +1,0 @@
-154 $dbDSN = mysql:host=127.0.0.1;dbname=jlfEDU;
-156 $dbUser = root
-158 $dbPassword = Pasword333
