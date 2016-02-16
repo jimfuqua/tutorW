@@ -5,9 +5,9 @@
 //fwrite($log_file, $string);
 ?>
 <?php
-require '/var/www/html/jimfuqua/tutor/src/scripts/basic_vars_lesson_js_PHP';
-require '/var/www/html/jimfuqua/tutor/src/scripts/f_exit_from_lesson_js_PHP';
-require '/var/www/html/jimfuqua/tutor/src/scripts/f_record_answer_js_PHP';
+require '../../scripts/basic_vars_lesson_js_PHP';
+require '../../scripts/f_exit_from_lesson_js_PHP';
+require '../../scripts/f_record_answer_js_PHP';
 ?>
 var rotation_direction;
 var i1;

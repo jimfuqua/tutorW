@@ -47,16 +47,12 @@ if (session_status() === PHP_SESSION_NONE) {
 session_regenerate_id(true);
 session_destroy();
 session_start();
-if (is_writable(session_save_path()) === false) {
-    echo 'Session path "' . session_save_path() . '" is not writable for PHP!';
-}
 
-$_SESSION['session_path'] = session_save_path();
 $_SESSION['session_id']   = session_id();
 
 // Must get tA_id for the lesson to be tested.
 
-require_once "/var/www/html/jimfuqua/tutorW/lessons/test_lesson_include.php";
+require_once "../test_lesson_include.php";
 
 // $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/test_GearsRotationDirection.log', 'w');
 // $v = var_export($_SESSION, true);
@@ -84,7 +80,7 @@ $_SESSION['tA_id'] = $result['tA_id'];
 // Remove the lesson to be tested.
 // Add it back with a 2 second post-date.
 //
-$class_instance ->delRowsByStudentId_AssignmentName($_SESSION['tA_S_ID'], 'gA_GearsRotationDirection');
+$class_instance ->delRowsByStudentIdAndAssignmentName($_SESSION['tA_S_ID'], 'gA_GearsRotationDirection');
 $_SESSION['tG_AssignmentName'] = $target_assignment_name;
 $_SESSION['tA_PostDateIncrement'] = 2;
 $_SESSION['tA_Post_date'] = round(microtime(true), 3, PHP_ROUND_HALF_EVEN) +

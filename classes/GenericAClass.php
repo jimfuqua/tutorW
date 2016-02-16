@@ -52,7 +52,7 @@ for more documentation.
 //for ($i = 0; $i < count($parts) - 1; $i++) {
 //  $dir .= $parts[$i] . "/";
 //}
-require 'db_include.php';
+require 'db_include2.php';
 require 'generalDbFunctions.php';
 require 'GeneralClassFunctions.php';
 
@@ -183,7 +183,7 @@ class GenericAClass {
    */
   private function connectToDb() {
 
-    require 'db_include.php';
+    require 'db_include2.php';
     try {
       $con = new \PDO('mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU', 'JimFuqu_jim', 'Carbon3');
       // Our new PDO Object.

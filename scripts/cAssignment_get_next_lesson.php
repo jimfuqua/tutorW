@@ -140,7 +140,7 @@ do {
 
     // Build the URL to the next lesson.
     $go_next = '';
-    $go_next = 'http://jim-fuqua.com/' . $file;
+    $go_next = 'http://jim-fuqua.com/tutorW/' . $file;
     $string = "\n" . __LINE__ . ' cA go_next = ' . $go_next;
     fwrite($log_file, $string . "\n");
 

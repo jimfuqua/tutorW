@@ -3,44 +3,15 @@ if(session_id() == '') {
     session_start();
 }
 $_SESSION['session_id'] = session_id();
-$logFile = fopen("/var/www/html/jimfuqua/tutor/logs/one_digit_addition_vertical_clues.log", "w");
-$v = var_export($_SESSION , true);
-$string='$_SESSION = ' . $v ;
-fwrite($logFile, $string . "\n");
- // Insure that include files are included. ***************************
-
-$filename="/var/www/html/jimfuqua/tutor/css/quit_valid.css";
- if(!file_exists($filename)){
-        $string = "Missing critical file -- quit_valid.css";
-        trigger_error($string, E_USER_ERROR);
-    }
-
-$filename="/var/www/html/jimfuqua/tutor/src/scripts/jquery.js";
- if(!file_exists($filename)){
-        $string = "Missing critical file -- jquery.js";
-        trigger_error($string, E_USER_ERROR);
-    }
-
-// End -- Insure that include files are included. ***************************
+$logFile = fopen("../../logs/one_digit_addition_vertical_clues.log", "w");
 
 $_SESSION['tC_ClientTimeStarted'] = time()+0;
-if (!isset($_SESSION['views'])){
-    $_SESSION['views']=1;
-} else {
-    $_SESSION['views']=$_SESSION['views']+1;
-}
 $date = new DateTime();
 $_SESSION["tC_ClientTimeStarted"] = $date->getTimestamp();
 $_SESSION['page'] = "one_digit_addition_vertical.php in object in container.php ";
-// $time_lesson_started=time()+0;
-// $_SESSION['tC_ServerTimeStarted']=$time_lesson_started;
 $string ="\n".$_SESSION['page']."\n";
 fwrite  (  $logFile, $string);
-$string="\$_SESSION['views']=".$_SESSION['views']."\n"."\$_SESSION['session_id']=".session_id()."\n";
-fwrite  (  $logFile, $string);
 $student=$_SESSION["tA_StudentName"];
-$string="\$_SESSION['tA_StudentName']=".$_SESSION["tA_StudentName"]."\n";
-fwrite  (  $logFile, $string);
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 ?>
@@ -50,8 +21,8 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 <title>One Digit Addition</title>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" href="./css/one_digit_addition_vertical_clues.css"/>
-<link rel="stylesheet" type="text/css" href="/jimfuqua/tutor/css/quit_valid.css"/>
-<script src="http://localhost/jimfuqua/tutor/src/scripts/jquery.js"></script>
+<link rel="stylesheet" type="text/css" href="../../css/quit_valid.css"/>
+<script src="../../scripts/jquery.js"></script>
 <script><?php require 'scripts/one_digit_addition_vertical_clues.js.php';?></script>
 
 </script>
@@ -59,8 +30,8 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 <body>
     <div>
-        <a id='quit_button_top_left' href='javascript:window.close()'><img id='image-exit' src='/jimfuqua/tutor/images/stop2.gif' alt='Quit'/></a>
-        <a id="help_button" href="fHelp()"><img id="image-help" src="/jimfuqua/tutor/images/Help.png" alt="help"/></a>
+        <a id='quit_button_top_left' href='javascript:window.close()'><img id='image-exit' src='../../images/stop2.gif' alt='Quit'/></a>
+        <a id="help_button" href="fHelp()"><img id="image-help" src="../../images/Help.png" alt="help"/></a>
     </div>
     <div id = 'clues'>
         <div id = 'clues_1'></div>
@@ -75,7 +46,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 	<span id='equal_symbol'	 >=</span>
 	<span id='SumDigit'  >?</span>
 	<span id='smiley'  >
-        <img id="smiley-face2" src="/jimfuqua/tutor/images/smiley-face2.png" alt='smiley-face'/>
+        <img id="smiley-face2" src="../../images/smiley-face2.png" alt='smiley-face'/>
 	</span>
 
     </div>

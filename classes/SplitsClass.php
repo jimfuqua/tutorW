@@ -123,7 +123,7 @@ class SplitsClass
      */
     private function _connectToDb()
     {
-        include 'db_include.php';
+        include 'db_include2.php';
         try {
             $con = new \PDO($db_dsn, 'root', $db_password);
             // Our new PDO Object.

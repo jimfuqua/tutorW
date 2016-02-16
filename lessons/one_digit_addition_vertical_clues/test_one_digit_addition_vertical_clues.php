@@ -1,4 +1,12 @@
 <?php
+namespace jimfuqua\tutorW;
+require "../../vendor/autoload.php";
+use jimfuqua\tutorW\classes;
+use jimfuqua\tutorW\tests;
+date_default_timezone_set('UTC');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 /**
  * @file Test lesson one_digit_addition_vertical_clues.php.
  *
@@ -43,16 +51,12 @@ if (session_status() === PHP_SESSION_NONE) {
 session_regenerate_id(true);
 session_destroy();
 session_start();
-if (is_writable(session_save_path()) === false) {
-    echo 'Session path "' . session_save_path() . '" is not writable for PHP!';
-}
 
-$_SESSION['session_path'] = session_save_path();
 $_SESSION['session_id']   = session_id();
 
 // Must get tA_id for the lesson to be tested.
 
-require_once "/var/www/html/jimfuqua/tutor/lessons/test_lesson_include.php";
+require_once "../test_lesson_include.php";
 
 // $log_file = fopen('/var/www/html/jimfuqua/tutor/logs/test_one_digit_addition_vertical_clues.log', 'w');
 // $v = var_export($_SESSION, true);
@@ -61,8 +65,7 @@ require_once "/var/www/html/jimfuqua/tutor/lessons/test_lesson_include.php";
 
 $target_assignment_name = 'gA_one_digit_addition_vertical_clues';
 
-require_once '/var/www/html/jimfuqua/tutor/src/classes/AssignmentsClass.inc';
-$class_instance = new tutor\src\classes\AssignmentsClass;
+$class_instance = new AssignmentsClass;
 
 // Get target lesson if it exists.
 $result = $class_instance -> getSpecificStudentAssignmentFromDbAsArray(
@@ -81,7 +84,7 @@ $_SESSION['tA_id'] = $result['tA_id'];
 // Remove the lesson to be tested.
 // Add it back with a 2 second post-date.
 //
-$class_instance ->delRowsByStudentId_AssignmentName($_SESSION['tA_S_ID'], 'gA_one_digit_addition_vertical_clues');
+$class_instance ->delRowsByStudentIdAndAssignmentName($_SESSION['tA_S_ID'], 'gA_one_digit_addition_vertical_clues');
 $_SESSION['tG_AssignmentName'] = $target_assignment_name;
 $_SESSION['tA_PostDateIncrement'] = 2;
 $_SESSION['tA_Post_date'] = round(microtime(true), 3, PHP_ROUND_HALF_EVEN) +

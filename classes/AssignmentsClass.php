@@ -160,55 +160,22 @@ class AssignmentsClass {
    *   Return a pdo connection to the database.
    */
   private function connectToDb() {
-
-    // Echo "<br  />" . __LINE__ ;.
-    require 'db_include.php';
-    // Echo "<br  />" . __LINE__ ." " . "connectToDb" ."<br  />";
-    // echo "<br  />" . __FILE__ ."  <br  />";.
-    $file = __FILE__;
-    if ($file === "/hsphere/local/home/jimfuqua/jim-fuqua.com/tutorW/classes/AssignmentsClass.php") {
-      $host = "mysql:host=mysql507.ixwebhosting.com";
-      $db_user = 'JimFuqu_jim';
-      $db_password = 'Carbon3';
-      $db_dsn = "mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU;";
-    }
-    // $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/Connect.log', 'w');
-    // $v       = var_export($pram_array, true);
-    // $string  = __LINE__.' $db_dsn = '.$db_dsn."\n";
-    // fwrite($log_file, $string);
-    // $string  = __LINE__.' $db_user = '.$db_user."\n";
-    // fwrite($log_file, $string);
-    // $string  = __LINE__.' $db_password = '.$db_password."\n";
-    // fwrite($log_file, $string);
-    // .
+    require 'db_include2.php';
     try {
       // Our new PDO Object.
-      // echo "<br  />" . __LINE__ ." " . $db_dsn ."<br  />";
-      // echo __LINE__ ." " .  $db_user ."<br  />";
-      // echo __LINE__ ." " .  $host ."<br  />";.
       $con = new \PDO($db_dsn,
                         $db_user,
-                        $db_password
-                        // array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION).
+                        $db_password,
+                        array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
                       );
-      /*$con = new \PDO(
-      "mysql:host=127.0.0.1;dbname=jlfEDU;",
-      'root',
-      'Pasword333',
-      array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
-      );*/
-      // die(json_encode(array('outcome' => true)));
-      // Catch and show the error.
     }
     catch (PDOException $ex) {
       die(json_encode(array('outcome' => FALSE, 'message' => 'Unable to connect')));
     }
-
     return $con;
+  } // End connectToDb().
 
-  } /**
-     * End connectToDb().
-     */
+
   public function removeUnneededColumns($in_array) {
     // What happens to loose a column?
     $ok_array = array(

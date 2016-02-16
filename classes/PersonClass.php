@@ -1,6 +1,6 @@
 <?php
 namespace jimfuqua\tutorW;
-require 'db_include.php';
+require 'db_include2.php';
 error_reporting(E_ALL);
 /**********************************************************************
 *  Manage the person database.

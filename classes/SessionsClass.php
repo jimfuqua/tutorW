@@ -9,7 +9,7 @@ namespace jimfuqua\tutorW;
 ToDo:
     3.   Add docbook type comments to each function and internal comments.
     */
-    require "/var/www/html/jimfuqua/tutor/src/db_include.php";
+    require "db_include2.php";
 date_default_timezone_set('UTC');
     //$logFile = fopen("/var/www/html/jimfuqua/tutor/logs/Sessions_log.txt", "a");
     //$string = "Sessions.class.php";

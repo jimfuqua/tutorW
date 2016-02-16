@@ -43,24 +43,6 @@ $sess    = session_id();
 //fwrite($log_file, __LINE__.' $_SESSION = '.$v." \n");
 //fwrite($log_file, __LINE__.' $sess = ' . $sess);
 
-$filename = '/var/www/html/jimfuqua/tutorW/lessons/gears_rotation_direction/css/GearsRotationDirection.css';
-if (file_exists($filename) === false) {
-    $string = 'Missing critical file -- ./css/GearsRotationDirection.css';
-    trigger_error($string, E_USER_ERROR);
-}
-$filename = '/var/www/html/jimfuqua/tutorW/scripts/jquery.js';
-if (file_exists($filename) === false) {
-    $string = 'Missing critical file -- jquery.js';
-    trigger_error($string, E_USER_ERROR);
-}
-
-$filename = '/var/www/html/jimfuqua/tutorW/lessons/gears_rotation_direction/scripts/GearsRotationDirection.js.php';
-if (file_exists($filename) === false) {
-    $string = 'Missing critical file -- GearsRotationDirection.js.php';
-    trigger_error($string, E_USER_ERROR);
-}
-
-$_SESSION['session_path'] = session_save_path();
 $_SESSION['session_id']   = session_id();
 
 $x = rand(0, 100);
@@ -83,12 +65,12 @@ if ($x >= 50) {
 <link rel="stylesheet" type="text/css"
 href="http://localhost/jimfuqua/tutorW/lessons/gears_rotation_direction/css/GearsRotationDirection.css"
 media="screen" />
-<script src="/jimfuqua/tutorW/scripts/jquery.js"></script>
+<script src='../../scripts/jquery.js'></script>
 <script><?php require 'scripts/GearsRotationDirection.js.php'; ?></script>
 </head>
 
 <body>
-<?php require_once '/var/www/html/jimfuqua/tutorW/lessons/quit_help_buttons.php';?>
+<?php require_once '../quit_help_buttons.php'; ?>
 <div class = "Title1" >Gear Rotation</div>
 <div class = "student_identifier"><?php echo $_SESSION['tA_StudentName'] ?></div>
 <img class="image1_maroon" class="image1_maroon"
@@ -108,10 +90,10 @@ media="screen" />
     </div>
 </dialog>
 <audio class ='c3'
-src='/jimfuqua/tutorW/sounds/c3.ogg' preload="auto">
+src='../../sounds/c3.ogg' preload="auto">
 </audio>
 <audio class ='ohoh'
-src='/jimfuqua/tutorW/sounds/ohoh.ogg' preload="auto">
+src='../../sounds/c3.ogg' preload="auto">
 </audio>
 <div class = "message"></div>
 <input type="hidden" id ="rotation"  class="rotation" value=<?php echo $rotation_direction ?> />;

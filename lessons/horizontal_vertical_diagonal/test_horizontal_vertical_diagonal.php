@@ -84,7 +84,7 @@ $_SESSION['tA_id'] = $result['tA_id'];
 // Remove the lesson to be tested.
 // Add it back with a 2 second post-date.
 //
-$class_instance ->delRowsByStudentId_AssignmentName($_SESSION['tA_S_ID'], 'gA_horizontal_vertical_diagonal');
+$class_instance ->delRowsByStudentIdAndAssignmentName($_SESSION['tA_S_ID'], 'gA_horizontal_vertical_diagonal');
 $_SESSION['tG_AssignmentName'] = $target_assignment_name;
 $_SESSION['tA_PostDateIncrement'] = 2;
 $_SESSION['tA_Post_date'] = round(microtime(true), 3, PHP_ROUND_HALF_EVEN) +

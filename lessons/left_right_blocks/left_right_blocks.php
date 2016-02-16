@@ -23,8 +23,7 @@ fwrite($log_file, $string . "\n");
 ToDo:     -->
 <link rel="stylesheet" type="text/css" href="http://jim-fuqua.com/tutorW/css/quit_valid.css"/>
 <link rel="stylesheet" type="text/css" href="./css/left_right_blocks.css"/>
-<script src="http://jim-fuqua.com/tutorW/src/scripts/jquery.js"></script>
-<script><?php require 'scripts/left_right_blocks.js.php';?></script><!---->
+<script src='../../scripts/jquery.js'></script>
 
 </head>
 
