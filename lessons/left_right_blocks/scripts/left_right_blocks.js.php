@@ -2,13 +2,14 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-require '../../src/scripts/basic_vars_lesson_js_PHP';
-require '../../src/scripts/f_exit_from_lesson_js_PHP';
-require '../../src/scripts/f_record_answer_js_PHP';
+require '../../scripts/basic_vars_lesson_js_PHP';
+require '../../scripts/f_exit_from_lesson_js_PHP';
+require '../../scripts/f_record_answer_js_PHP';
 ?>
 
 $(document).ready(function () {
     'use strict';
+
     var randomnumber, soundHandleCorrect, soundHandleError;
     tC_ClientTimeStarted = new Date().getTime();
     Answer_Correct = null;
@@ -34,7 +35,7 @@ $(document).ready(function () {
 
     $('#left').click(function () {
         if (randomnumber === 1) { // correct
-            soundHandleCorrect.src = "http://localhost/jimfuqua/tutor/sounds/c3.wav";
+            soundHandleCorrect.src = "../../sounds/c3.wav";
             soundHandleCorrect.play();
             Answer_Correct = 1;  // MySQL stores true as 1 or anything but 0.
             errors_made = 0;
@@ -42,35 +43,33 @@ $(document).ready(function () {
             exit_from_lesson();
         } else {  // error
             $("#error_notice_div").append(
-            "<p>Error - You clicked on the box on the
-             <b>left</b> side.</p><p>Click me to close me.</p>");
+            "<p>Error - You clicked on the box on the <b>left</b> side.</p><p>Click me to close me.</p>");
             $("#error_notice_div").show();
             $("#outer_error_notice_div").show();
-            soundHandleError.src = "http://localhost/jimfuqua/tutor/sounds/ohoh.wav";
+            soundHandleError.src = "../../sounds/ohoh.wav";
             soundHandleError.play();
             Answer_Correct = 0;  // MySQL stores true as 1 or anything but 0.
             record_answer(Answer_Correct);
-            $.post("http://localhost/jimfuqua/tutor/src/scripts/increment_tA_ErrorsMade.php");
+            $.post("../../src/scripts/increment_tA_ErrorsMade.php");
         }
         record_answer(Answer_Correct);
-    });
+    });//function
 
    $('#right').click(function () {
         if (randomnumber === 1) {
             // error
             $("#error_notice_div").append(
-            "<p>Error - You clicked on the box on the <b>right</b>
-               side.</p></p><p>Click me to close me.</p>");
+            "<p>Error - You clicked on the box on the <b>right</b> side.</p></p><p>Click me to close me.</p>");
             $("#error_notice_div").show();
             $("#outer_error_notice_div").show();
-            soundHandleError.src = "http://localhost/jimfuqua/tutor/sounds/ohoh.wav";
+            soundHandleError.src = "../../sounds/ohoh.wav";
             soundHandleError.play();
             Answer_Correct = 0;  // MySQL stores true as 1 or anything but 0.
             record_answer(Answer_Correct);
         } else {
             if (randomnumber === 0) {
                 // correct
-                soundHandleCorrect.src = "http://localhost/jimfuqua/tutor/sounds/c3.wav";
+                soundHandleCorrect.src = "../../sounds/c3.wav";
                 soundHandleCorrect.play();
                 // MySQL stores true as 1 or anything but 0.
                 Answer_Correct = 1;
