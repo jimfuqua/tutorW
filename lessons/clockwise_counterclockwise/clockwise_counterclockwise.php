@@ -15,18 +15,18 @@
  * @author Jim Fuqua <jim@jim-fuqua.com>
  *
  * @copyright 1997-2015 Jim Fuqua
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  This program is free software: you can redistribute it and/or modify
+ *    it under the terms of the GNU General Public License as published by
+ *    the Free Software Foundation, either version 3 of the License, or
+ *    (at your option) any later version.
+ *
+ *    This program is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *    GNU General Public License for more details.
+ *
+ *    You should have received a copy of the GNU General Public License
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @license http://www.http://www.gnu.org/licenses/gpl-3.0.html
  *
@@ -36,22 +36,15 @@
  * @see NetOther, Net_Sample::Net_Sample()
  *
  * @since File available since Release 1.2.0
-*/
+ */
 
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 $sess    = session_id();
-// $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/clockwise-counterclockwise.php_log', 'w');
-// $string  = 'clockwise-counterclockwise.php';
-// fwrite($log_file, $string . "\n");
-//$v = var_export($_SESSION, true);
-//fwrite($log_file, __LINE__.' $_SESSION = '.$v." \n");
-//fwrite($log_file, __LINE__.' $sess = ' . $sess);
 
 $_SESSION['session_path'] = session_save_path();
 $_SESSION['session_id']   = session_id();
-//echo "<br  />clockwise_counterclockwise.php " . __LINE__ ;
 ?>
 <DOCTYPE html>
 <html>

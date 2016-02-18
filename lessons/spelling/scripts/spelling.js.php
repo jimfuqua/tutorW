@@ -1,14 +1,7 @@
 <?php
-//$log_file = fopen('/var/www/html/jimfuqua/tutor/logs/spelling_js.php.log', 'w');
-//$v = var_export($_SESSION, true);
-//$string = __LINE__.' $_SESSION = '.$v."\n\n";
-//fwrite($log_file, $string);
-?>
-<?php
-require '/var/www/html/jimfuqua/tutor/src/scripts/basic_vars_lesson_js_PHP';
-require '/var/www/html/jimfuqua/tutor/src/scripts/f_exit_from_lesson_js_PHP';
-require '/var/www/html/jimfuqua/tutor/src/scripts/f_record_answer_js_PHP';
-?>
+require '../../scripts/basic_vars_lesson_js_PHP';
+require '../../scripts/f_exit_from_lesson_js_PHP';
+require '../../scripts/f_record_answer_js_PHP';?>
 var okay;
 var src = ($('#src1').attr('src'));
 

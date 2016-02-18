@@ -1,16 +1,8 @@
-/*<?php
-$log_file = fopen('/var/www/html/jimfuqua/tutor/logs/Typing_Single_Template_js_php.log', 'w');
-$string = 'Typing_Single_Template_js.php';
-fwrite($log_file, $string."\n");
-$v = var_export($_SESSION, true);
-$string = "\n".__LINE__.' $_SESSION = '.$v;
-fwrite($log_file, $string."\n\n");
-?>
 <?php
-require '/var/www/html/jimfuqua/tutor/src/scripts/basic_vars_lesson_js_PHP';
-require '/var/www/html/jimfuqua/tutor/src/scripts/f_exit_from_lesson_js_PHP';
-require '/var/www/html/jimfuqua/tutor/src/scripts/f_record_answer_js_PHP';
-//?>
+require '../../scripts/basic_vars_lesson_js_PHP';
+require '../../scripts/f_exit_from_lesson_js_PHP';
+require '../../scripts/f_record_answer_js_PHP';
+?>
 /*ToDo
 record erroneous key stroke values
 record keystroke time for each character.

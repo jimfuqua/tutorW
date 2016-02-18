@@ -1,16 +1,16 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$log_file = fopen('/var/www/html/jimfuqua/tutor/logs/spelling_php.log', 'w');
+$log_file = fopen('../../logs/spelling_php.log', 'w');
 assert_options(ASSERT_CALLBACK, 'my_assert_handler');
 // Create a handler function
 function my_assert_handler($file, $line, $code, $desc = null)
 {
     //echo "Assertion failed at $file:$line: $code";
     $string = "Assertion failed at $file:$line: $code";
-    $log = fopen('/var/www/html/jimfuqua/tutor/logs/spelling_assertions.php.log', 'w');
+    $log = fopen('../../logs/spelling_assertions.php.log', 'w');
     fwrite($log, $string."\n");
     if ($desc) {
         //echo ": $desc";
@@ -56,34 +56,6 @@ $audio_sentence = $audio_sentence.$text_word.'.ogg';
 $msg = $audio_sentence."\n".'Path + file name not correct.';
 assert(file_exists($audio_sentence), $msg);
 
-// Insure that include files are included. ***************************
-
-$filename = '../spelling/css/spelling.css';
-if (!file_exists($filename)) {
-    $string = 'Missing critical file -- spelling.css';
-    trigger_error($string, E_USER_ERROR);
-}
-
-$filename = '../../css/quit_valid.css';
-if (!file_exists($filename)) {
-    $string = 'Missing critical file -- quit_valid.css';
-    trigger_error($string, E_USER_ERROR);
-}
-
- $filename = './scripts/spelling.js.php';
-if (!file_exists($filename)) {
-    $string = 'Missing critical file -- spelling.js.php';
-    trigger_error($string, E_USER_ERROR);
-}
-
-    $filename = '/var/www/html/jimfuqua/tutor/src/scripts/jquery.js';
-if (!file_exists($filename)) {
-    $string = 'Missing critical file -- jquery.js';
-    trigger_error($string, E_USER_ERROR);
-}
-
-// put essential db variables within html body
-
 ?>
 
 <!DOCTYPE html>
@@ -93,11 +65,11 @@ if (!file_exists($filename)) {
   <title>Spelling</title>
   <link rel="stylesheet" type="text/css" href="../../css/quit_valid.css"/>
   <link rel="stylesheet" type="text/css" href="./css/spelling.css" media="screen"/>
-  <script src="/jimfuqua/tutor/src/scripts/jquery.js"></script>
+  <script src='../../scripts/jquery.js'></script>
   <script><?php require 'scripts/spelling.js.php'; ?></script>
 </head>
 <body>
-<?php require_once '/var/www/html/jimfuqua/tutor/lessons/quit_help_buttons.php';?>
+<?php require_once '../quit_help_buttons.php'; ?>
 <div id="page" class="page">
   <header>
       <h1 id='h1_one' >Spelling</h1>

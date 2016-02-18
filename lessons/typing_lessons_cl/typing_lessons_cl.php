@@ -5,7 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $_SESSION['page'] = 'Typing_lessons_cl.php in frame in container.php ';
 $_SESSION['tC_ServerTimeStarted'] = time() + 0;
-$logFile = fopen('/var/www/html/jimfuqua/tutor/logs/typing_lessons_cl.txt', 'w');
+$logFile = fopen('../../logs/typing_lessons_cl.txt', 'w');
 $str = "\nTyping_lessons_cl.php \n";
 fwrite($logFile, $str);
 $str = "\$_SESSION['session_id']=".session_id()."\n";
@@ -13,26 +13,10 @@ fwrite($logFile, $str);
 $v = var_export($_SESSION, true);
 $string = "\n".__LINE__.' $_SESSION = '.$v;
 fwrite($logFile, $string."\n\n");
- // Insure that include files are included. ***************************
 
-$filename = '../../css/quit_valid.css';
-if (!file_exists($filename)) {
-    $string = 'Missing critical file -- quit_valid.css';
-    trigger_error($string, E_USER_ERROR);
-}
-$filename = '../../src/scripts/jquery.js';
-if (!file_exists($filename)) {
-    $string = 'Missing critical file -- jquery.js';
-    trigger_error($string, E_USER_ERROR);
-}
-
-//require_once "/var/www/tutor/lib/lib_lesson_header.php";
-// End -- Insure that include files are included. ***************************
 
 $selected_student = $_SESSION['tA_StudentName'];
-//$_SESSION['views'] = $_SESSION['views'] + 1;
 $lesson_no = $_SESSION['tA_StartRec'];
-//$gA_assignment_name=$_SESSION['gA_assignment_name']
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,10 +28,7 @@ ToDo:     -->
 <link rel="stylesheet" type="text/css" href="./css/master.css" media='screen'/>
 <link rel="stylesheet" type="text/css" href="../../css/quit_valid.css" media='screen' />
 <link rel="stylesheet" type="text/css" href="./css/typing_lessons_cl.css"  media='screen' />
-<script src="http://localhost/jimfuqua/tutor/src/scripts/jquery.js" ></script>
-<!--<script src="./scripts/xxxxxxxxxxxxxxxxxxjquery.url.js" type="text/javascript"></script>
-<script src="/tutor/scripts/jquery.form.js" ></script>
-<script src="./scripts/typing_single_template_js.php"></script>-->
+<script src="../../scripts/jquery.js" ></script>
 <script><?php require 'scripts/typing_single_template.js.php';?></script>
 </head>
 
