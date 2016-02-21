@@ -41,7 +41,7 @@ class AssignmentsClass {
    */
   public function __construct() {
 
-    // Echo "I am an AssignmentClass object.<br/>";.
+    //echo "I am an AssignmentClass object.<br/>";
   }
 
   /**
@@ -54,8 +54,6 @@ class AssignmentsClass {
    *   It is a row from tAssignments.
    */
   public function setSessionVariablesFromLesson(array $lesson) {
-
-    echo "<br  />" . __LINE__ . "<br  />";
     // Set session variables.
     $_SESSION['lesson_id']            = $lesson['tA_id'];
     $_SESSION['tA_id']                = $lesson['tA_id'];
@@ -559,7 +557,27 @@ EOD;
     $count = $del->rowCount();
     return $count;
 
-  }//end deleteRowByRowId()
+  }//end deleteRowsByRowId()
+
+    /**
+     * Delete all rows for a student.
+     *
+     * @param string $tA_S_ID
+     *   The student id.
+     *
+     * @return result
+     *   Deletes and returns the count of rows affected.
+     */
+    public function deleteRowByStudentId($id) {
+
+      $pdo_connection = $this->connectToDb();
+      $del            = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_S_ID = :id');
+      $del->bindParam(':id', $tA_S_ID, \PDO::PARAM_STR);
+      $del->execute();
+      $count = $del->rowCount();
+      return $count;
+
+    }//end deleteRowByStudentId()
 
   /**
    * Update fields.

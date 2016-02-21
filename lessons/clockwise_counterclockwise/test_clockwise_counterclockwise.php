@@ -37,11 +37,21 @@
 
 namespace jimfuqua\tutorW;
 
+//use Monolog\Logger;
+//use Monolog\Handler\StreamHandler;
 require "../../vendor/autoload.php";
 date_default_timezone_set('UTC');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// create a log channel
+//$log = new Logger('name');
+//$log->pushHandler(new StreamHandler('../../logs/your.log', Logger::WARNING));
+
+// add records to the log
+//$log->addWarning('Foo');
+//$log->addError('Bar');
 
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
@@ -51,32 +61,32 @@ session_regenerate_id(TRUE);
 session_destroy();
 session_start();
 
-// $_SESSION['session_path'] = session_save_path();
-$_SESSION['session_id']   = session_id();
-
 // Must get tA_id for the lesson to be tested.
 require_once "../test_lesson_include.php";
-
-$target_assignment_name = 'gA_clockwise_counterclockwise';
 $class_instance = new AssignmentsClass();
+$target_assignment_name = 'gA_clockwise_counterclockwise';
+$secondary_assignment_name = 'gA_left_right_blocks';
 
-// Get target lesson if it exists.
-$result = $class_instance->getSpecificStudentAssignmentFromDbAsArray(
+$_SESSION['tG_AssignmentName'] = "$secondary_assignment_name";
+$_SESSION['tA_StartRec'] = 1;
+$_SESSION['tA_S_ID']="zxcvb";
+$_SESSION['tA_Post_date'] = round(microtime(TRUE), 3, PHP_ROUND_HALF_EVEN);
+// Clear old lessons for this test student.
+$class_instance->delRowsByStudentId($_SESSION['tA_S_ID']);
+
+// Insert the next lesson after this target lesson.
+$result = $class_instance->insertRecord($_SESSION);
+$_SESSION['tG_AssignmentName'] = "$target_assignment_name";
+// Change variables and insert this test lesson.
+$_SESSION['tA_Post_date'] = round(microtime(TRUE), 3, PHP_ROUND_HALF_EVEN) + 2;
+// Insert a new row to test.
+$result = $class_instance->insertRecord($_SESSION);
+$result = $class_instance -> getSpecificStudentAssignmentFromDbAsArray(
     $_SESSION['tA_S_ID'],
     $target_assignment_name,
     $_SESSION['tA_StartRec']
 );
 
 $_SESSION['tA_id'] = $result['tA_id'];
-
-// Remove the lesson to be tested.
-// Add it back with a 2 second post-date.
-$class_instance->delRowsByStudentIdAndAssignmentName($_SESSION['tA_S_ID'], 'gA_clockwise_counterclockwise');
-$_SESSION['tG_AssignmentName'] = $target_assignment_name;
-$_SESSION['tA_PostDateIncrement'] = 2;
-$_SESSION['tA_Post_date'] = round(microtime(TRUE), 3, PHP_ROUND_HALF_EVEN) +
-   $_SESSION['tA_PostDateIncrement'];
-
-$result = $class_instance->insertRecord($_SESSION);
-
+// Load the lesson to test.
 require 'clockwise_counterclockwise.php';
