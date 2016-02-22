@@ -1,8 +1,8 @@
-/*<?php
+<?php
 require '../../scripts/basic_vars_lesson_js_PHP';
 require '../../scripts/f_exit_from_lesson_js_PHP';
 require '../../scripts/f_record_answer_js_PHP';
-?>*/
+?>
 var direction="";
 var Answer_Correct;
 var tC_Question_and_Response;
@@ -10,6 +10,7 @@ var tC_ClientTimeStarted;
 
 function check_answer( direction ) {
     "use strict";
+    console.log(13);
     var dialog = document.getElementById("dialog"),
         okay = document.getElementById("okay");
 
@@ -37,6 +38,7 @@ function check_answer( direction ) {
 
 $( document ).ready( function() {
     "use strict";
+    console.log(41);
     //var dialog = document.getElementById("Dialog").style.visibility = "hidden";
     $( "#student_identifier" ).html(tA_StudentName);
     direction = $( "#rotation" ).val();  // Stored by PHP in main page.

@@ -139,8 +139,17 @@ do {
     fwrite($log_file, $string . "\n");
 
     // Build the URL to the next lesson.
+    $directory = __DIR__;
+    $string = "\n" . __LINE__ . ' $directory = ' . $directory . "\n\n";
+    fwrite($log_file, $string . "\n");
+    $string = "\n" . __LINE__ . ' stripos($directory, "/var/www/") = ' . stripos($directory, "/var/www/") . "\n\n";
+    fwrite($log_file, $string . "\n");
     $go_next = '';
-    $go_next = 'http://jim-fuqua.com/tutorW/' . $file;
+    if (stripos($directory, "/var/www/")===0) {
+      $go_next = "/var/www/html/jimfuqua/tutorW/lessons";
+    } else {
+      $go_next = 'http://jim-fuqua.com/tutorW/' . $file;
+    }
     $string = "\n" . __LINE__ . ' cA go_next = ' . $go_next;
     fwrite($log_file, $string . "\n");
 

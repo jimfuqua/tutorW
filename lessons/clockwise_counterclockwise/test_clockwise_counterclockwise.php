@@ -45,14 +45,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// create a log channel
-//$log = new Logger('name');
-//$log->pushHandler(new StreamHandler('../../logs/your.log', Logger::WARNING));
-
-// add records to the log
-//$log->addWarning('Foo');
-//$log->addError('Bar');
-
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
@@ -63,24 +55,41 @@ session_start();
 
 // Must get tA_id for the lesson to be tested.
 require_once "../test_lesson_include.php";
-$class_instance = new AssignmentsClass();
-$target_assignment_name = 'gA_clockwise_counterclockwise';
-$secondary_assignment_name = 'gA_left_right_blocks';
-
-$_SESSION['tG_AssignmentName'] = "$secondary_assignment_name";
-$_SESSION['tA_StartRec'] = 1;
 $_SESSION['tA_S_ID']="zxcvb";
-$_SESSION['tA_Post_date'] = round(microtime(TRUE), 3, PHP_ROUND_HALF_EVEN);
-// Clear old lessons for this test student.
+$_SESSION['tA_StartRec'] = 1;
+$class_instance = new AssignmentsClass();
 $class_instance->delRowsByStudentId($_SESSION['tA_S_ID']);
+$target_assignment_name = 'gA_clockwise_counterclockwise';
+//$secondary_assignment_name = 'gA_left_right_blocks';
 
-// Insert the next lesson after this target lesson.
-$result = $class_instance->insertRecord($_SESSION);
-$_SESSION['tG_AssignmentName'] = "$target_assignment_name";
-// Change variables and insert this test lesson.
-$_SESSION['tA_Post_date'] = round(microtime(TRUE), 3, PHP_ROUND_HALF_EVEN) + 2;
-// Insert a new row to test.
-$result = $class_instance->insertRecord($_SESSION);
+$lessons_to_ta = array
+  (
+  array(
+    'ga'=>'gA_left_right_blocks',
+    'tA_PostDateIncrement'=>0),
+  array(
+    'ga'=>'gA_typing_lessons_cl',
+    'tA_PostDateIncrement'=>0),
+  array(
+    'ga'=>'gA_spelling',
+    'tA_PostDateIncrement'=>0),
+  array(
+    'ga'=>'gA_horizontal_vertical_diagonal',
+    'tA_PostDateIncrement'=>0),
+  array(
+    'ga'=>'gA_one_digit_addition_vertical_clues',
+    'tA_PostDateIncrement'=>0),
+  array(
+    'ga'=>'gA_clockwise_counterclockwise',
+    'tA_PostDateIncrement'=>2)
+);
+
+foreach ($lessons_to_ta as $v1) {
+      $_SESSION['tG_AssignmentName'] = $v1["ga"];
+      $_SESSION['tA_PostDateIncrement'] = $v1['tA_PostDateIncrement'];
+      $result = $class_instance->insertRecord($_SESSION);
+}
+
 $result = $class_instance -> getSpecificStudentAssignmentFromDbAsArray(
     $_SESSION['tA_S_ID'],
     $target_assignment_name,
