@@ -59,7 +59,7 @@ fwrite($log_file, $string);
 
 
 
-$_SESSION['tC_ServerTimeStarted'] = microtime(true);
+$_SESSION['tC_ServerTimeStarted'] = round(microtime(true), 3, PHP_ROUND_HALF_EVEN);
 $_SESSION['from']                 = __LINE__ . '  ' . __FILE__;
 $v      = var_export($_SESSION, true);
 $string = __LINE__ . '  $_SESSION = ' . $v . "\n\n";
@@ -76,12 +76,20 @@ fwrite($log_file, $string);
 if (empty($_data['tA_S_ID']) === true) {
     $string = "\n" . __LINE__ . ' $_data["tA_S_ID"] = ' . $_data['tA_S_ID'];
     fwrite($log_file, $string . "\n\n");
-    fwrite($log_file, __LINE__ . ' microtime(true) = ' . microtime(true) . "\n");
+    fwrite($log_file, __LINE__ . ' round(microtime(true), 3, PHP_ROUND_HALF_EVEN) = ' . round(microtime(true), 3, PHP_ROUND_HALF_EVEN) . "\n");
     $msg = ' cAssignment_get_next_lesson.php    Must have "tA_S_ID" in $_data.';
     $msg = $msg . "\n" . __LINE__ . ' Missing $_data["tA_S_ID"] can not proceed';
     trigger_error($msg, E_USER_ERROR);
 }
-
+if (empty($_data['tA_id']) === true) {
+    $string = "\n" . __LINE__ . ' $_data["tA_id"] = ' . $_data['tA_id'];
+    fwrite($log_file, $string . "\n\n");
+    fwrite($log_file, __LINE__ . ' round(microtime(true), 3, PHP_ROUND_HALF_EVEN) = ' . round(microtime(true), 3, PHP_ROUND_HALF_EVEN) . "\n");
+    $msg = ' cAssignment_get_next_lesson.php    Should have "tA_id" in $_data except on initial login.';
+    fwrite($log_file, $msg . "\n\n");
+    $msg = $msg . "\n" . __LINE__ . ' Missing $_data["tA_id"] can not proceed';
+    fwrite($log_file, $msg . "\n\n");
+}
 // Now find a lesson.
 $loops = 0;
 // See while ($loops < 6 ); near end.
@@ -90,14 +98,7 @@ do {
     $_data['tA_S_ID'] = filter_var($_data['tA_S_ID'], FILTER_UNSAFE_RAW);
     $string = "\n" . __LINE__ . ' $_data["tA_S_ID"] = ' . $_data['tA_S_ID'];
     fwrite($log_file, $string . "\n\n");
-    $last_lesson_id = $_data['tA_id'];
     $_data['last_gA'] = null;
-
-    if (isset($_data['lesson_id']) === true) {
-        $last_lesson_id = $_data['lesson_id'];
-    } else {
-        $last_lesson_id = '';
-    }
 
     // START NEW session with the existing relevant data.
     $v = var_export($_data, true);
@@ -111,27 +112,33 @@ do {
     fwrite($log_file, $string . "\n");
 
     // Get next assignment to do from the login data.
-    //$next_lesson = new tutor\src\classes\AssignmentsClass();
     $next_lesson = new AssignmentsClass();
     // Return a single lesson as a tAssignments row.
-    $lesson = $next_lesson->getNextAssignmentToDo($_data['tA_S_ID'], $last_lesson_id);
+    $string = "\n" . __LINE__ . ' $_data["tA_S_ID"] = ' . $_data['tA_S_ID'] . "\n\n";
+    fwrite($log_file, $string . "\n");
+    $string = "\n" . __LINE__ . ' $_data["tA_id"] = ' . $_data['tA_id'] . "\n\n";
+    fwrite($log_file, $string . "\n");
+    $lesson = $next_lesson->getNextAssignmentToDo($_data['tA_S_ID'], $_data['tA_id']);
     $v = var_export($lesson, true);
     $string = "\n" . __LINE__ . ' $lesson = ' . $v . "\n\n";
     fwrite($log_file, $string . "\n");
-
+    if (is_null($lesson) == true) {
+      $msg = $msg . "\n" . __LINE__ . ' No lesson found.';
+      trigger_error($msg, E_USER_ERROR);
+    }
     // Assign the lessons variables to the $_SESSION variable.
     // $next_lesson->setSessionVariablesFromLesson($lesson);
     // From the assignment name retrieve the generic assignment and assign
     // its variables  to the $_SESSION variable.
     $my_next_ga = new GenericAClass();
     $my_next_ga->setSessionVariablesFromTblGenerAssignmentName($lesson['tG_AssignmentName']);
-    fwrite($log_file, __LINE__ . ' microtime(true) = ' . microtime(true) . "\n\n");
+    fwrite($log_file, __LINE__ . ' round(microtime(true), 3, PHP_ROUND_HALF_EVEN) = ' . round(microtime(true), 3, PHP_ROUND_HALF_EVEN) . "\n\n");
     $v = var_export($_SESSION, true);
     $string = "\n" . __LINE__ . ' $_SESSION = ' . $v . "\n\n";
     fwrite($log_file, $string . "\n");
 
     // We should now have the data to prepare the next lesson.
-    fwrite($log_file, __LINE__ . ' microtime(true) = ' . microtime(false) . "\n\n");
+    fwrite($log_file, __LINE__ . ' round(microtime(true), 3, PHP_ROUND_HALF_EVEN) = ' . round(microtime(true), 3, PHP_ROUND_HALF_EVEN) . "\n\n");
     $_SESSION['tG_path_to_lesson'] = trim($_SESSION['tG_path_to_lesson']);
     $_SESSION['tG_FormName'] = trim($_SESSION['tG_FormName']);
     $file = $_SESSION['tG_path_to_lesson'] . $_SESSION['tG_FormName'];
@@ -146,7 +153,7 @@ do {
     fwrite($log_file, $string . "\n");
     $go_next = '';
     if (stripos($directory, "/var/www/")===0) {
-      $go_next = "/var/www/html/jimfuqua/tutorW/lessons";
+      $go_next = "/var/www/html/jimfuqua/tutorW/lessons/" . $file;
     } else {
       $go_next = 'http://jim-fuqua.com/tutorW/' . $file;
     }

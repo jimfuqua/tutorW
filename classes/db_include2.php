@@ -1,9 +1,14 @@
 <?php
+//$file = '../../logs/db_include2.log';
+//$log_file = fopen($file, 'w');
 $file = __FILE__;
 $file2 = substr($file,1,7);
-//echo $file."<br />";
-//echo $file2;
-///var/www/html/jimfuqua/tutorW/classes/db_include2.php
+//$string  = __LINE__ . '  $file = ' . $file . "\n\n";
+//fwrite($log_file, $string);
+//$string  = __LINE__ . '  $file2 = ' . $file2 . "\n\n";
+//fwrite($log_file, $string);
+
+//var/www/html/jimfuqua/tutorW/classes/db_include2.php
 
 if ($file2 === "hsphere") {
   $host = "mysql:host=mysql507.ixwebhosting.com";
@@ -11,15 +16,15 @@ if ($file2 === "hsphere") {
   $db_password = 'Carbon3';
   $db_dsn = "mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU;";
 } elseif ($file === "/var/www/html/jimfuqua/tutorW/classes/db_include2.php") {
-  //echo __LINE__ . "<br />";
   $database = 'jlfEDU';
-  //$host = "localhost";
+  //$host = "localhost"; // This did not work.
   $host = "127.0.0.1";
   $db_user = 'root';
-  $db_password = 'Pasword333';
+  $db_password = 'pasword';
   $db_dsn = "mysql:host=127.0.0.1;dbname=jlfEDU";
 }
-//echo $host;
+//$string  = __LINE__ . '  $db_dsn = ' . $db_dsn . "\n\n";
+//fwrite($log_file, $string);
 /*
 User: JimFuqu_jim@127.0.0.1
 JimFuqu_jlfEDU

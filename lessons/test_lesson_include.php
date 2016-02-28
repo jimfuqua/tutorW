@@ -7,23 +7,23 @@ use tutorW\classes;
 $var_array = [];
 // in left_right_blocks.  Must go up to lessons then up to tutorW
 // before going down to logs.
-$logFile=fopen("../../logs/test_lesson_include.php.log",
-"w");
+//$log_file=fopen("../../logs/test_lesson_include.php.log",
+//"w");
 
 // Create array of necessary variables.
 date_default_timezone_set('UTC');
 //date.timezone("America/Chicago");
 $current_time = time();
 
-fwrite($logFile, __LINE__ .  ' $current_time = ' . $current_time . "\n");
-$microtime = microtime();
-fwrite($logFile, __LINE__ .  ' $microtime = ' . $microtime . "\n");
+//fwrite($log_file, __LINE__ .  ' $current_time = ' . $current_time . "\n");
+//$microtime = microtime();
+//fwrite($log_file, __LINE__ .  ' $microtime = ' . $microtime . "\n");
 $date_mt = date("Y-m-d H:i:s:u", time());
-fwrite($logFile, __LINE__ . ' $date_mt = ' . $date_mt . "\n");
+//fwrite($log_file, __LINE__ . ' $date_mt = ' . $date_mt . "\n");
  $t = microtime($get_as_float = true);
- fwrite($logFile, __LINE__ . ' microtime ($get_as_float = true) = ' . $t . "\n");
- $tt = round($t, 3, PHP_ROUND_HALF_EVEN);
- fwrite($logFile, __LINE__ . ' $tt = ' . $tt . "\n");
+// fwrite($log_file, __LINE__ . ' microtime ($get_as_float = true) = ' . $t . "\n");
+// $tt = round($t, 3, PHP_ROUND_HALF_EVEN);
+// fwrite($log_file, __LINE__ . ' $tt = ' . $tt . "\n");
 
 $var_array['tA_id'] = '';
 $var_array['tA_S_ID']                 = 'Abcdxyz';
@@ -51,9 +51,9 @@ $var_array['tA_LocalDateTime']        = date("Y-m-d H:i:s", time());
 if (count($var_array) !== 22) {
     trigger_error('Wrong number of variables.', E_USER_ERROR);
 }
- fwrite($logFile, __LINE__ .  ' $var_array["tA_Post_date"]    = ' . $var_array['tA_Post_date']   . "\n");
- $v = $v = var_export($var_array, true);
- fwrite($logFile, __LINE__ .  ' $var_array    = ' . $v   . "\n");
+// fwrite($log_file, __LINE__ .  ' $var_array["tA_Post_date"]    = ' . $var_array['tA_Post_date']   . "\n");
+// $v = $v = var_export($var_array, true);
+// fwrite($log_file, __LINE__ .  ' $var_array    = ' . $v   . "\n");
 
 // Create a new user and prime tA with six lessons.
 // Prime global session variable in next statements.

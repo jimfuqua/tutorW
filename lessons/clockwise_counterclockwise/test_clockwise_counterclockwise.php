@@ -87,6 +87,9 @@ $lessons_to_ta = array
 foreach ($lessons_to_ta as $v1) {
       $_SESSION['tG_AssignmentName'] = $v1["ga"];
       $_SESSION['tA_PostDateIncrement'] = $v1['tA_PostDateIncrement'];
+      $_SESSION['tA_Post_date'] =
+          round(microtime(true), 3, PHP_ROUND_HALF_EVEN) +
+          $_SESSION['tA_PostDateIncrement'];
       $result = $class_instance->insertRecord($_SESSION);
 }
 
@@ -96,6 +99,8 @@ $result = $class_instance -> getSpecificStudentAssignmentFromDbAsArray(
     $_SESSION['tA_StartRec']
 );
 
+//echo $_SESSION['tG_AssignmentName'];
 $_SESSION['tA_id'] = $result['tA_id'];
+//echo $_SESSION['tA_id'];
 // Load the lesson to test.
 require 'clockwise_counterclockwise.php';

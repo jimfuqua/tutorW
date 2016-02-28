@@ -5,9 +5,14 @@
  */
 
 namespace jimfuqua\tutorW;
+require '../vendor/autoload.php';
+// Require '../../vendor/autoload.php';.
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 // echo "<br  />" . __LINE__ ;
 /*
  * AssignmentsClass.php File Doc Comment
@@ -41,7 +46,7 @@ class AssignmentsClass {
    */
   public function __construct() {
 
-    //echo "I am an AssignmentClass object.<br/>";
+    // Echo "I am an AssignmentClass object.<br/>";.
   }
 
   /**
@@ -100,7 +105,7 @@ class AssignmentsClass {
     $sql_values = trim($sql_values);
     $sql_values = rtrim($sql_values, ',');
     $sql       = $sql . $sql_values;
-    $sql       = $sql . ');';
+    $sql       = $sql . ')';
     return $sql;
 
   }//end arrayToSqlString()
@@ -114,13 +119,13 @@ class AssignmentsClass {
    *   The source of the lessons.
    * @param array $where_array
    *   Name of the generic assignment.
-   * @param string $pdo_connection
+   * @param string $dbh
    *   The connextion to the database.
    *
    * @return sql
    *   Returns a SQL string.
    */
-  private function arrayToUpdateSql(array $value_array, array $where_array, $pdo_connection) {
+  private function arrayToUpdateSql(array $value_array, array $where_array, $dbh) {
     // Echo "<br  />" . __LINE__;.
     $sql = '';
     $sql = 'UPDATE tAssignments SET ';
@@ -161,19 +166,21 @@ class AssignmentsClass {
     require 'db_include2.php';
     try {
       // Our new PDO Object.
-      $con = new \PDO($db_dsn,
-                        $db_user,
-                        $db_password,
-                        array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
-                      );
+      $con = new \PDO(
+        $db_dsn,
+        $db_user,
+        $db_password,
+        array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
+      );
     }
-    catch (PDOException $ex) {
-      die(json_encode(array('outcome' => FALSE, 'message' => 'Unable to connect')));
+    catch (PDOException $e) {
+      echo 'Connection failed: ' . $e->getMessage();
+      return NULL;
     }
     return $con;
-  } // End connectToDb().
-
-
+  } /**
+     * End connectToDb().
+     */
   public function removeUnneededColumns($in_array) {
     // What happens to loose a column?
     $ok_array = array(
@@ -205,20 +212,14 @@ class AssignmentsClass {
     $out_array = array();
 
     foreach ($ok_array as $key => $value) {
-      // fwrite($log_file, '$key = ' . $key . "\n");
-      // fwrite($log_file, '$value = ' . $value . "\n");.
       if (array_key_exists($value, $in_array)) {
         $out_array[$value] = $in_array[$value];
-        // fwrite($log_file, 'Row added.' . "\n\n");.
       }
       else {
         // fwrite($log_file, 'array_key_exists($value,
         // $in_array ) = false' . "\n\n");.
       }
     }
-    // $v = var_export($out_array, true);
-    // $string  = __LINE__.' $out_array = '.$v."\n\n";
-    // fwrite($log_file, $string);.
     return $out_array;
   }
 
@@ -238,9 +239,9 @@ class AssignmentsClass {
    */
   public function insertRecord(array $pram_array) {
     $pram_array_processed = $this->removeUnneededColumns($pram_array);
-    $pdo_connection = $this->connectToDb();
-    $sql            = $this->arrayToSqlString($pram_array_processed);
-    $result = $pdo_connection->exec($sql);
+    $dbh = $this->connectToDb();
+    $sql = $this->arrayToSqlString($pram_array_processed);
+    $result = $dbh->exec($sql);
     // Warning This function may return Boolean FALSE,
     // but may also return a non-Boolean value which evaluates to FALSE.
     // Returns number of rows affected.
@@ -260,9 +261,9 @@ class AssignmentsClass {
    */
   public function returnColumnsNamesInArray() {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = 'SELECT * FROM  `tAssignments` LIMIT 1';
-    $result         = $pdo_connection->query($sql);
+    $result         = $dbh->query($sql);
     $row            = $result->fetch(\PDO::FETCH_ASSOC);
     $colnames       = array_keys($row);
     return $colnames;
@@ -285,13 +286,13 @@ class AssignmentsClass {
    */
   public function getLastDbEntryAsArray($student_id) {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = 'SELECT * FROM tAssignments WHERE tA_S_ID = :student_id
                             ORDER BY tA_id DESC LIMIT 1';
-    $stmt           = $pdo_connection->prepare($sql);
-    $stmt->bindParam('student_id', $student_id, \PDO::PARAM_INT);
-    $stmt->execute();
-    $row     = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $sth           = $dbh->prepare($sql);
+    $sth->bindParam('student_id', $student_id, \PDO::PARAM_INT);
+    $sth->execute();
+    $row     = $sth->fetch(\PDO::FETCH_ASSOC);
     return $row;
 
   }//end getLastDbEntryAsArray()
@@ -310,15 +311,15 @@ class AssignmentsClass {
    */
   public function getNewestDbEntry($student_id) {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = 'SELECT * FROM tAssignments
                 WHERE tA_S_ID = :student_id
                 ORDER BY tA_LastModifiedDateTime
                 DESC LIMIT 1';
-    $stmt           = $pdo_connection->prepare($sql);
-    $stmt->bindParam('student_id', $student_id, \PDO::PARAM_INT);
-    $stmt->execute();
-    $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $sth           = $dbh->prepare($sql);
+    $sth->bindParam('student_id', $student_id, \PDO::PARAM_INT);
+    $sth->execute();
+    $row = $sth->fetch(\PDO::FETCH_ASSOC);
     return $row;
 
   }//end getNewestDbEntry()
@@ -337,9 +338,9 @@ class AssignmentsClass {
    */
   public function getOneRowFromDbAsArrayId($student_id) {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = "SELECT * FROM tAssignments WHERE tA_S_ID = '" . $student_id . "' LIMIT 1";
-    $pdo_object     = $pdo_connection->query($sql);
+    $pdo_object     = $dbh->query($sql);
     $row            = $pdo_object->fetch(\PDO::FETCH_ASSOC);
     return $row;
 
@@ -369,7 +370,7 @@ class AssignmentsClass {
       ) {
 
     // Gets a specific row and return mysql_results.
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql = <<<EOD
 SELECT *
 FROM tAssignments
@@ -378,7 +379,7 @@ WHERE ((tA_S_ID = "$student_id")
 && (tA_StartRec = "$ta_start_rec"))
 EOD;
     // Echo $sql;.
-    $pdo_object   = $pdo_connection->query($sql);
+    $pdo_object   = $dbh->query($sql);
     // Echo $pdo_object;.
     $row = $pdo_object->fetch(\PDO::FETCH_ASSOC);
     return $row;
@@ -398,47 +399,16 @@ EOD;
    *   Base array is numeric. Rows are relational.
    */
   public function getAssignmentsByStudentId($student_id) {
-    $pdo_connection = $this->connectToDb();
-    $stmt = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_S_ID = :tA_S_ID');
-    if (!$stmt) {
-      // $string = __LINE__." \nPDO::errorInfo():\n";
-      // fwrite($log_file, $string);
-      // fwrite($log_file, "$dbh->errorInfo()");
-      // fwrite($log_file, "\n ". '$stmt = '.$stmt);.
-    }
-    $stmt->bindParam(':tA_S_ID', $student_id, \PDO::PARAM_STR, 80);
-    $stmt->execute();
-    $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    $dbh = $this->connectToDb();
+    $sth = $dbh->prepare('SELECT * FROM tAssignments WHERE tA_S_ID = :tA_S_ID');
+    $sth->bindParam(':tA_S_ID', $student_id, \PDO::PARAM_STR, 80);
+    $sth->execute();
+    $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
     return $rows;
     // Did ok.
   }//end getAssignmentsByStudentId()
 
   /**
-   * Get row by the id.
-   *
-   * Get row by id.
-   *
-   * @param string $id
-   *   Is the row index.
-   *
-   * @return row
-   *   Returns one lesson.
-   */
-  public function getRowByIndexId($id) {
-
-    $pdo_connection = $this->connectToDb();
-    $stmt           = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_id = :id');
-    $stmt->bindParam('id', $id, \PDO::PARAM_INT);
-    $stmt->execute();
-    $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-    return $row;
-
-  }//end getRowByIndexId()
-
-
-  /**
-   * Duplicate of above.
-   *
    * Get a row by its id.
    *
    * @param string $ta_id
@@ -449,11 +419,11 @@ EOD;
    */
   public function getAssignmentByAssignmentId($ta_id) {
 
-    $pdo_connection = $this->connectToDb();
-    $stmt           = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_id = :id');
-    $stmt->bindParam(':id', $ta_id, \PDO::PARAM_INT);
-    $stmt->execute();
-    $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+    $dbh = $this->connectToDb();
+    $sth           = $dbh->prepare('SELECT * FROM tAssignments WHERE tA_id = :id');
+    $sth->bindParam(':id', $ta_id, \PDO::PARAM_INT);
+    $sth->execute();
+    $row = $sth->fetch(\PDO::FETCH_ASSOC);
     return $row;
 
   }//end getAssignmentByAssignmentId()
@@ -473,17 +443,17 @@ EOD;
   public function deleteLastRow($student_id) {
 
     // Should get newest row.  Test to make sure it does not get oldest row.
-    $pdo_connection = $this->connectToDb();
-    $stmt           = $pdo_connection->prepare(
+    $dbh = $this->connectToDb();
+    $sth           = $dbh->prepare(
           'DELETE FROM tAssignments
-                                                    WHERE (tA_S_ID = :student_id)
-                                                    ORDER BY tA_id DESC
-                                                    LIMIT 1'
+           WHERE (tA_S_ID = :student_id)
+           ORDER BY tA_id DESC
+           LIMIT 1'
       );
-    $stmt->bindParam(':student_id', $student_id, \PDO::PARAM_STR, 80);
-    $result = $stmt->execute();
+    $sth->bindParam(':student_id', $student_id, \PDO::PARAM_STR, 80);
+    $result = $sth->execute();
     // Returns TRUE on success or FALSE on failure.
-    $count = $stmt->rowCount();
+    $count = $sth->rowCount();
     return $count;
 
   }//end deleteLastRow()
@@ -504,12 +474,14 @@ EOD;
    */
   public function delRowsByStudentIdAndAssignmentName($student_id, $tg_assignment_name) {
 
-    $pdo_connection = $this->connectToDb();
-    $stmt = $pdo_connection->prepare('DELETE FROM tAssignments WHERE (tA_S_ID = :student_id && tG_AssignmentName = :tG_AssignmentName)');
-    $stmt->bindParam(':student_id', $student_id, \PDO::PARAM_STR, 80);
-    $stmt->bindParam(':tG_AssignmentName', $tg_assignment_name, \PDO::PARAM_STR, 80);
-    $result = $stmt->execute();
-    $count  = $stmt->rowCount();
+    $dbh = $this->connectToDb();
+    $sth = $dbh->prepare(
+      'DELETE FROM tAssignments
+       WHERE (tA_S_ID = :student_id && tG_AssignmentName = :tG_AssignmentName)');
+    $sth->bindParam(':student_id', $student_id, \PDO::PARAM_STR, 80);
+    $sth->bindParam(':tG_AssignmentName', $tg_assignment_name, \PDO::PARAM_STR, 80);
+    $result = $sth->execute();
+    $count  = $sth->rowCount();
     return $count;
 
   }//end delRowsByStudentId()
@@ -527,12 +499,20 @@ EOD;
    *   Returns the number of rows changed.
    */
   public function delRowsByStudentId($student_id) {
-
-    $pdo_connection = $this->connectToDb();
-    $stmt = $pdo_connection->prepare('DELETE FROM tAssignments WHERE (tA_S_ID = :student_id)');
-    $stmt->bindParam(':student_id', $student_id, \PDO::PARAM_STR, 80);
-    $result = $stmt->execute();
-    $count  = $stmt->rowCount();
+    $dbh = $this->connectToDb();
+    $sth = $dbh->prepare(
+     "DELETE
+      FROM tAssignments
+      WHERE (tA_S_ID = :student_id)"
+    );
+    // Beware single quotes below may make difference.
+    $sth->bindParam(":student_id", $student_id, \PDO::PARAM_STR, 80);
+    if (!$sth) {
+      $msg = $msg . "\n" . __LINE__ . 'AC delRowsByStudentId error:' . $dbh->errorInfo();
+      trigger_error($msg, E_USER_ERROR);
+    }
+    $result = $sth->execute();
+    $count  = $sth->rowCount();
     return $count;
   }//end delRowsByStudentId()
 
@@ -550,8 +530,10 @@ EOD;
    */
   public function deleteRowByRowId($id) {
 
-    $pdo_connection = $this->connectToDb();
-    $del            = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_id = :id');
+    $dbh = $this->connectToDb();
+    $del = $dbh->prepare(
+      'SELECT * FROM tAssignments WHERE tA_id = :id'
+    );
     $del->bindParam(':id', $id, \PDO::PARAM_INT);
     $del->execute();
     $count = $del->rowCount();
@@ -559,25 +541,28 @@ EOD;
 
   }//end deleteRowsByRowId()
 
-    /**
-     * Delete all rows for a student.
-     *
-     * @param string $tA_S_ID
-     *   The student id.
-     *
-     * @return result
-     *   Deletes and returns the count of rows affected.
-     */
-    public function deleteRowByStudentId($id) {
-
-      $pdo_connection = $this->connectToDb();
-      $del            = $pdo_connection->prepare('SELECT * FROM tAssignments WHERE tA_S_ID = :id');
-      $del->bindParam(':id', $tA_S_ID, \PDO::PARAM_STR);
-      $del->execute();
-      $count = $del->rowCount();
-      return $count;
-
-    }//end deleteRowByStudentId()
+  /**
+   * Delete all rows for a student.
+   *
+   * @param string $student_id
+   *   The student id.
+   *
+   * @return count
+   *   Deletes and returns the count of rows affected.
+   */
+  public function deleteRowByStudentId($student_id) {
+    $dbh = $this->connectToDb();
+    $sql = <<<EOD
+    DELETE *
+    FROM tAssignments
+    WHERE tA_S_ID = :student_id
+EOD;
+    $del = $dbh->prepare();
+    $del->bindParam(':student_id', $student_id, \PDO::PARAM_STR);
+    $del->execute();
+    $count = $del->rowCount();
+    return $count;
+  }//end deleteRowByStudentId()
 
   /**
    * Update fields.
@@ -593,15 +578,15 @@ EOD;
    *   Updates an array with new data.
    */
   public function updateFields(array $value_array, array $where_array) {
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = $this->arrayToUpdateSql(
           $value_array,
           $where_array,
-          $pdo_connection
+          $dbh
       );
     // $string         = __LINE__.' AC $sql = '."$sql\n\n";
     // fwrite($log_file, $string);.
-    $affected_rows = $pdo_connection->exec($sql);
+    $affected_rows = $dbh->exec($sql);
     return $affected_rows;
 
   }//end updateFields()
@@ -633,14 +618,14 @@ EOD;
     $row = $this->getRowByIndexId($lesson_id);
     // Next commands increment RepsTowardM.
     if (is_numeric($ta_reps_toward_m) === TRUE) {
-      $pdo_connection = $this->connectToDb();
+      $dbh = $this->connectToDb();
       $sql = 'UPDATE tAssignments SET tA_RepsTowardM = "' . $ta_reps_toward_m . ';
       "WHERE tA_id = "' . $lesson_id . '"';
-      $affected_rows   = $pdo_connection->exec($sql);
+      $affected_rows   = $dbh->exec($sql);
 
       // Get assignment back and check for tA_RepsTowardM
       // equal of greater than tG_Reps_To_Master.
-      $result         = $this->getAssignmentByAssignmentId($lesson_id);
+      $result = $this->getAssignmentByAssignmentId($lesson_id);
       $ta_reps_toward_m  = $result['tA_RepsTowardM'];
       $tg_reps_to_master = $result['tG_Reps_to_master'];
       $return_array    = [
@@ -676,7 +661,7 @@ EOD;
    */
   public function incrementErrorsMade($lesson_id) {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $row            = $this->getRowByIndexId($lesson_id);
     // Returns array.
     $errors_made = ($row['tA_ErrorsMade'] + 1);
@@ -686,8 +671,8 @@ EOD;
         SET tA_ErrorsMade=tA_ErrorsMade+1
         WHERE id= . $lesson_id;
 EOD;
-    $result = $pdo_connection->exec($sql);
-    $pdo_connection->close();
+    $result = $dbh->exec($sql);
+    $dbh->close();
     return $rows_affected;
 
   }//end incrementErrorsMade()
@@ -708,14 +693,14 @@ EOD;
    */
   public function upDateTaStartRec($ta_start_rec, $student_id, $ta_original_time_stamp) {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = "UPDATE  tAssignments
                         SET     tA_StartRec = '" . $ta_start_rec . "'
                         WHERE   tA_S_ID   = '" . $student_id . "' AND
                         tA_OriginalTimestamp = '" . $ta_original_time_stamp . "'";
     // $string = __LINE__.' $sql = '.$sql."\n\n";
     // fwrite($log_file, $string);.
-    $affected_rows   = $pdo_connection->exec($sql);
+    $affected_rows   = $dbh->exec($sql);
     // $string = __LINE__.' $affected_rows = '.$affected_rows."\n\n";
     // fwrite($log_file, $string);.
     return $affected_rows;
@@ -760,37 +745,45 @@ EOD;
    *   Returns an array of assignments.
    */
   public function getCurrentStudentAssignmentsInAnArray($student_id) {
-
-    $result         = NULL;
-    $pdo_connection = $this->connectToDb();
+    $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/AC_getCurrentStudentAssignmentsInAnArray.log", "w");
+    $string = __LINE__ . ' $student_id = ' . $student_id . "\n\n";
+    fwrite($log_file, $string);
+    $dbh = $this->connectToDb();
+    if (is_null($dbh) === TRUE) {
+      $msg = $msg . "\n" . __LINE__ . 'AC No valid connection.';
+      trigger_error($msg, E_USER_ERROR);
+    }
     // Variable $student_id must never contain spaces.
     trim($student_id);
-    // $db_user = 'JimFuqu_jim';
-    // $db_password = 'Carbon3';
-    // $db_dsn = "mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU;";.
-    try {
-      // Our new PDO Object.
-      // $con = new \PDO($db_dsn, $db_user, $db_password);.
-      $con = $this->connectToDb();
-      // Catch and show the error.
-    }
-    catch (PDOException $pe) {
-      die('Error occurred:' . $pe->getMessage());
+    // Don't quote the variable in the SQL query!
+    $sql = <<<EOD
+      SELECT *
+      FROM tAssignments
+      WHERE tA_S_ID = :student_id
+      AND tA_Post_date < :utc_time
+      ORDER BY tA_PercentTime
+      DESC
+EOD;
+
+    $sth = $dbh->prepare($sql);
+    $utc_time = time();
+    $string = __LINE__ . ' $utc_time = ' . $utc_time . "\n\n";
+    fwrite($log_file, $string);
+    $sth->execute(array(':student_id' => $student_id, ':utc_time' => $utc_time));
+
+    if ($sth === FALSE) {
+      $string = __LINE__ . ' AC $return from execute = ' . "false\n\n";
+      fwrite($log_file, $string);
+      print_r("\n" . 'AC $return from execute() = ' . "false\n\n" . " $time\n");
     }
 
-    $stmt = $con->prepare('SELECT * FROM tAssignments
-                         WHERE tA_S_ID = :student_id && tA_Post_date < UNIX_TIMESTAMP()
-                         ORDER BY tA_PercentTime
-                         DESC');
-    $stmt->bindParam(':student_id', $student_id, \PDO::PARAM_STR, 12);
-    $stmt->execute();
-    $rows = $stmt->fetchAll();
-    /*$stmt = $pdo_connection->prepare('SELECT * FROM tAssignments
-    WHERE tA_S_ID = :student_id && tA_Post_date < UNIX_TIMESTAMP()
-    ORDER BY tA_PercentTime
-    DESC');
-    $stmt->bindParam(':student_id', $student_id, \PDO::PARAM_STR, 12);
-    $stmt->execute();*/
+    $rows = $sth->fetchAll();
+
+    $v = var_export($rows, TRUE);
+    $string = __LINE__ . ' AC $rows = ' . $v . "\n\n";
+    fwrite($log_file, $string);
+    $string = __LINE__ . ' microtime(true) = ' . microtime(TRUE) . "\n\n";
+    fwrite($log_file, $string);
 
     // Eliminate duplicate numberic keys.
     foreach ($rows as $key => $value) {
@@ -801,9 +794,9 @@ EOD;
       }
     }
 
-    // $v = var_export($rows, true);
-    // $string = __LINE__.' AC $rows = '.$v."\n\n";
-    // fwrite($log_file, $string);.
+    $v = var_export($rows, TRUE);
+    $string = __LINE__ . ' AC $rows = ' . $v . "\n\n";
+    fwrite($log_file, $string);
     return $rows;
 
   }//end getCurrentStudentAssignmentsInAnArray()
@@ -833,11 +826,7 @@ EOD;
           $tg_assignment_name,
           $ta_start_rec
       );
-
     $return_array = array();
-    if ($current_row === NULL) {
-      $return_array['NULL_input'] = TRUE;
-    }
 
     if (array_key_exists('NULL_input', $return_array) === FALSE) {
       if ($ta_start_rec > $current_row['tA_StopRec']) {
@@ -1220,6 +1209,18 @@ EOD;
    *    Row count.
    */
   public function getNextAssignmentToDo($student_id, $last_lesson_id) {
+    $log = new Logger('name');
+    $log->pushHandler(new StreamHandler('/var/www/html/jimfuqua/tutorW/logs/myLog.log', Logger::WARNING));
+
+    // Add records to the log.
+    $log->addWarning('Foo');
+    $log->addError('Bar');
+    $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/ACgetNextAssignmentToDo.log", "w");
+    $string = __LINE__ . ' AC $student_id = ' . $student_id . "\n\n";
+    fwrite($log_file, $string);
+    $string = __LINE__ . ' AC $last_lesson_id = ' . $last_lesson_id . "\n\n";
+    fwrite($log_file, $string);
+    $looking_for_lesson = TRUE;
     do {
       // End is while ($looking_for_lesson === TRUE).
       // Must resolve all splits before can process results.
@@ -1227,9 +1228,9 @@ EOD;
       // Get an array of arrays. Numeric outer. Relational inner.
       $result_array = $this->getCurrentStudentAssignmentsInAnArray($student_id);
       // Variable $result_array is an array of arrays.
-      // $v = var_export($result_array, true);
-      // $string = __LINE__.' AC $result_array = '.$v."\n\n";
-      // fwrite($log_file, $string);.
+      $v = var_export($result_array, TRUE);
+      $string = __LINE__ . ' AC $result_array = ' . $v . "\n\n";
+      fwrite($log_file, $string);
       if ($result_array === NULL) {
         // This student has no lessons.
         return NULL;
@@ -1253,9 +1254,9 @@ EOD;
       }//end if
     } while ($looking_for_lesson === TRUE);
     reset($result_array);
-    // $v = var_export($result_array, true);
-    // $string = __LINE__.' AC $result_array = '.$v."\n\n";
-    // fwrite($log_file, $string);.
+    $v = var_export($result_array, TRUE);
+    $string = __LINE__ . ' AC $result_array = ' . $v . "\n\n";
+    fwrite($log_file, $string);
     if (count($result_array) > 0) {
       // Takes an array of lessons and returns a lesson id.
       $lesson = $this->selectOneLesson($result_array, $last_lesson_id);
