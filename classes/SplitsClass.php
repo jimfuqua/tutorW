@@ -152,6 +152,17 @@ class SplitsClass
      */
     public function insertRow(array $pramArray)
     {
+      /***********
+      tSp_id
+      tSp_GroupID
+      tSp_GroupDescription
+      tSp_LessonName
+      tSp_tA_Parameter
+      tSp_gA
+      tSp_gA_Parameter
+      tSp_PercentTime
+      tSp_TimeRelativeOrAbsolute
+      //*************/
         if (is_array($pramArray) === FALSE) {
                 return FALSE;
         } else {

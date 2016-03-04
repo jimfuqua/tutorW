@@ -1,10 +1,6 @@
-Problem is that getCurrentStudentAssignmentsInAnArray
+Problem is that insertTaSplitIntoTa fails.
 is not returning lessons_array
-problems
-  Lessons do not contain a tA_Post_date
-  Probably should use  UTC_TIMESTAMP( )  instead of UNIX_TIMESTAMP()
-   I have changed to UTC_TIMESTAMP() but not test_lesson_include
-   Name should be in quotes.  Put them in but have not tested
+
 
   test_clockwise is not inserting the tA_Post_date
 ***********

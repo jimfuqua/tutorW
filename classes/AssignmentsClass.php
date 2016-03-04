@@ -5,7 +5,14 @@
  */
 
 namespace jimfuqua\tutorW;
-require '../vendor/autoload.php';
+$directory = __DIR__;
+//print_r ($directory);
+if (file_exists('../vendor/autoload.php' )) {
+  require '../vendor/autoload.php';
+} else {
+  require '../../vendor/autoload.php';
+}
+
 // Require '../../vendor/autoload.php';.
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -238,9 +245,14 @@ class AssignmentsClass {
    *   Returns boolean.
    */
   public function insertRecord(array $pram_array) {
+    $path = "/var/www/html/jimfuqua/tutorW/logs/";
+    $file="AC insertRecord.log";
+    $log_file = fopen($path.$file, "w");
     $pram_array_processed = $this->removeUnneededColumns($pram_array);
     $dbh = $this->connectToDb();
     $sql = $this->arrayToSqlString($pram_array_processed);
+    $string = __LINE__.' $sql =  '."$sql\n\n";
+    fwrite($log_file, $string);
     $result = $dbh->exec($sql);
     // Warning This function may return Boolean FALSE,
     // but may also return a non-Boolean value which evaluates to FALSE.
@@ -774,7 +786,7 @@ EOD;
     if ($sth === FALSE) {
       $string = __LINE__ . ' AC $return from execute = ' . "false\n\n";
       fwrite($log_file, $string);
-      print_r("\n" . 'AC $return from execute() = ' . "false\n\n" . " $time\n");
+      //print_r("\n" . 'AC $return from execute() = ' . "false\n\n" . " $time\n");
     }
 
     $rows = $sth->fetchAll();
@@ -1099,7 +1111,7 @@ EOD;
    * @param string $one_ta_assignment_split
    *   The split to process.
    */
-  public function insertTaSplitIntoTa($one_ta_assignment_split) {
+  public function -++++insertTaSplitIntoTa($one_ta_assignment_split) {
     // Must get an array of the splits.
     // Make assignments of them  and insert the
     // assignments into tA.
@@ -1210,7 +1222,7 @@ EOD;
    */
   public function getNextAssignmentToDo($student_id, $last_lesson_id) {
     $log = new Logger('name');
-    $log->pushHandler(new StreamHandler('/var/www/html/jimfuqua/tutorW/logs/myLog.log', Logger::WARNING));
+    $log->pushHandler(new StreamHandler('/var/www/html/jimfuqua/tutorW/logs/AC_Log.log', Logger::WARNING));
 
     // Add records to the log.
     $log->addWarning('Foo');
