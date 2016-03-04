@@ -1,5 +1,4 @@
-Problem is that insertTaSplitIntoTa fails.
-is not returning lessons_array
+
 
 
   test_clockwise is not inserting the tA_Post_date
@@ -7,3 +6,8 @@ is not returning lessons_array
 use phpcs on all lessons after counterclockwise
 get pdepends data
 use eslint on all lesson js
+
+Problem is that insertTaSplitIntoTa fails.
+is not returning lessons_array
+Splits should be revised to take arrays of lessons using
+serialize — Generates a storable representation of a value

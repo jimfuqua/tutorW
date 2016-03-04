@@ -6,10 +6,11 @@
 
 namespace jimfuqua\tutorW;
 $directory = __DIR__;
-//print_r ($directory);
-if (file_exists('../vendor/autoload.php' )) {
+// print_r ($directory);.
+if (file_exists('../vendor/autoload.php')) {
   require '../vendor/autoload.php';
-} else {
+}
+else {
   require '../../vendor/autoload.php';
 }
 
@@ -246,12 +247,12 @@ class AssignmentsClass {
    */
   public function insertRecord(array $pram_array) {
     $path = "/var/www/html/jimfuqua/tutorW/logs/";
-    $file="AC insertRecord.log";
-    $log_file = fopen($path.$file, "w");
+    $file = "AC insertRecord.log";
+    $log_file = fopen($path . $file, "w");
     $pram_array_processed = $this->removeUnneededColumns($pram_array);
     $dbh = $this->connectToDb();
     $sql = $this->arrayToSqlString($pram_array_processed);
-    $string = __LINE__.' $sql =  '."$sql\n\n";
+    $string = __LINE__ . ' $sql =  ' . "$sql\n\n";
     fwrite($log_file, $string);
     $result = $dbh->exec($sql);
     // Warning This function may return Boolean FALSE,
@@ -786,7 +787,8 @@ EOD;
     if ($sth === FALSE) {
       $string = __LINE__ . ' AC $return from execute = ' . "false\n\n";
       fwrite($log_file, $string);
-      //print_r("\n" . 'AC $return from execute() = ' . "false\n\n" . " $time\n");
+      // print_r("\n" . 'AC $return from execute() = ' .
+      // "false\n\n" . " $time\n");.
     }
 
     $rows = $sth->fetchAll();
@@ -1110,42 +1112,55 @@ EOD;
    *
    * @param string $one_ta_assignment_split
    *   The split to process.
+   *
+   * Splits should be revised to take arrays of lessons using
+   * serialize — Generates a storable representation of a value
+   *    * public function insertTaSplitIntoTa($one_ta_assignment_split) {
+   * // Must get a split from tA as a param.
+   * // Make assignments of them and insert the assignments into tA.
+   * /*
+   * A tSplit split has the following variables.
+   * tSp_id
+   * tSp_GroupID
+   * tSp_GroupDescription
+   * tSp_LessonName
+   * tSp_tA_Parameter
+   * tSp_gA
+   * tSp_gA_Parameter
+   * tSp_PercentTime
+   * tSp_TimeRelativeOrAbsolute
+   * In tAssignments, a split is described with
+   *    * $student_name = $one_ta_assignment_split[0]['tA_StudentName'];
+   * $student_id   = $one_ta_assignment_split[0]['tA_S_ID'];
+   * // This assignment should be a split.
+   * if (substr($one_ta_assignment_split[0]['tG_AssignmentName'], 0, 3) ===
+   * 'tS_') {
+   * // Now get an array of all of the tSplits with that name.
+   * // add assignment info not in tSplits.
+   * $insertion_array = array(
+   * 'tA_StudentName' => $student_name,
+   * 'tA_S_ID'        => $student_id,
+   * );
+   * // include_once 'SplitsClass.inc';.
+   * $splits_class_instance = new SplitsClass();
+   * // The $splits_array is an array of the relevant tSplits splits with
+   * // this name.  There may be many.
+   * $splits_array = $splits_class_instance->getSplitByName(
+   * $one_ta_assignment_split[0]['tG_AssignmentName']
+   * );
+   * // The $splits_array keys are numeric & $values are associative arrays.
+   * // Keys are id, tS_Name, tS_tA_Parameter, tSplit_gA,
+   * // tS_gA_Parameter, tSplit_PercentageTime.
+   * // foreach ($splits_array as $key => $value) {
+   * // Is an array of arrays.
+   * // Add field to $insertion_array.
+   * // $insertion_array['tG_AssignmentName'] = $value['tSplit_gA'];
+   * // Now insert the content of the insertion_Array into the tA.
+   * // $result = $this->insertRecord($insertion_array);
+   * // }
+   * }//end if
+   *    * }//end insertTaSplitIntoTa()
    */
-  public function -++++insertTaSplitIntoTa($one_ta_assignment_split) {
-    // Must get an array of the splits.
-    // Make assignments of them  and insert the
-    // assignments into tA.
-    $student_name = $one_ta_assignment_split[0]['tA_StudentName'];
-    $student_id   = $one_ta_assignment_split[0]['tA_S_ID'];
-    // This assignment should be a split.
-    if (substr($one_ta_assignment_split[0]['tG_AssignmentName'], 0, 3) === 'tS_') {
-      // Now get an array of all of the tSplits with that name.
-      // add assignment info not in tSplits.
-      $insertion_array = array(
-        'tA_StudentName' => $student_name,
-        'tA_S_ID'        => $student_id,
-      );
-      // include_once 'SplitsClass.inc';.
-      $splits_class_instance = new SplitsClass();
-      // The $splits_array is an array of the relevant tSplits splits with
-      // this name.  There may be many.
-      $splits_array = $splits_class_instance->getSplitByName(
-            $one_ta_assignment_split[0]['tG_AssignmentName']
-        );
-      // The $splits_array keys are numeric & $values are associative arrays.
-      // Keys are id, tS_Name, tS_tA_Parameter, tSplit_gA,
-      // tS_gA_Parameter, tSplit_PercentageTime.
-      // foreach ($splits_array as $key => $value) {
-      // Is an array of arrays.
-      // Add field to $insertion_array.
-      // $insertion_array['tG_AssignmentName'] = $value['tSplit_gA'];
-      // Now insert the content of the insertion_Array into the tA.
-      // $result = $this->insertRecord($insertion_array);
-      // }
-    }//end if
-
-  }//end insertTaSplitIntoTa()
-
 
   /**
    * Manage assignments that split..
