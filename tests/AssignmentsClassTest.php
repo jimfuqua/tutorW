@@ -11,8 +11,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 $directory = __DIR__;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 if ($directory === '/var/www/html/jimfuqua/tutorW/tests') {
   require '../vendor/autoload.php';
 }
@@ -63,7 +61,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
   /**
    * Resets the values in $this->myArray.
    */
-  public function testbuildArray() {
+  public function resetMyArray() {
 
     // $myArray is in db order but that does not make a difference when
     // you use the function to create SQL.
@@ -95,7 +93,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue(count($this->myArray) === 24, "Count of myArray should be 24.");
     return ($this->myArray);
   }/**
-    * End testbuildArray().
+    * End resetMyArray().
     */
   public function testremoveUneededColumns() {
     // $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/
@@ -132,7 +130,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testinsertRecord() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     // Start with empty db entry.
@@ -153,7 +151,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     // Return $ac_class_instance;  Why was this here?
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testinsertRecord()
 
 
@@ -162,7 +160,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testgetAssignmentsByStudentId() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $result        = $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
@@ -184,7 +182,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Line above returns # of rows deleted.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     $this->assertTrue($result2 == 2);
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
   }//end testgetAssignmentsByStudentId()
 
@@ -194,7 +192,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testGetOneRowFromDbAsArrayId() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $result        = $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
@@ -220,7 +218,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testgetSpecificStudentAssignmentFromDbAsArray() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $result = $ac_class_instance->delRowsByStudentId(
@@ -240,7 +238,6 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
           $this->myArray['tG_AssignmentName'],
           $this->myArray['tA_StartRec']
       );
-    // exit;.
     $this->assertTrue(is_array($row));
     $this->assertTrue($row['tA_S_ID'] === 'ghghgh');
     $this->assertTrue($row['tG_AssignmentName'] === 'TestAssignment');
@@ -285,7 +282,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
         unset($missing_tests[$key]);
       }
 
-      if ($value === 'testbuildArray') {
+      if ($value === 'resetMyArray') {
         unset($missing_tests[$key]);
       }
 
@@ -312,10 +309,10 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testdeleteRowByRowId() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
-    $result        = $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
+    $result = $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     // Remove rows if they exist.
     // $this->assertTrue( mysql_affected_rows() === 0);
     // $this->assertTrue( $mysqli->affected_rows === 0);
@@ -333,11 +330,11 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // $this->assertTrue( mysql_affected_rows() === 1);
     // $this->assertTrue( $mysqli->affected_rows === 1);
     // Only one row should have been there to delete.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to original values.
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testdeleteRowByRowId()
 
 
@@ -346,7 +343,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testgetNewestDbEntry() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $result        = $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
@@ -365,7 +362,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     $ac_class_instance->delRowsByStudentId('ghghgh');
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testgetNewestDbEntry()
 
 
@@ -402,7 +399,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
   public function testfieldsInDbVsMyArray() {
 
     // Get a list of fields in the db.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $result        = $ac_class_instance->insertRecord($this->myArray);
@@ -418,7 +415,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
   public function testgetLastDbEntryAsArray() {
 
     $result = '';
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
@@ -430,7 +427,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue($returned_array['tA_SavedStartRec'] === '8');
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testgetLastDbEntryAsArray()
 
 
@@ -439,7 +436,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testGetOneRowFromDb() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $result        = $ac_class_instance->insertRecord($this->myArray);
@@ -451,7 +448,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     }
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testGetOneRowFromDb()
 
 
@@ -465,7 +462,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // $v = var_export($student_assignments_array, true);
     // $string = __LINE__.' Start = '."\n\n";
     // fwrite($log_file, $string);.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $this->assertTrue(isset($ac_class_instance));
@@ -475,12 +472,8 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
 
     $this->myArray['tA_S_ID'] = 'a76677';
     $result = $ac_class_instance->insertRecord($this->myArray);
-    // $string = __LINE__.' $result = '. $result ."\n\n";
-    // fwrite($log_file, $string);
-    // exit; one is there.
     $result = $ac_class_instance->insertRecord($this->myArray);
     $result = $ac_class_instance->insertRecord($this->myArray);
-    // exit; three are there.
     $results_array = $ac_class_instance->getCurrentStudentAssignmentsInAnArray($this->myArray['tA_S_ID']);
 
     // $v = var_export($results_array, true);
@@ -513,16 +506,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    * Test test "normalizePercentTimeTo100Percent()" in Assignments.class.inc.
    */
   public function testgetCurrentStudentAssignmentsInAnArray() {
-    $log = new Logger('name');
-    $log->pushHandler(new StreamHandler('/var/www/html/jimfuqua/tutorW/logs/testgetCurrentStudentAssignmentsInAnArray.log', Logger::WARNING));
-    // Add records to the log.
-    $log->addWarning('Foo');
-    $log->addError('Bar');
-
-    $path = "/var/www/html/jimfuqua/tutorW/logs/";
-    $file = "testgetCurrentStudentAssignmentsInAnArray.log";
-    $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/testgetCurrentStudentAssignmentsInAnArray.log", "w");
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $this->assertTrue(isset($ac_class_instance));
@@ -538,18 +522,14 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
 
     $result = $ac_class_instance->insertRecord($this->myArray);
     // Test to see if insertion succeded.
-    $v = var_export($this->myArray, TRUE);
-    $string = __LINE__ . ' $this->myArray = ' . "$v\n\n";
-    fwrite($log_file, $string);
-    $string = __LINE__ . ' $result = ' . "$result\n\n";
-    fwrite($log_file, $string);
+    // $v = var_export($this->myArray, TRUE);
+    // $string = __LINE__ . ' $this->myArray = ' . "$v\n\n";
+    // fwrite($log_file, $string);
+    // $string = __LINE__ . ' $result = ' . "$result\n\n";
+    // fwrite($log_file, $string);.
     $this->assertTrue($result === 1);
-    // Insertion succeded.
-    // exit; verified.
     $number_of_rows_deleted = $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     $this->assertTrue($number_of_rows_deleted === 1);
-    // exit;
-    // Check total.
     $result = $ac_class_instance->getCurrentStudentAssignmentsInAnArray(
           $this->myArray['tA_S_ID']
       );
@@ -564,48 +544,41 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $this->myArray['tA_Post_date'] = strval(microtime(TRUE));
     $result = $ac_class_instance->insertRecord($this->myArray);
     $this->assertTrue($result === 1);
-    $v = var_export($this->myArray["tA_Post_date"], TRUE);
-    $string = __LINE__ . ' $this->myArray["tA_Post_date"] = ' . "$v\n\n";
-    fwrite($log_file, $string);
-
+    // $v = var_export($this->myArray["tA_Post_date"], TRUE);
+    // $string = __LINE__ . ' $this->myArray["tA_Post_date"] = ' . "$v\n\n";
+    // fwrite($log_file, $string);
     // Now create one row with a 100 second post date.
     $this->myArray['tA_Post_date'] = strval(microtime(TRUE) + 100);
     $result = $ac_class_instance->insertRecord($this->myArray);
     $this->assertTrue($result === 1);
-    $v = var_export($this->myArray["tA_Post_date"], TRUE);
-    $string = __LINE__ . ' $this->myArray["tA_Post_date"] = ' . "$v\n\n";
-    fwrite($log_file, $string);
-
+    // $v = var_export($this->myArray["tA_Post_date"], TRUE);
+    // $string = __LINE__ . ' $this->myArray["tA_Post_date"] = ' . "$v\n\n";
+    // fwrite($log_file, $string);
     // Now create one row with a -100 second post date.
     $this->myArray['tA_Post_date'] = strval(microtime(TRUE) - 100);
     $result = $ac_class_instance->insertRecord($this->myArray);
     $this->assertTrue($result === 1);
 
-    $v = var_export($this->myArray["tA_Post_date"], TRUE);
-    $string = __LINE__ . ' $this->myArray["tA_Post_date"] = ' . "$v\n\n";
-    fwrite($log_file, $string);
-
-    $v = var_export($this->myArray, TRUE);
-    $string = __LINE__ . ' $this->myArray = ' . "$v\n\n";
-    fwrite($log_file, $string);
-
-    $string = __LINE__ . ' $result = ' . $result . "\n\n";
-    fwrite($log_file, $string);
-
+    // $v = var_export($this->myArray["tA_Post_date"], TRUE);
+    // $string = __LINE__ . ' $this->myArray["tA_Post_date"] = ' . "$v\n\n";
+    // fwrite($log_file, $string);
+    // $v = var_export($this->myArray, TRUE);
+    // $string = __LINE__ . ' $this->myArray = ' . "$v\n\n";
+    // fwrite($log_file, $string);
+    // $string = __LINE__ . ' $result = ' . $result . "\n\n";
+    // fwrite($log_file, $string);.
     $result = $ac_class_instance->getCurrentStudentAssignmentsInAnArray($this->myArray['tA_S_ID']);
 
-    $v = var_export($result, TRUE);
-    $string = __LINE__ . ' $result = ' . $v . "\n\n";
-    fwrite($log_file, $string);
-
+    // $v = var_export($result, TRUE);
+    // $string = __LINE__ . ' $result = ' . $v . "\n\n";
+    // fwrite($log_file, $string);.
     $this->assertTrue(count($result) === 1);
 
     $result = $ac_class_instance->getCurrentStudentAssignmentsInAnArray($this->myArray['tA_S_ID']);
 
-    $v = var_export($result, TRUE);
-    $string = __LINE__ . ' $result = ' . $v . "\n\n";
-    fwrite($log_file, $string);
-
+    // $v = var_export($result, TRUE);
+    // $string = __LINE__ . ' $result = ' . $v . "\n\n";
+    // fwrite($log_file, $string);
     // Every test method will stop executing once an assertion fails.
     $this->assertTrue(count($result) === 1);
 
@@ -641,7 +614,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testChangeTaPostDate() {
     // Merge with Assignmentstest.
-    $this->testbuildArray();
+    $this->resetMyArray();
     $ac_class_instance = new AssignmentsClass();
     $this->assertTrue(isset($ac_class_instance));
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
@@ -653,7 +626,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue($old_ta_post_date === 1000);
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }
 
 
@@ -662,7 +635,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testupdateFields() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $this->assertTrue(isset($ac_class_instance));
@@ -737,7 +710,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // $v = var_export($student_assignments_array, true);
     // $string = __LINE__.' $student_assignments_array = '.$v."\n\n";
     // fwrite($log_file, $string).
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     // 987654000.
     $this->myArray['tA_OriginalTimestamp'] = '0987654';
@@ -766,7 +739,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     $ac_class_instance->delRowsByStudentId('x!@#$1112');
-    $this->testbuildArray();
+    $this->resetMyArray();
     // reset myArray to origninal values.
   }//end testupdateTaStartRec()
 
@@ -776,7 +749,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testgetAssignmentByAssignmentId() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
@@ -794,7 +767,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
       $this->assertTrue($result['tA_id'] === '88888');
     }
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
-    $this->testbuildArray();
+    $this->resetMyArray();
   } //End testgetAssignmentByAssignmentId().
 
 
@@ -803,7 +776,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
   // */
   // public function testsetRepsTowardMToZero()
   // {
-  // temp_stop_rec $this->testbuildArray();
+  // temp_stop_rec $this->resetMyArray();
   // temp_stop_rec // reset myArray to origninal values.
   // temp_stop_rec $ac_class_instance = new AssignmentsClass;
   // temp_stop_rec $ac_class_instance->
@@ -850,13 +823,13 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
   // $this->assertTrue($row['tA_RepsTowardM'] === '0');
   // $ac_class_instance->delRowsByStudentId($temp_student_id);
   // // Insure no lessons for this student.
-  // $this->testbuildArray();
+  // $this->resetMyArray();
   // // Reset myArray to origninal values.
   // temp_stop_rec // Clean Up.
   // temp_stop_rec $ac_class_instance->delRowsByStudentId($this->
   // myArray['tA_S_ID']);
   // temp_stop_rec $ac_class_instance->delRowsByStudentId('abcdefg');
-  // temp_stop_rec$this->testbuildArray();
+  // temp_stop_rec$this->resetMyArray();
   // }//end testsetRepsTowardMToZero()
   /**
    * Test "testprintNullIfNull()" in Assignments.class.pdf.
@@ -873,13 +846,13 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    * Test test "normalizePercentTimeTo100Percent()" in Assignments.class.inc.
    */
   public function testrepairRowIfStartRecIslargerThanStopRec() {
-
+    // Problem with 2
     // First step is to place a distinct -correct lesson- in the database
     // and retrieve it and run a test.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance   = new AssignmentsClass();
-    $resulttemp_stop_rec = $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
+    $result = $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     // Insure no previous lessons for this student.
     $this->assertTrue($result === 0);
     // Only deletion if improper cleanup else where.
@@ -896,10 +869,11 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue($result === 1);
     // The test record was added to the DB.
     $result = $ac_class_instance->repairRowIfStartRecIsLargerThanStopRec(
-      temp_stop_rec  $temp_student_id,
+      $temp_student_id,
       $this->myArray['tG_AssignmentName'],
       $temp_start_rec
     );
+
     $this->assertTrue(is_array($result));
     $this->assertTrue($result['tA_StartRecWasGreater'] === TRUE);
     $this->assertTrue($result['tA_subsequentAssignmentInserted'] === TRUE);
@@ -918,7 +892,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $result = $ac_class_instance->insertRecord($this->myArray);
     $this->assertTrue($result === 1);
     $result = $ac_class_instance->repairRowIfStartRecIsLargerThanStopRec(
-      temp_stop_rec  $temp_student_id,
+      $temp_student_id,
       $this->myArray['tG_AssignmentName'],
       $temp_start_rec
     );
@@ -929,12 +903,12 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Clean up.
     $ac_class_instance->delRowsByStudentId($temp_student_id);
     unset($result);
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     $ac_class_instance->delRowsByStudentId('abcdefg');
     unset($ac_class_instance);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testrepairRowIfStartRecIslargerThanStopRec()
 
 
@@ -944,7 +918,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
   public function testgetSumOfAssignedTime() {
     // Input parameter is an array of lessons for one student.
     // Create a three lesson array of lessons.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $temp_student_id   = 'abcdefg';
@@ -979,7 +953,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     $ac_class_instance->delRowsByStudentId('abcdefg');
     unset($ac_class_instance);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testgetSumOfAssignedTime()
 
 
@@ -991,7 +965,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Returns normalized array of lessons totalling 100%.
     // Create a three lesson array of lessons.
     // Reset myArray to origninal values.
-    $this->testbuildArray();
+    $this->resetMyArray();
 
     $ac_class_instance = new AssignmentsClass();
     $temp_student_id   = 'abcdefg';
@@ -1000,7 +974,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $ac_class_instance->delRowsByStudentId($temp_student_id);
 
     // Add three new lessons.
-    $this->myArray['tA_S_ID']temp_stop_rec = $temp_student_id;
+    $this->myArray['tA_S_ID'] = $temp_student_id;
     $this->myArray['tA_PercentTime'] = 120;
     $ac_class_instance->insertRecord($this->myArray);
     $this->myArray['tA_PercentTime'] = 137;
@@ -1036,7 +1010,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     $ac_class_instance->delRowsByStudentId('abcdefg');
     unset($ac_class_instance);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testnormalizePercentTimeTo100Percent()
 
 
@@ -1073,7 +1047,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Construct a fake student.  Populate with three lessons.
     // Run about 100 selections and test that a lesson is returned in the
     // correct ratio.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance = new AssignmentsClass();
     $temp_student_id   = 'abcdefg';
@@ -1136,9 +1110,8 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     // Insure no previous lessons for this student.
     $ac_class_instance->delRowsByStudentId('abcdefg');
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testselectOneLesson()
-
 
   /**
    * Test "insertTaSplitIntoTa()" in Assignments.class.inc.
@@ -1154,7 +1127,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    * // Should also add the tSplits entries to make function stand alone.
    * // Pack array with new values to make the assignment a split.
    * // Then insert the split into the db.
-   *    * $this->testbuildArray();
+   *    * $this->resetMyArray();
    * // Reset myArray to original values.
    * // Add one split.
    * /*
@@ -1218,13 +1191,13 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    *  insertTaSplitIntoTa($assignmentArray);
    * $this->assertTrue($resultAfterInsert === 1);
    * // Now check to see if the split was converted to assignments.
-   * // not converted        exit;
+   * // not converted
    * // Clean up.
    * $this->assertTrue($this->myArray['tA_S_ID'] === 'gbcdefg');
    * $result = $ac_class_instance->
    *    delRowsByStudentId($this->myArray['tA_S_ID']);
    * $this->assertTrue($result === 1);
-   * // exit;
+   * //
    * // Deleted the two split rows. Original assignment was deleted upon
    * // insertion of splits.
    * //        $result = $split_instance->deleteRowId($my_array1['tA_id']);
@@ -1234,7 +1207,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    * // Clean Up.
    * $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
    * $ac_class_instance->delRowsByStudentId('gbcdefg');
-   * $this->testbuildArray();
+   * $this->resetMyArray();
    * }//end testinsertTaSplitIntoTa()
    */
 
@@ -1242,7 +1215,6 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    * Test "checkAndProcessSplits()" in Assignments.class.php.
    */
   public function testcheckAndProcessSplits() {
-
     // Add two splits.
     $my_array1['tSp_id']        = '1111';
     $my_array1['tSp_LessonName']   = 'split_1';
@@ -1270,9 +1242,11 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue($row['tSp_id'] === '1112');
     // Note that id is a string.
     // Clean up database.
+    echo "Splits not working.";
+    // print_r( "Splits not working.\n");.
     $split_instance->deleteRowId($my_array1['tSp_id']);
     $split_instance->deleteRowId($my_array2['tSp_id']);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testcheckAndProcessSplits()
 
 
@@ -1283,7 +1257,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testreturnColumnsNamesInArray() {
 
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to original values.
     $ac_class_instance = new AssignmentsClass();
     $ac_class_instance->insertRecord($this->myArray);
@@ -1301,7 +1275,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue($difference_between_arrays === 0);
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testreturnColumnsNamesInArray()
 
 
@@ -1314,7 +1288,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Run several tests to see that the correct lesson is returned.
     // First test should be simple with one zero time assigned and
     // the other 150% assigned.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance  = new AssignmentsClass();
     $temp_student_id591 = 'abcdefg';
@@ -1342,22 +1316,18 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     $this->assertTrue($result === 0);
     $ac_class_instance->insertRecord($this->myArray);
 
-    $result  = $ac_class_instance->getCurrentStudentAssignmentsInAnArray($temp_student_id591);
-    $log_file = fopen("/var/www/html/jimfuqua/tutor/logs/testgetNextAssignmentToDo.log", "w");
-    $v = var_export($result, TRUE);
-    $string = __LINE__ . ' AC $result = ' . $v . "\n";
-    fwrite($log_file, $string);
+    $result = $ac_class_instance->getCurrentStudentAssignmentsInAnArray($temp_student_id591);
     $num_rows = count($result);
-    $v = var_export($num_rows, TRUE);
-    $string = __LINE__ . ' AC $num_rows = ' . $v . "\n";
-    fwrite($log_file, $string);
+    // $v = var_export($num_rows, TRUE);
+    // $string = __LINE__ . ' AC $num_rows = ' . $v . "\n";
+    // fwrite($log_file, $string);.
     $this->assertTrue($num_rows === 1);
     $last_lesson_id = '';
     $result = $ac_class_instance->getNextAssignmentToDo($temp_student_id591, $last_lesson_id);
     $num_rows = count($result);
-    $v = var_export($num_rows, TRUE);
-    $string = __LINE__ . ' AC $num_rows = ' . $v . "\n";
-    fwrite($log_file, $string);
+    // $v = var_export($num_rows, TRUE);
+    // $string = __LINE__ . ' AC $num_rows = ' . $v . "\n";
+    // fwrite($log_file, $string);.
     $this->assertTrue($num_rows === 24);
 
     // Test 3 add an identical lesson and test for number of lessons = 2.
@@ -1389,7 +1359,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Insure no previous lessons for this student.
     $this->assertTrue($result === 1);
     // Any number greater than 1 would indicate a clean-up failure.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to original values.
     unset($ac_class_instance);
 
@@ -1399,7 +1369,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Test for return of one with greater time assigned.
     // First delete all lessons for $temp_student_id591.
     unset($ac_class_instance);
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray.
     $temp_student_id591           = 'abcdefg';
     $ac_class_instance            = new AssignmentsClass();
@@ -1429,7 +1399,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     unset($ac_class_instance);
 
     // Reset myArray to origninal values.
-    $this->testbuildArray();
+    $this->resetMyArray();
 
     // Test 6
     // Delete all lessons and add two lessons one with 0 time assigned and
@@ -1437,7 +1407,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Test for return of one with greater time assigned.
     // First delete all lessons for $temp_student_id591.
     unset($ac_class_instance);
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray.
     $temp_student_id591           = 'abcdefg';
     $ac_class_instance            = new AssignmentsClass();
@@ -1466,10 +1436,10 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Clean Up.
     unset($ac_class_instance);
     // Reset myArray to origninal values.
-    $this->testbuildArray();
+    $this->resetMyArray();
 
     // Test 7    Add three new lessons and check frequency of return.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray.
     $temp_student_id591           = 'asdfg  hjkl';
     $this->myArray['tA_S_ID'] = $temp_student_id591;
@@ -1532,20 +1502,20 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
 
     $ac_class_instance->delRowsByStudentId($temp_student_id591);
     // Next reset myArray to origninal values.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     $ac_class_instance->delRowsByStudentId('abcdefg');
     $ac_class_instance->delRowsByStudentId('x!@#$1112');
     unset($ac_class_instance);
-    $this->testbuildArray();
+    $this->resetMyArray();
   }//end testgetNextAssignmentToDo()
 
   /**
    * Test delRowsByStudentIdAndAssignmentName().
    */
   public function testdelRowsByStudentIdAndAssignmentName() {
-    $this->testbuildArray();
+    $this->resetMyArray();
     $temp_student_id = 'abcdefg';
     $temp_assignment_name = 'hijklmn';
     $this->myArray['tA_S_ID'] = $temp_student_id;
@@ -1570,7 +1540,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
    */
   public function testdelRowsByStudentId() {
     // Next reset myArray to origninal values.
-    $this->testbuildArray();
+    $this->resetMyArray();
     $temp_student_id = 'abcdefg';
     $this->myArray['tA_S_ID'] = $temp_student_id;
     $ac_class_instance = new AssignmentsClass();
@@ -1589,11 +1559,11 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
     // Clean Up.
     $ac_class_instance->delRowsByStudentId($temp_student_id);
     // Insure no previous lessons for this student.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance->delRowsByStudentId($this->myArray['tA_S_ID']);
     // Insure no previous lessons for this student.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Reset myArray to origninal values.
     $ac_class_instance->delRowsByStudentId($temp_student_id);
     // Clean Up.
@@ -1615,7 +1585,7 @@ class AssignmentsCTest extends \PHPUnit_Framework_TestCase {
      */
 
     // Next reset myArray to origninal values.
-    $this->testbuildArray();
+    $this->resetMyArray();
     // Add a new row to delete.
     $ac_class_instance = new AssignmentsClass();
     $this->assertTrue(isset($ac_class_instance));

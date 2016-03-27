@@ -6,7 +6,7 @@ $dbDSN = "mysql:host=localhost;dbname=jlfEDU;";
 
 try {
             // Our new PDO Object.
-            $con = new \PDO($dbDSN, $dbUser, $dbPassword);
+            $dbh = new \PDO($dbDSN, $dbUser, $dbPassword);
             //$con = $this->_connectToDb();
             // Catch and show the error.
         } catch (PDOException $pe) {
@@ -18,6 +18,20 @@ echo "<br/>";
 echo $studentID."<br/>.";
 //echo $con;
 
+$stmt = $dbh->prepare("INSERT INTO REGISTRY (name, value) VALUES (:name, :value)");
+$stmt->bindParam(':name', $name);
+$stmt->bindParam(':value', $value);
+
+// insert one row
+$name = 'one';
+$value = 1;
+$stmt->execute();
+
+// insert another row with different values
+$name = 'two';
+$value = 2;
+$stmt->execute();
+/*
 $stmt = $con->prepare('SELECT * FROM tAssignments
                  WHERE tA_S_ID = :studentID && tA_Post_date < UNIX_TIMESTAMP()
                  ORDER BY tA_PercentTime
@@ -54,6 +68,3 @@ foreach ($rows as $key => $value) {
         //$rows[$key] = $value;
     echo "<br/>";echo "<br/>";
     }
-
-
-

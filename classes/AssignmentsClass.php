@@ -18,8 +18,6 @@ else {
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 // echo "<br  />" . __LINE__ ;
 /*
@@ -100,7 +98,6 @@ class AssignmentsClass {
    */
   private function arrayToSqlString(array $my_parameters_array) {
 
-    // Echo "<br  />" . __LINE__ ;.
     $sql       = 'INSERT INTO tAssignments (';
     $sql_values = ') VALUES (';
     foreach ($my_parameters_array as $key => $value) {
@@ -246,14 +243,16 @@ class AssignmentsClass {
    *   Returns boolean.
    */
   public function insertRecord(array $pram_array) {
-    $path = "/var/www/html/jimfuqua/tutorW/logs/";
-    $file = "AC insertRecord.log";
-    $log_file = fopen($path . $file, "w");
+    // var_dump($pram_array);
+    // if ($pram_array['tA_S_ID'] == 2){var_dump(debug_backtrace());exit;}
+    // $path = "/var/www/html/jimfuqua/tutorW/logs/";
+    // $file = "AC insertRecord.log";
+    // $log_file = fopen($path . $file, "w");.
     $pram_array_processed = $this->removeUnneededColumns($pram_array);
     $dbh = $this->connectToDb();
     $sql = $this->arrayToSqlString($pram_array_processed);
-    $string = __LINE__ . ' $sql =  ' . "$sql\n\n";
-    fwrite($log_file, $string);
+    // $string = __LINE__ . ' $sql =  ' . "$sql\n\n";
+    // fwrite($log_file, $string);.
     $result = $dbh->exec($sql);
     // Warning This function may return Boolean FALSE,
     // but may also return a non-Boolean value which evaluates to FALSE.
@@ -758,9 +757,6 @@ EOD;
    *   Returns an array of assignments.
    */
   public function getCurrentStudentAssignmentsInAnArray($student_id) {
-    $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/AC_getCurrentStudentAssignmentsInAnArray.log", "w");
-    $string = __LINE__ . ' $student_id = ' . $student_id . "\n\n";
-    fwrite($log_file, $string);
     $dbh = $this->connectToDb();
     if (is_null($dbh) === TRUE) {
       $msg = $msg . "\n" . __LINE__ . 'AC No valid connection.';
@@ -781,24 +777,23 @@ EOD;
     $sth = $dbh->prepare($sql);
     $utc_time = time();
     $string = __LINE__ . ' $utc_time = ' . $utc_time . "\n\n";
-    fwrite($log_file, $string);
+    // fwrite($log_file, $string);.
     $sth->execute(array(':student_id' => $student_id, ':utc_time' => $utc_time));
 
     if ($sth === FALSE) {
       $string = __LINE__ . ' AC $return from execute = ' . "false\n\n";
-      fwrite($log_file, $string);
+      // fwrite($log_file, $string);
       // print_r("\n" . 'AC $return from execute() = ' .
       // "false\n\n" . " $time\n");.
     }
 
     $rows = $sth->fetchAll();
 
-    $v = var_export($rows, TRUE);
-    $string = __LINE__ . ' AC $rows = ' . $v . "\n\n";
-    fwrite($log_file, $string);
-    $string = __LINE__ . ' microtime(true) = ' . microtime(TRUE) . "\n\n";
-    fwrite($log_file, $string);
-
+    // $v = var_export($rows, TRUE);
+    // $string = __LINE__ . ' AC $rows = ' . $v . "\n\n";
+    // fwrite($log_file, $string);
+    // $string = __LINE__ . ' microtime(true) = ' . microtime(TRUE) . "\n\n";
+    // fwrite($log_file, $string);
     // Eliminate duplicate numberic keys.
     foreach ($rows as $key => $value) {
       foreach ($value as $key2 => $single_assignment) {
@@ -808,9 +803,9 @@ EOD;
       }
     }
 
-    $v = var_export($rows, TRUE);
-    $string = __LINE__ . ' AC $rows = ' . $v . "\n\n";
-    fwrite($log_file, $string);
+    // $v = var_export($rows, TRUE);
+    // $string = __LINE__ . ' AC $rows = ' . $v . "\n\n";
+    // fwrite($log_file, $string);.
     return $rows;
 
   }//end getCurrentStudentAssignmentsInAnArray()
@@ -883,6 +878,7 @@ EOD;
           'tA_iterations_to_do'    => '',
           'tG_Errors_Allowed '     => '',
         );
+
         $result = $this->insertRecord($pram_array);
         // FALSE for failure or TRUE for success.
         $return_array['tA_subsequentAssignmentInserted'] = TRUE;
@@ -1236,17 +1232,6 @@ EOD;
    *    Row count.
    */
   public function getNextAssignmentToDo($student_id, $last_lesson_id) {
-    $log = new Logger('name');
-    $log->pushHandler(new StreamHandler('/var/www/html/jimfuqua/tutorW/logs/AC_Log.log', Logger::WARNING));
-
-    // Add records to the log.
-    $log->addWarning('Foo');
-    $log->addError('Bar');
-    $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/ACgetNextAssignmentToDo.log", "w");
-    $string = __LINE__ . ' AC $student_id = ' . $student_id . "\n\n";
-    fwrite($log_file, $string);
-    $string = __LINE__ . ' AC $last_lesson_id = ' . $last_lesson_id . "\n\n";
-    fwrite($log_file, $string);
     $looking_for_lesson = TRUE;
     do {
       // End is while ($looking_for_lesson === TRUE).
@@ -1255,9 +1240,9 @@ EOD;
       // Get an array of arrays. Numeric outer. Relational inner.
       $result_array = $this->getCurrentStudentAssignmentsInAnArray($student_id);
       // Variable $result_array is an array of arrays.
-      $v = var_export($result_array, TRUE);
-      $string = __LINE__ . ' AC $result_array = ' . $v . "\n\n";
-      fwrite($log_file, $string);
+      // $v = var_export($result_array, TRUE);
+      // $string = __LINE__ . ' AC $result_array = ' . $v . "\n\n";
+      // fwrite($log_file, $string);.
       if ($result_array === NULL) {
         // This student has no lessons.
         return NULL;
@@ -1281,17 +1266,13 @@ EOD;
       }//end if
     } while ($looking_for_lesson === TRUE);
     reset($result_array);
-    $v = var_export($result_array, TRUE);
-    $string = __LINE__ . ' AC $result_array = ' . $v . "\n\n";
-    fwrite($log_file, $string);
+    // $v = var_export($result_array, TRUE);
+    // $string = __LINE__ . ' AC $result_array = ' . $v . "\n\n";
+    // fwrite($log_file, $string);.
     if (count($result_array) > 0) {
       // Takes an array of lessons and returns a lesson id.
       $lesson = $this->selectOneLesson($result_array, $last_lesson_id);
       // Should always return array but does not sometimes.
-      $str = __LINE__ . ' AC   count($result_array) = ' . count($result_array) . "\n";
-      // $v = var_export($lesson, true);
-      // $string = __LINE__.' AC $lesson = '.$v."\n\n";
-      // fwrite($log_file, $string);.
       return $lesson;
     }
     else {

@@ -1,5 +1,9 @@
 
+Missing some method tests for AssignmentsClassTest.php.
 
+Get splits working in assignments class.  Splits should be
+just model assignments.  Abandon the old concept of of a
+forking split.
 
   test_clockwise is not inserting the tA_Post_date
 ***********

@@ -10,6 +10,7 @@
   "require": {
     "php-console/php-console": "~3.0",
     "monolog/monolog": "^1.17",
-    "pdepend/pdepend": "2.2.3"
+    "pdepend/pdepend": "2.2.3",
+    "css-crush/css-crush": "dev-master"
   }
 }
