@@ -17,7 +17,7 @@ $studentID ='Abcdxyz';
 echo "<br/>";
 echo $studentID."<br/>.";
 //echo $con;
-
+$dbh = new \PDO($dbDSN, $dbUser, $dbPassword);
 $stmt = $dbh->prepare("INSERT INTO REGISTRY (name, value) VALUES (:name, :value)");
 $stmt->bindParam(':name', $name);
 $stmt->bindParam(':value', $value);
@@ -31,40 +31,13 @@ $stmt->execute();
 $name = 'two';
 $value = 2;
 $stmt->execute();
-/*
-$stmt = $con->prepare('SELECT * FROM tAssignments
-                 WHERE tA_S_ID = :studentID && tA_Post_date < UNIX_TIMESTAMP()
-                 ORDER BY tA_PercentTime
-                 DESC');
 
-$stmt->bindParam(':studentID', $studentID, \PDO::PARAM_STR, 12);
-$stmt->debugDumpParams();
-echo "<br/>";echo "<br/>";
-$stmt->execute();
-$rows = $stmt->fetchAll();
-
-
-foreach ($rows as $key => $value) {
-    echo $key;
-    echo "<br/>";
-    foreach ($value as $key2 => $singleAssignment) {
-        if (is_numeric($key2) === TRUE) {
-            unset($rows[$key][$key2]);
-        } else {
-            echo $key2; echo " --- "; echo $singleAssignment;
-            echo "<br/>";
-        }
-    }
-echo "<br/>";echo "<br/>";
+//$stmt = $dbh->prepare('SELECT * FROM REGISTRY');
+$var = "one";
+$sql = 'SELECT * FROM REGISTRY WHERE name = "'.$var.'"';
+$results =  $dbh->query($sql);
+foreach($results as $row){
+    echo $row['name'] . "<br>";
 }
-
-
-foreach ($rows as $key => $value) {
-    echo $key;
-    echo "<br/>";
-        foreach ($value as $key2 => $singleAssignment) {
-            echo $key2."____".$singleAssignment."<br/>";
-        }
-        //$rows[$key] = $value;
-    echo "<br/>";echo "<br/>";
-    }
+print_r("\n".$sql."\n\n<br />");
+print_r($results);
