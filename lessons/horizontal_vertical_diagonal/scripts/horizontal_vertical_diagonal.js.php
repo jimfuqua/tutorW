@@ -1,10 +1,7 @@
 <?php
-$_SESSION["tC_ClientTimeStarted"] = time()+0;
-$_SESSION["tC_ServerTimeStarted"] = time()+0;
-//$logFile = fopen("/var/www/html/jimfuqua/tutor/logs/horizontal_vertical_diagnonal_js", "w");
-// This data is erroneous on first lesson after login.
-//$v = var_export($_SESSION, true);
-//    fwrite($logFile, "\n" .  __LINE__ . ' horizontal_vertical_diagnonal_js $_SESSION =:' .  $v . " \n");
+require '../../scripts/basic_vars_lesson_js_PHP';
+require '../../scripts/f_exit_from_lesson_js_PHP';
+require '../../scripts/f_record_answer_js_PHP';
 $random_mnumber = rand (1 , 6);
 ?>
 /*eslint-env browser, jquery */
@@ -28,56 +25,6 @@ var data_out =[];
 var c;
 var ctx;
 var CorrectAnswer;
-
-
-function exit_from_lesson() {
-    'use strict';
-    // THIS IS THE EXIT FROM THIS LESSON
-    $.post(
-    "http://localhost/jimfuqua/tutor/src/scripts/cAssignment_get_next_lesson.php", data_out).
-    done(function( returned_data ) {
-         // alert( "returned_data Loaded: " + returned_data );
-         document.location.href = returned_data;
-     });
-}
-
-function record_answer(result) {
-    'use strict';
-    // data_out will have fields for both tCompleted and tAssignments.
-    // Those programs should ignore unneeded data fields.
-    data_out = {
-            tA_S_ID : "<?php echo $_SESSION['tA_S_ID']; ?>",
-            tA_id : "<?php echo $_SESSION['tA_id']; ?>",
-            tA_StudentName: "<?php echo $_SESSION['tA_StudentName']; ?>",
-            session_id: "<?php echo $_SESSION['session_id']; ?>",
-            tG_AssignmentName: 'gA_GearsRotationDirection',
-            tA_StartRec: "<?php echo $_SESSION['tA_StartRec']; ?>",
-            tA_StopRec: "<?php echo $_SESSION['tA_StopRec']; ?>",
-            tC_ServerTimeStarted: "<?php echo $_SESSION['tC_ServerTimeStarted']; ?>",
-            sender : "GearsRotationDirection.php",
-            tC_Correct : result,
-            tC_ClientTimeStarted : tC_ClientTimeStarted,
-            tC_Time_client_processed_answer : Date.now(),
-            tC_Question_and_Response : tC_Question_and_Response,
-            tC_More_data_about_response : tC_More_data_about_response,
-            tA_ErrorsMade : errors_made,
-            tA_LocalDateTime : Math.floor(Date.now() / 1000) // Get rid of milliseconds.
-        };
-
-    if (result === 1) {
-        data_out.tA_RepsTowardM = "Plus1";
-    } else {
-        data_out.tA_RepsTowardM = "0";
-        data_out.tA_ErrorsMade = "Plus1";
-    }
-
-// Update tCompleted and tAssignments.php.
-    var post_to_update_tA_tC = "http://localhost/jimfuqua/tutor/src/scripts/update_tA_tC.php";
-    $.post(post_to_update_tA_tC, data_out, function post_to_update_tA_tC (data, status) {
-        // alert("Data: " + data_out + "\nStatus: " + status);
-    });
-
-}// end function record_answer
 
 $("#quit_button_top_left").click(function quit_button () {
     "use strict";

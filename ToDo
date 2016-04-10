@@ -1,3 +1,5 @@
+cAssignment_get_next_lesson check for file existence is flawed.
+Change the file name checked to an absolute path name back to /.
 
 Missing some method tests for AssignmentsClassTest.php.
 

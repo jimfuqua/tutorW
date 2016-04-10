@@ -63,7 +63,7 @@ class GenericAClass {
    * The constructor. Operates on instantination.
    */
   public function __construct() {
-    // Echo "I am a GenericAClass instance.<br/>";.
+    // Echo "I am a GenericAClass instance.<br/>";
   }
 
   /**
@@ -74,8 +74,9 @@ class GenericAClass {
    * @param string $tg_assignment_name
    *   From tAssignments.
    */
-  public function setSessionVariablesFromTblGenerAssignmentName($tg_assignment_name) {  $log_file = fopen('../logs/', 'a');
-    $string  = "\n" .__METHOD__. " inside ".__CLASS__."\n";
+  public function setSessionVariablesFromTblGenerAssignmentName($tg_assignment_name) {
+    $log_file = fopen('../logs/', 'a');
+    $string  = "\n" . __METHOD__ . " inside " . __CLASS__ . "\n";
     fwrite($log_file, $string);
     fwrite($log_file, __LINE__ . ' microtime(TRUE) = ' . microtime(TRUE) . "\n\n");
     $string = "\n" . __LINE__ . ' $tg_assignment_name = ' . $tg_assignment_name . "\n";
@@ -131,8 +132,8 @@ class GenericAClass {
   } // End logMyMethods()
 
   /**
-    * .
-    */
+   * .
+   */
   public function arrayToSqlInsert($table_name, array $my_parameters_array) {
     // Uses traditonal INSERT INTO table_name (column1,column2,column3,...)
     // VALUES (value1,value2,value3,...);
@@ -200,17 +201,33 @@ class GenericAClass {
 
     require 'db_include2.php';
     try {
-      $con = new \PDO('mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU', 'JimFuqu_jim', 'Carbon3');
       // Our new PDO Object.
+      $con = new \PDO(
+        $db_dsn,
+        $db_user,
+        $db_password,
+        array(\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION)
+      );
     }
     catch (PDOException $e) {
-      echo $e->getMessage();
-      //$log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/GenericAConnectToDb.php.log', 'w');
-      //$string  = __LINE__ . ' PDOException = ' . $e->getMessage();
-      //fwrite($log_file, $string . "\n");
+      echo 'Connection failed: ' . $e->getMessage();
+      return NULL;
     }
-    $con->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     return $con;
+    //require 'db_include2.php';
+    //try {
+    //  $con = new \PDO('mysql:host=mysql507.ixwebhosting.com;dbname=JimFuqu_jlfEDU', 'JimFuqu_jim', 'Carbon3');
+      // Our new PDO Object.
+    //}
+    //catch (PDOException $e) {
+    //  echo $e->getMessage();
+      // $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/GenericAConnectToDb.php.log', 'w');
+      // $string  = __LINE__ . ' PDOException = ' . $e->getMessage();
+      // fwrite($log_file, $string . "\n");
+    //}
+    //$con->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+    //$con = new \mysqli($host, $db_user, $db_password, $database);
+    //return $con;
 
   }//end connectToDb()
 
@@ -226,11 +243,23 @@ class GenericAClass {
    *   Count of number of rows added. Should be 1.
    */
   public function insertRecord(array $param_array) {
+    $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/testAccessibilityOfAllForms.log', 'w');
+    $string  = "\n" . __METHOD__ . " inside " . __CLASS__ . "\n";
+    fwrite($log_file, $string);
+    $v = var_export($param_array, TRUE);
+    $string = "\n" . '$param_array = ' . $v . "\n";
+    fwrite($log_file, $string);
     $dbh = $this->connectToDb();
     $sql = $this->arrayToSqlInsert('tGenericAssignments', $param_array);
+    $string = "\n" . '$sql = ' . $sql . "\n";
+    fwrite($log_file, $string);
     $stmt = $dbh->prepare($sql);
     $affected_rows = $dbh->exec($sql);
+    $string = "\n" . '$affected_rows = ' . $affected_rows . "\n";
+    fwrite($log_file, $string);
+    //$result = $dbh->query($sql);
     return $affected_rows;
+    //return $result; // Should be true.
   }
 
   /**
@@ -246,16 +275,16 @@ class GenericAClass {
    */
   public function editRow(array $pram_array) {
 
-    $sql            = $this->arrToSqlUpdate($pram_array);
-    $pdo_connection = $this->connectToDb();
-    $query          = $pdo_connection->exec($sql);
+    $sql = $this->arrToSqlUpdate($pram_array);
+    $dbh = $this->connectToDb();
+    //$mysqli_connection = $this->connectToDb();
+    //$result = $mysqli_connection->query($sql);
+    $query = $dbh->exec($sql);
     if ($query === NULL) {
       return FALSE;
     }
-
     // Return should be TRUE.
     return $query;
-
   }//end editRow()
 
 
@@ -274,18 +303,18 @@ class GenericAClass {
    *   Checks to see if files exist for all lessons.
    */
   public function testAccessibilityOfAllForms() {
-    //$log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/testAccessibilityOfAllForms.log', 'w');
-    //$string  = "\n" . 'testAccessibilityOfAllForms' . "\n";
-    //fwrite($log_file, $string);
-    $pdo_connection = $this->connectToDb();
+    // $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/testAccessibilityOfAllForms.log', 'w');
+    // $string  = "\n" . 'testAccessibilityOfAllForms' . "\n";
+    // fwrite($log_file, $string);
+    $dbh = $this->connectToDb();
     $sql            = 'SELECT id, tG_AssignmentName, tG_path_to_lesson, tG_FormName FROM tGenericAssignments';
-    $result         = $pdo_connection->exec($sql);
-    //$v      = var_export($result, TRUE);
-    //$string = "\n" . '$result = ' . $v . "\n";
-    //fwrite($log_file, $string);
+    $result         = $dbh->exec($sql);
+    // $v      = var_export($result, TRUE);
+    // $string = "\n" . '$result = ' . $v . "\n";
+    // fwrite($log_file, $string);
     // Put $result in an array.
-    // $stmt = $pdo_connection->query($sql);
-    // $stmt = $pdo_connection->fetchAll();
+    // $stmt = $dbh->query($sql);
+    // $stmt = $dbh->fetchAll();
     // $number_of_gener_assignments = count($row);
     $return_array          = NULL;
     /*$index = 0;
@@ -318,12 +347,14 @@ class GenericAClass {
    */
   public function getLastDbEntryAsArray() {
 
-    $pdo_connection = $this->connectToDb();
+    //$dbh = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = "SELECT * FROM tGenericAssignments ORDER BY id DESC LIMIT 1";
-    $stmt           = $pdo_connection->query($sql);
+    $stmt           = $dbh->query($sql);
+    $result = $dbh->query($sql);
     $row            = $stmt->fetch(\PDO::FETCH_ASSOC);
+    //$row = $result->fetch_row();
     return $row;
-
   }//end getLastDbEntryAsArray()
 
 
@@ -342,49 +373,48 @@ class GenericAClass {
   public function getRowFromDbAsArray($t_g_assignment_name) {
     require 'db_include2.php';
     $conn = new \mysqli($host, $db_user, $db_password, $database);
-    // Check connection
+    // Check connection.
     if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
-
-    $log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/getRowFromDbAsArray.log', 'w');
-    $string  = "\n" .__METHOD__. " inside ".__CLASS__."\n";
-    fwrite($log_file, $string);
-    $string  = "\n" .__LINE__. ' $t_g_assignment_name = ' . "$t_g_assignment_name\n";
-    fwrite($log_file, $string);
-
-    //$dbh = $this->connectToDb();
-    $sql = 'SELECT * FROM tGenericAssignments WHERE tG_AssignmentName ="'.$t_g_assignment_name.'"';
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        " - Name: " . $row["tG_AssignmentName"]. "<br>";
-        $v = var_export($row, TRUE);
-        $string  = "\n" .__LINE__. ' $row = ' . "$v\n";
-        fwrite($log_file, $string);
-        return $row;
+      die("Connection failed: " . $conn->connect_error);
     }
-    } else {
-      echo "0 results";
-    }
-$conn->close();
-    //$results =  $dbh->query($sql);
-    //$sql = "SELECT * FROM tGenericAssignments";
-    $string  = "\n" .__LINE__. ' $sql = ' . "$sql\n";
-    fwrite($log_file, $string);
-    //$results = $dbh->query($sql);
-    //$v = var_export($results, TRUE);
-    //$string  = "\n" .__LINE__. ' $results = ' . "$v\n";
+
+    //$log_file = fopen('/var/www/html/jimfuqua/tutorW/logs/getRowFromDbAsArray.log', 'w');
+    //$string  = "\n" . __METHOD__ . " inside " . __CLASS__ . "\n";
+    //fwrite($log_file, $string);
+    //$string  = "\n" . __LINE__ . ' $t_g_assignment_name = ' . "$t_g_assignment_name\n";
     //fwrite($log_file, $string);
 
-    //foreach($results as $row){
+    // $dbh = $this->connectToDb();
+    $sql = 'SELECT * FROM tGenericAssignments WHERE tG_AssignmentName ="' . $t_g_assignment_name . '"';
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+      // Output data of each row.
+      while ($row = $result->fetch_assoc()) {
+        " - Name: " . $row["tG_AssignmentName"] . "<br>";
+        //$v = var_export($row, TRUE);
+        //$string  = "\n" . __LINE__ . ' $row = ' . "$v\n";
+        //fwrite($log_file, $string);
+        return $row;
+      }
+    }
+    else {
+      echo "0 results";
+    }
+    $conn->close();
+    // $results =  $dbh->query($sql);
+    // $sql = "SELECT * FROM tGenericAssignments";
+    //$string  = "\n" . __LINE__ . ' $sql = ' . "$sql\n";
+    //fwrite($log_file, $string);
+    // $results = $dbh->query($sql);
+    // $v = var_export($results, TRUE);
+    // $string  = "\n" .__LINE__. ' $results = ' . "$v\n";
+    // fwrite($log_file, $string);
+    // foreach($results as $row){
     //    echo $row['tG_AssignmentName'] . "<br>";
-    //}
+    // }
     //  $v = var_export($result, TRUE);
     //  $string  = "\n" .__LINE__. ' $result = ' . "$v\n";
     //  fwrite($log_file, $string);
-
   } //end getRowFromDbAsArray()
 
 
@@ -397,9 +427,9 @@ $conn->close();
    *   json
    */
   public function getAllGenericAssgignmentNamesFromDbJson() {
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql = "SELECT tG_AssignmentName FROM tGenericAssignments ORDER BY id DESC";
-    $stmt           = $pdo_connection->query($sql);
+    $stmt           = $dbh->query($sql);
     $row = $stmt->fetch(\PDO::FETCH_ASSOC);
     $obj = json_encode($row);
     return $obj;
@@ -417,9 +447,9 @@ $conn->close();
    */
   public function getAllAssignmentNamesFromDbArray() {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql    = "SELECT * FROM `tGenericAssignments`";
-    $stmt   = $pdo_connection->query($sql);
+    $stmt   = $dbh->query($sql);
     $rows   = $stmt->fetchAll(\PDO::FETCH_ASSOC);
     $i     = 0;
     $names = [];
@@ -447,10 +477,10 @@ $conn->close();
    */
   public function getGerAssignmentNamesFilteredByStartingLettersToJson($alpha_filter) {
 
-    $pdo_connection      = $this->connectToDb();
+    $dbh      = $this->connectToDb();
     $query_filtered_tga_data = "SELECT * FROM tGenericAssignments
                 WHERE locate('" . $alpha_filter . "',tG_AssignmentName,'1')!= 0 ";
-    $result = $pdo_connection->exec($query_filtered_tga_data);
+    $result = $dbh->exec($query_filtered_tga_data);
     $index  = 0;
     while ($result) {
       $index++;
@@ -484,13 +514,13 @@ $conn->close();
    */
   public function deleteLastRowInserted() {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = 'SELECT id FROM tGenericAssignments ORDER BY id DESC LIMIT 1';
-    $stmt           = $pdo_connection->query($sql);
+    $stmt           = $dbh->query($sql);
     $row            = $stmt->fetch(\PDO::FETCH_ASSOC);
     $sql            = "DELETE FROM tGenericAssignments
                 WHERE ( id ='" . $row['id'] . "' ) LIMIT 1";
-    $count          = $pdo_connection->exec($sql);
+    $count          = $dbh->exec($sql);
     $return_value   = $count;
     return $return_value;
 
@@ -511,10 +541,12 @@ $conn->close();
    */
   public function deleteRowsNamed($t_g_assignment_name) {
 
-    $pdo_connection = $this->connectToDb();
-    $sql            = "DELETE FROM tGenericAssignments
-                WHERE ( tG_AssignmentName = '" . $t_g_assignment_name . "' )";
-    $result         = $pdo_connection->exec($sql);
+    $dbh = $this->connectToDb();
+    //$mysqli_connection = $this->connectToDb();
+    $sql = "DELETE FROM tGenericAssignments
+            WHERE ( tG_AssignmentName = '" . $t_g_assignment_name . "' )";
+    $result = $dbh->exec($sql);
+    //$result = $mysqli_connection->query($sql);
     return $result;
 
   }//end deleteRowsNamed()
@@ -528,9 +560,9 @@ $conn->close();
    */
   public function getAllAssignmentNamesToJson() {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = 'SELECT tG_AssignmentName FROM tGenericAssignments ORDER BY id DESC';
-    $stmt           = $pdo_connection->query($sql);
+    $stmt           = $dbh->query($sql);
     $row            = $stmt->fetch(\PDO::FETCH_ASSOC);
     $json_encoded_array = json_encode($row);
     return $json_encoded_array;
@@ -556,10 +588,10 @@ $conn->close();
       $t_g_id = 1;
     }
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
     $sql            = "DELETE FROM tGenericAssignments WHERE ( id ='" . $t_g_id . "' ) LIMIT 1";
-    $count          = $pdo_connection->exec($sql);
-    $pdo_connection = NULL;
+    $count          = $dbh->exec($sql);
+    $dbh = NULL;
     return $count;
 
   }//end deleteRowById()
@@ -578,23 +610,19 @@ $conn->close();
    */
   public function getRowFromDbAsArrayById($id) {
 
-    $pdo_connection = $this->connectToDb();
+    $dbh = $this->connectToDb();
 
-  try {
-    $stmt = $pdo_connection->prepare("SELECT * FROM tGenericAssignments WHERE id = :id");
-  }
-  catch( PDOException $Exception ) {
-    // PHP Fatal Error. Second Argument Has To Be An Integer,
-    // But PDOException::getCode Returns A String.
-    throw new MyDatabaseException( $Exception->getMessage( ) ,
-       (int)$Exception->getCode( ) );
-  }
+    try {
+      $stmt = $dbh->prepare("SELECT * FROM tGenericAssignments WHERE id = :id");
+    }
+    catch (PDOException $Exception) {
+      // PHP Fatal Error. Second Argument Has To Be An Integer,
+      // But PDOException::getCode Returns A String.
+      throw new MyDatabaseException($Exception->getMessage(),
+       (int) $Exception->getCode());
+    }
     $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
-    //assert($stmt===true);
     $stmt->execute();
-    //assert($stmt===true);
-    //$sql            = "SELECT * FROM tGenericAssignments WHERE (id ='" . $id . "')";
-    //$stmt           = $pdo_connection->query($sql);
     $row            = $stmt->fetch(\PDO::FETCH_ASSOC);
     return $row;
 

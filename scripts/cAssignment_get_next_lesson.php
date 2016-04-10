@@ -50,8 +50,8 @@ error_reporting(E_ALL);
 // Required by /hsphere/.
 date_default_timezone_set('UTC');
 
-$file = '../logs/cAssignment_get_next_lesson.log';
-$log_file = fopen($file, "w");
+$log_file = '../logs/cAssignment_get_next_lesson.log';
+$log_file = fopen($log_file, "w");
 $string  = "\n" . __FILE__ . "  " . __LINE__ . "\n";
 fwrite($log_file, $string);
 
@@ -105,9 +105,17 @@ foreach ($the_ga as $key => $value) {
   $_SESSION[$key] = $value;
 }
 
+$v      = var_export($_SESSION, TRUE);
+$string = __LINE__ . '  $_SESSION = ' . $v . "\n\n";
+fwrite($log_file, $string);
+
 // We should now have the data to prepare the next lesson.
 $_SESSION['tG_path_to_lesson'] = trim($_SESSION['tG_path_to_lesson']);
 $_SESSION['tG_FormName'] = trim($_SESSION['tG_FormName']);
+
+$file = $_SESSION['tG_path_to_lesson'] . $_SESSION['tG_FormName'];
+$string = "\n" . __LINE__ . ' $file = ' . $file;
+fwrite($log_file, $string . "\n");
 
 // Build the URL to the next lesson.
 $directory = __DIR__;
@@ -124,10 +132,14 @@ $string = "\n" . __LINE__ . ' cA go_next = ' . $go_next;
 fwrite($log_file, $string . "\n");
 
 // Check to see that we really have a file to go to.
-if (file_exists($go_next) === FALSE) {
-  $msg = $msg . "\n" . __LINE__ . ' File to go to does not exist.';
-  trigger_error($msg, E_USER_ERROR);
-}
+// This check causes major problems in its current form.
+// Convert check to absolute path.
+//if (file_exists($go_next) === FALSE) {
+  //$msg = $msg . "\n" . __LINE__ . ' File to go to does not exist.';
+  $string = "\n" . __LINE__ . ' File to go to does not exist. = ' . $go_next;
+  fwrite($log_file, $string . "\n");
+  //trigger_error($msg, E_USER_ERROR);
+//}
 // Following line is the exit from this php file.
 // Following line is the exit from this php file.
 // Following line is the exit from this php file.

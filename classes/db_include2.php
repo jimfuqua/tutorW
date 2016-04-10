@@ -19,5 +19,6 @@ if ($file2 === "hsphere") {
   $host = "127.0.0.1";
   $db_user = 'root';
   $db_password = 'pasword';
+  //$db_password = '*5B11A98489BB8247E874749ED456502C2DD23043';
   $db_dsn = "mysql:host=127.0.0.1;dbname=jlfEDU;charset=utf8mb4";
 }

@@ -20,7 +20,7 @@ function check_answer( direction ) {
         $( "#c3" ).each( function() {
             this.play();
             Answer_Correct = 1;  // MySQL stores TRUE as 1 or anything but 0.
-            record_answer( Answer_Correct );
+            record_answer(Answer_Correct);
             exit_from_lesson();
         } );
     } else {

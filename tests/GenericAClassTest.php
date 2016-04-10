@@ -72,9 +72,9 @@ class GenericATest extends \PHPUnit_Framework_TestCase {
    */
   public function testcompareClassMethodsToTests() {
 return;
-    $log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/compareClassMethodsToTests.log", "w");
-    $string = __LINE__ . ' compareClassMethodsToTests' . "\n";
-    fwrite($log_file, $string);
+    //$log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/compareClassMethodsToTests.log", "w");
+    //$string = __LINE__ . ' compareClassMethodsToTests' . "\n";
+    //fwrite($log_file, $string);
     // Create an array.of test methods.
     $tests_class_methods = get_class_methods(new GenericATest());
     // Remove methods not starting with 'test'/.
@@ -86,9 +86,9 @@ return;
     // Create an array.of methods from the tested class.
     $class_instance = new GenericAClass();
     $class_methods = get_class_methods(new GenericAClass());
-    $v = var_export($class_methods, TRUE);
-    $string = __LINE__ . ' $class_methods = ' . $v . "\n";
-    fwrite($log_file, $string);
+    //$v = var_export($class_methods, TRUE);
+    //$string = __LINE__ . ' $class_methods = ' . $v . "\n";
+    //fwrite($log_file, $string);
     // Add 'test' to start of each class method before compare.
     foreach ($class_methods as $key => $value) {
       $class_methods[$key] = "test" . $value;
@@ -118,8 +118,8 @@ return;
       foreach ($missing_tests as $key => $value) {
         $string = "\n" . 'Missing:  ' . $value;
         // Echo $string;.
-        $string = __LINE__ . ' ' . $string . "\n";
-        fwrite($log_file, $string);
+        //$string = __LINE__ . ' ' . $string . "\n";
+        //fwrite($log_file, $string);
       }
     }
     else {
@@ -272,7 +272,15 @@ return;
     $row = $class_instance->getLastDbEntryAsArray();
 
     // id omitted from myArray as it is autocompleted.
-    $this->assertTrue(count($row) === count($this->myArray) + 2);
+    //$file = "/var/www/html/jimfuqua/tutorW/logs/testfieldsInDbVsMyArray.log";
+    //$log_file = fopen($file, "w");
+    //$string  = "\n" .__METHOD__. " inside ".__CLASS__."\n";
+    //fwrite($log_file, $string);
+    //$string  = "\n" . ' count($row) = '. count($row) . "\n";
+    //fwrite($log_file, $string);
+    //$string  = "\n" . ' count($this->myArray) = '. count($this->myArray) . "\n";
+    //fwrite($log_file, $string);
+    $this->assertTrue(count($row) === count($this->myArray) + 1);
     // Put all of the column names from the returned row in an array.
     $num_columns = count($row);
     $i = 0;
@@ -335,23 +343,20 @@ return;
     $class_instance = new GenericAClass();
     $this->assertTrue(isset($class_instance));
     $this->assertTrue(method_exists($class_instance,'insertRecord'));
-
     //$this->assertTrue(property_exists($class_instance, $this->myArray['tG_AssignmentName']) === true);
-    $this->assertTrue(True === true);
-    $this->assertTrue(TRUE === true);
     $class_instance->deleteRowsNamed($this->myArray['tG_AssignmentName']);
     $result = $class_instance->insertRecord($this->myArray);
     $this->assertTrue($result === 1);
     //exit;
     $row = $class_instance->getRowFromDbAsArray($this->myArray['tG_AssignmentName']);
-    $file = "/var/www/html/jimfuqua/tutorW/logs/testgetRowFromDbAsArray.log";
-    $log_file = fopen($file, "w");
-    $string  = "\n" .__METHOD__. " inside ".__CLASS__."\n";
-    fwrite($log_file, $string);
-    $string  = "\n" .__LINE__. ' $row["tG_AssignmentName"] = '.$row["tG_AssignmentName"];
-    fwrite($log_file, $string);
-    $string  = "\n" .__LINE__. ' $this->myArray[tG_AssignmentName] = '.$this->myArray['tG_AssignmentName'];
-    fwrite($log_file, $string);
+    //$file = "/var/www/html/jimfuqua/tutorW/logs/testgetRowFromDbAsArray.log";
+    //$log_file = fopen($file, "w");
+    //$string  = "\n" .__METHOD__. " inside ".__CLASS__."\n";
+    //fwrite($log_file, $string);
+    //$string  = "\n" .__LINE__. ' $row["tG_AssignmentName"] = '.$row["tG_AssignmentName"];
+    //fwrite($log_file, $string);
+    //$string  = "\n" .__LINE__. ' $this->myArray[tG_AssignmentName] = '.$this->myArray['tG_AssignmentName'];
+    //fwrite($log_file, $string);
     $this->assertTrue($row['tG_AssignmentName'] === $this->myArray['tG_AssignmentName']);
     // Clean up.
     $class_instance->deleteRowsNamed("Test");
@@ -413,9 +418,9 @@ return;
    */
   public function testgetAllGenericAssgignmentNamesFromDbJson() {
 
-    $log_file = fopen("/var/www/html/jimfuqua/tutor/logs/testgetAllGenericAssgignmentNamesFromDbJson", "w");
-    $string = "\n" . 'testgetAllGenericAssgignmentNamesFromDbJson()' . "\n";
-    fwrite($log_file, $string);
+    //$log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/testgetAllGenericAssgignmentNamesFromDbJson", "w+");
+    //$string = "\n" . 'testgetAllGenericAssgignmentNamesFromDbJson()' . "\n";
+    //fwrite($log_file, $string);
     // Reset variables.
     $this->resetMyArray();
     $returned_json = NULL;
@@ -430,12 +435,12 @@ return;
     $result2 = $class_instance->insertRecord($this->myArray);
     $result_json = $class_instance->getAllGenericAssgignmentNamesFromDbJson();
     $result_1 = json_decode($result_json, TRUE);
-    $v = var_export($result_json, TRUE);
-    $string = "\n" . __LINE__ . ' $result_json = ' . "$v\n";
-    fwrite($log_file, $string);
-    $v = var_export($result_1, TRUE);
-    $string = "\n" . __LINE__ . ' $result_1 = ' . "$v\n";
-    fwrite($log_file, $string);
+    //$v = var_export($result_json, TRUE);
+    //$string = "\n" . __LINE__ . ' $result_json = ' . "$v\n";
+    //fwrite($log_file, $string);
+    //$v = var_export($result_1, TRUE);
+    //$string = "\n" . __LINE__ . ' $result_1 = ' . "$v\n";
+    //fwrite($log_file, $string);
     $this->assertTrue(is_array($result_1));
     $this->myArray['tG_AssignmentName'] = 'xx';
     // $this->myArray['id'] = '';.
@@ -488,14 +493,13 @@ return;
    * Filter is by the fourth character in tG_AssignmentName.
    */
   public function testGetAllAssignmentNamesToJson() {
-
-    $log_file = fopen("/var/www/html/jimfuqua/tutor/logs/testGetAllAssignmentNamesToJson.log", "w+");
+    //$log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/testGetAllAssignmentNamesToJson.log", "w+");
     $class_instance = new GenericAClass();
     $json_list_of_generic_assignments = $class_instance->getAllAssignmentNamesToJSON();
-    $v = var_export($json_list_of_generic_assignments, TRUE);
-    fwrite($log_file, __LINE__ . ' $json_list_of_generic_assignments = ' . $v . "\n \n");
-    $msg1 = json_decode($json_list_of_generic_assignments);
-    fwrite($log_file, __LINE__ . json_last_error_msg() . " \n\n");
+    //$v = var_export($json_list_of_generic_assignments, TRUE);
+    //fwrite($log_file, __LINE__ . ' $json_list_of_generic_assignments = ' . $v . "\n \n");
+    //$msg1 = json_decode($json_list_of_generic_assignments);
+    //fwrite($log_file, __LINE__ . json_last_error_msg() . " \n\n");
     $msg2 = json_last_error_msg();
     $this->assertTrue($msg2 === "No error");
   }
@@ -587,7 +591,7 @@ return;
     // Insert a row.  Retrieve the row.
     // Modify the row.  Retrieve the row and compare.
     // reset variables.
-    $log_file = fopen("/var/www/html/jimfuqua/tutor/logs/testeditRow.log", "w+");
+    //$log_file = fopen("/var/www/html/jimfuqua/tutorW/logs/testeditRow.log", "w+");
 
     $this->resetMyArray();
     $class_instance = new GenericAClass();
@@ -601,8 +605,8 @@ return;
     $result = $class_instance->insertRecord($this->myArray);
     $this->assertTrue($result === 1);
     $row = $class_instance->getLastDbEntryAsArray();
-    $v = var_export($row, TRUE);
-    fwrite($log_file, __LINE__ . ' $row = ' . $v . "\n \n");
+    //$v = var_export($row, TRUE);
+    //fwrite($log_file, __LINE__ . ' $row = ' . $v . "\n \n");
     //print_r($row);
     $this->assertTrue($row['tG_AssignmentName'] === $this->myArray['tG_AssignmentName']);
 
@@ -610,8 +614,8 @@ return;
     $result = $class_instance->editRow($my_local_array);
     //$log_file = fopen("/var/www/html/jimfuqua/tutor/logs/testeditRow", "w");
     $s = var_export($result, TRUE);
-    $string = '$result = ' . $s . "\n";
-    fwrite($log_file, $string);
+    //$string = '$result = ' . $s . "\n";
+    //fwrite($log_file, $string);
     $this->assertTrue($result === 1);
     // Now retrieve the row and check for updated fields.
     $row2 = $class_instance->getRowFromDbAsArrayById($row['id']);
